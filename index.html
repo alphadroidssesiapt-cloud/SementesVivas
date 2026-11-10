@@ -5,159 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sementes Vivas - Restauração de Biomas</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Ícones do Google -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <div class="app-container">
-        
-        <!-- TELA DE LOGIN -->
-        <section id="login-screen" class="screen active">
-            <div class="login-header">
-                <div class="logo-placeholder"></div>
-                <h1>Sementes Vivas</h1>
-                <p>Conservando sementes, cultivando o futuro.</p>
+    <!-- Ecrã de Login -->
+    <section id="login-screen" class="screen active full-center">
+        <div class="auth-card">
+            <div class="logo-header">
+                <span class="material-icons logo-icon">eco</span>
+                <h2>Sementes Vivas</h2>
             </div>
-            <div class="login-form">
-                <h2>Bem-vindo(a)!</h2>
-                <p>Faça seu login para continuar</p>
-                
-                <div class="input-group">
-                    <span class="material-icons">person</span>
-                    <input type="text" id="username" placeholder="Usuário ou e-mail" value="Ana Julia">
-                </div>
-                <div class="input-group">
-                    <span class="material-icons">lock</span>
-                    <input type="password" id="password" placeholder="Senha" value="123456">
-                </div>
-                
-                <button onclick="login()" class="btn-primary">Entrar &rarr;</button>
-                
-                <p class="forgot-password">Esqueceu sua senha?</p>
-                <div class="divider"><span>ou</span></div>
-                <button class="btn-secondary"><span class="material-icons">eco</span> Criar uma conta</button>
+            <h3>Acesse sua Conta</h3>
+            <div class="input-group">
+                <label>E-mail:</label>
+                <input type="email" id="login-email" placeholder="seuemail@exemplo.com">
             </div>
-        </section>
+            <div class="input-group">
+                <label>Senha:</label>
+                <input type="password" id="login-password" placeholder="Sua senha (mínimo 6 caracteres)">
+            </div>
+            <button onclick="login()" class="btn-primary">Entrar</button>
+            <p class="switch-auth">Não tem uma conta? <a href="#" onclick="showScreen('register-screen')">Cadastre-se aqui</a></p>
+        </div>
+    </section>
 
-        <!-- TELA PRINCIPAL (DASHBOARD) -->
-        <section id="dashboard-screen" class="screen">
-            <header class="dash-header">
-                <div>
-                    <h2 id="user-greeting">Olá, Usuário!</h2>
-                    <p>O que você deseja fazer hoje?</p>
+    <!-- Ecrã de Registo -->
+    <section id="register-screen" class="screen full-center">
+         <div class="auth-card">
+            <div class="logo-header">
+                <span class="material-icons logo-icon">eco</span>
+                <h2>Sementes Vivas</h2>
+            </div>
+            <h3>Criar Nova Conta</h3>
+            <div class="input-group">
+                <label>Nome de utilizador:</label>
+                <input type="text" id="reg-name" placeholder="Seu nome completo ou apelido">
+            </div>
+            <div class="input-group">
+                <label>E-mail:</label>
+                <input type="email" id="reg-email" placeholder="seuemail@exemplo.com">
+            </div>
+            <div class="input-group">
+                <label>Senha:</label>
+                <input type="password" id="reg-password" placeholder="Sua senha (mínimo 6 caracteres)">
+            </div>
+            <button onclick="registerUser()" class="btn-primary">Cadastrar</button>
+            <p class="switch-auth">Já tem uma conta? <a href="#" onclick="showScreen('login-screen')">Entre aqui</a></p>
+        </div>
+    </section>
+
+    <!-- Estrutura Principal (Após Login) -->
+    <section id="main-app" class="screen app-layout">
+        <header class="top-nav">
+            <div class="nav-brand">
+                <span class="material-icons">eco</span> Sementes Vivas
+            </div>
+            <div class="nav-links">
+                <a href="#" onclick="showDashboard()">Início</a>
+                <a href="#" onclick="showAvailable()">Sementes Disponíveis</a>
+                <a href="#" onclick="showDonate()">Doar Semente</a>
+            </div>
+            <div class="nav-user">
+                <span id="user-greeting">Olá, Utilizador</span>
+                <button class="btn-logout" onclick="logout()" title="Sair"><span class="material-icons">logout</span></button>
+            </div>
+        </header>
+
+        <main class="app-content">
+            <!-- Vista: Dashboard -->
+            <div id="dashboard-view" class="view active">
+                <div class="welcome-banner">
+                    <h2>O que deseja fazer hoje?</h2>
                 </div>
-                <button class="icon-btn"><span class="material-icons">notifications</span></button>
-            </header>
+                <div class="action-grid">
+                    <div class="action-card" onclick="showAvailable()">
+                        <span class="material-icons">inventory_2</span>
+                        <span>Sementes Disponíveis</span>
+                    </div>
+                    <div class="action-card" onclick="showDonate()">
+                        <span class="material-icons">camera_alt</span>
+                        <span>Doar Sementes (IA)</span>
+                    </div>
+                    <div class="action-card">
+                        <span class="material-icons">menu_book</span>
+                        <span>Aprender a Plantar</span>
+                    </div>
+                    <div class="action-card">
+                        <span class="material-icons">map</span>
+                        <span>Mapa de Biomas</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vista: Doar Semente com IA e Câmara -->
+            <div id="donate-view" class="view">
+                <div class="content-card">
+                    <h2>Doar Semente</h2>
+                    <p>Tire uma foto da semente e informe apenas o nome. A nossa Inteligência Artificial completará a descrição, bioma e dicas de utilização!</p>
+                    
+                    <div class="input-group" style="margin-top: 20px;">
+                        <label>Foto da Semente (Obrigatório) *</label>
+                        <!-- O atributo 'capture="environment"' aciona a câmara do telemóvel -->
+                        <input type="file" id="seed-photo" accept="image/*" capture="environment" class="file-input">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Nome da Semente *</label>
+                        <input type="text" id="donate-seed-name" placeholder="Ex.: Ipê Amarelo">
+                    </div>
+
+                    <button onclick="processAIDonation()" class="btn-primary" id="btn-donate">Analisar com IA e Publicar</button>
+                    
+                    <div id="ai-loading" class="hidden">
+                        <span class="material-icons spin">sync</span> A IA está a analisar a semente...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vista: Sementes Disponíveis (Grelha) -->
+            <div id="available-view" class="view">
+                <h2>Sementes Disponíveis</h2>
+                <div class="seeds-grid" id="seeds-grid-container">
+                    <!-- As caixas de sementes serão injetadas aqui pelo JavaScript -->
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <!-- Modal de Detalhes da Semente -->
+    <div id="seed-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title">Nome da Semente</h2>
+            <span class="badge" id="modal-biome">Bioma</span>
+            <p style="margin-top: 15px;"><strong>Publicado por:</strong> <span id="modal-author">Autor</span></p>
             
-            <div class="search-bar">
-                <span class="material-icons">search</span>
-                <input type="text" placeholder="Buscar sementes ou biomas...">
-            </div>
-
-            <div class="action-grid">
-                <div class="action-card" onclick="showScreen('feed-screen')">
-                    <span class="material-icons">spa</span>
-                    <span>Ver Sementes</span>
-                </div>
-                <div class="action-card" onclick="showScreen('donate-screen')">
-                    <span class="material-icons">edit</span>
-                    <span>Cadastrar Sementes</span>
-                </div>
-                <div class="action-card">
-                    <span class="material-icons">handshake</span>
-                    <span>Trocar Sementes</span>
-                </div>
-                <div class="action-card">
-                    <span class="material-icons">menu_book</span>
-                    <span>Aprender a Plantar</span>
-                </div>
-                <div class="action-card">
-                    <span class="material-icons">map</span>
-                    <span>Mapa de Biomas</span>
-                </div>
-                <div class="action-card">
-                    <span class="material-icons">auto_stories</span>
-                    <span>Nossa Memória</span>
-                </div>
-            </div>
-
-            <div class="info-card">
-                <h3>Você sabia?</h3>
-                <p>As sementes nativas ajudam a manter o equilíbrio do nosso ecossistema!</p>
-                <a href="#">Saiba mais &rarr;</a>
-            </div>
-            
-            <nav class="bottom-nav">
-                <div class="nav-item active" onclick="showScreen('dashboard-screen')"><span class="material-icons">home</span> Início</div>
-                <div class="nav-item" onclick="showScreen('feed-screen')"><span class="material-icons">park</span> Mural</div>
-                <div class="nav-item" onclick="showScreen('donate-screen')"><span class="material-icons">favorite</span> Doar</div>
-            </nav>
-        </section>
-
-        <!-- TELA DE CADASTRO DE DOAÇÃO -->
-        <section id="donate-screen" class="screen">
-            <header class="dash-header">
-                <button class="icon-btn" onclick="showScreen('dashboard-screen')"><span class="material-icons">arrow_back</span></button>
-                <h2>Compartilhe uma semente</h2>
-            </header>
-            <div class="form-container">
-                <p>Preencha os detalhes para publicar no mural da comunidade.</p>
+            <div class="ai-generated-box">
+                <h4><span class="material-icons">auto_awesome</span> Descrição Gerada por IA</h4>
+                <p id="modal-desc">Descrição...</p>
                 
-                <label>Bioma de Origem *</label>
-                <select id="seed-biome">
-                    <option value="Amazônia">Amazônia</option>
-                    <option value="Cerrado">Cerrado</option>
-                    <option value="Mata Atlântica">Mata Atlântica</option>
-                    <option value="Caatinga">Caatinga</option>
-                    <option value="Pampa">Pampa</option>
-                    <option value="Pantanal">Pantanal</option>
-                </select>
-
-                <label>Nome da semente *</label>
-                <input type="text" id="seed-name" placeholder="Ex.: Ipê Amarelo">
-
-                <label>Quantidade</label>
-                <input type="text" id="seed-qtd" placeholder="Ex.: 10 unidades / 1 pacote">
-
-                <label>Descrição</label>
-                <textarea id="seed-desc" rows="3" placeholder="Conte um pouco sobre a semente e as condições ideais de plantio..."></textarea>
-
-                <button onclick="publishSeed()" class="btn-primary">Publicar no mural</button>
+                <h4><span class="material-icons">lightbulb</span> Dicas de Utilização</h4>
+                <p id="modal-tips">Dicas...</p>
             </div>
-            <nav class="bottom-nav">
-                <div class="nav-item" onclick="showScreen('dashboard-screen')"><span class="material-icons">home</span> Início</div>
-                <div class="nav-item" onclick="showScreen('feed-screen')"><span class="material-icons">park</span> Mural</div>
-                <div class="nav-item active" onclick="showScreen('donate-screen')"><span class="material-icons">favorite</span> Doar</div>
-            </nav>
-        </section>
-
-        <!-- TELA DO MURAL DE SEMENTES (COMUNIDADE) -->
-        <section id="feed-screen" class="screen">
-            <header class="dash-header">
-                <button class="icon-btn" onclick="showScreen('dashboard-screen')"><span class="material-icons">arrow_back</span></button>
-                <h2>Mural de Doações</h2>
-            </header>
-            
-            <!-- Filtro por Bioma -->
-            <div class="biome-filter" id="biome-filters">
-                <button class="filter-btn active" onclick="filterBiome('Todos')">Todos</button>
-                <button class="filter-btn" onclick="filterBiome('Amazônia')">Amazônia</button>
-                <button class="filter-btn" onclick="filterBiome('Cerrado')">Cerrado</button>
-                <button class="filter-btn" onclick="filterBiome('Mata Atlântica')">Mata Atlântica</button>
-            </div>
-
-            <div class="feed-container" id="seed-feed">
-                <!-- As postagens aparecerão aqui dinamicamente -->
-            </div>
-
-            <nav class="bottom-nav">
-                <div class="nav-item" onclick="showScreen('dashboard-screen')"><span class="material-icons">home</span> Início</div>
-                <div class="nav-item active" onclick="showScreen('feed-screen')"><span class="material-icons">park</span> Mural</div>
-                <div class="nav-item" onclick="showScreen('donate-screen')"><span class="material-icons">favorite</span> Doar</div>
-            </nav>
-        </section>
-
+        </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
