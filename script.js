@@ -5,12 +5,23 @@ import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.c
 
 // SUBSTITUA ESTE BLOCO PELAS SUAS CHAVES DO PASSO 1
 const firebaseConfig = {
-    apiKey: "SUA_API_KEY",
-    authDomain: "SEU_PROJETO.firebaseapp.com",
-    projectId: "SEU_PROJETO",
-    storageBucket: "SEU_PROJETO.appspot.com",
-    messagingSenderId: "SEU_SENDER_ID",
-    appId: "SEU_APP_ID"
+    // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAZUFBGcCz0o0ZeSvXkdbwJXBzFFBemgt0",
+  authDomain: "sementesvivas-7b21e.firebaseapp.com",
+  projectId: "sementesvivas-7b21e",
+  storageBucket: "sementesvivas-7b21e.firebasestorage.app",
+  messagingSenderId: "800525003943",
+  appId: "1:800525003943:web:1c05341ca393178a02ff82"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 };
 
 // 2. INICIALIZAR FIREBASE
