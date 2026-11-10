@@ -3,14 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// SUBSTITUA ESTE BLOCO PELAS SUAS CHAVES DO PASSO 1
-const firebaseConfig = {
-    // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
+// SUAS CHAVES DO FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyAZUFBGcCz0o0ZeSvXkdbwJXBzFFBemgt0",
   authDomain: "sementesvivas-7b21e.firebaseapp.com",
@@ -20,29 +13,15 @@ const firebaseConfig = {
   appId: "1:800525003943:web:1c05341ca393178a02ff82"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-};
-
 // 2. INICIALIZAR FIREBASE
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// 3. EXPOR FUNÇÕES PARA O HTML (Como o script é um module, o HTML precisa disto para acionar cliques)
+// 3. EXPOR FUNÇÕES PARA O HTML
 window.showScreen = (screenId) => {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
-};
-window.switchView = (viewId) => {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById(viewId).classList.add('active');
-};
-window.showDashboard = () => window.switchView('dashboard-view');
-window.showDonate = () => window.switchView('donate-view');
-window.showAvailable = () => {
-    window.switchView('available-view');
-    window.renderSeeds();
 };
 
 // 4. AUTENTICAÇÃO
