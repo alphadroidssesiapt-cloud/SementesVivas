@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary-dark: #1b4332;
+    --primary-green: #2d6a4f;
+    --light-green: #d8f3dc;
+    --bg-color: #f4f9f4;
+    --card-bg: #e3f0e3;
+    --text-color: #333;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #e0e0e0; /* Fundo escuro fora do app */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 414px; /* Simula tamanho de celular */
+    height: 100vh;
+    background-color: var(--bg-color);
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* Telas */
+.screen {
+    display: none;
+    padding: 20px;
+    padding-bottom: 80px;
+    animation: fadeIn 0.3s ease;
+}
+.screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Login Customização */
+.login-header {
+    text-align: center;
+    margin-top: 40px;
+    color: var(--primary-dark);
+}
+.logo-placeholder {
+    font-size: 60px;
+    margin-bottom: 10px;
+}
+.login-header p {
+    font-size: 12px;
+    font-weight: 500;
+}
+.login-form {
+    margin-top: 40px;
+    background: var(--white);
+    padding: 30px 20px;
+    border-radius: 24px 24px 0 0;
+    height: 100%;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+}
+.login-form h2 {
+    color: var(--primary-dark);
+    margin-bottom: 5px;
+}
+.input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 15px;
+}
+.input-group span {
+    color: var(--primary-green);
+    margin-right: 10px;
+}
+.input-group input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+}
+
+/* Botões */
+.btn-primary {
+    width: 100%;
+    background-color: var(--primary-dark);
+    color: var(--white);
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 20px;
+    cursor: pointer;
+}
+.btn-secondary {
+    width: 100%;
+    background-color: transparent;
+    color: var(--primary-dark);
+    border: 1px solid var(--primary-dark);
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.forgot-password { text-align: center; margin: 15px 0; font-size: 14px; color: var(--primary-green); cursor: pointer; }
+.divider { text-align: center; margin: 20px 0; position: relative; }
+.divider::before { content: ""; position: absolute; left: 0; top: 50%; width: 40%; height: 1px; background: #ccc; }
+.divider::after { content: ""; position: absolute; right: 0; top: 50%; width: 40%; height: 1px; background: #ccc; }
+.divider span { font-size: 12px; color: #777; }
+
+/* Dashboard Customização */
+.dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.dash-header h2 { color: var(--primary-dark); }
+.dash-header p { font-size: 14px; color: #555; }
+.icon-btn { background: var(--light-green); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; color: var(--primary-dark); cursor: pointer; }
+
+.search-bar { display: flex; align-items: center; background: transparent; border: 1px solid var(--primary-green); border-radius: 30px; padding: 10px 20px; margin-bottom: 20px; }
+.search-bar input { border: none; outline: none; background: transparent; width: 100%; margin-left: 10px; font-size: 14px; }
+
+.action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+.action-card { background: var(--card-bg); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--primary-dark); font-weight: 600; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+.action-card span.material-icons { font-size: 32px; }
+
+.info-card { background: linear-gradient(to right, #4a7c59, #1b4332); color: white; padding: 20px; border-radius: 12px; }
+.info-card h3 { margin-bottom: 5px; }
+.info-card p { font-size: 13px; margin-bottom: 10px; }
+.info-card a { color: var(--light-green); text-decoration: none; font-size: 14px; font-weight: 600; }
+
+/* Formulário Customização */
+.form-container label { display: block; margin-top: 15px; font-size: 14px; font-weight: 600; color: var(--primary-dark); }
+.form-container input, .form-container select, .form-container textarea { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; outline: none; }
+.form-container input:focus, .form-container select:focus, .form-container textarea:focus { border-color: var(--primary-green); }
+
+/* Mural e Feed */
+.biome-filter { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; }
+.biome-filter::-webkit-scrollbar { display: none; }
+.filter-btn { padding: 8px 16px; border: 1px solid var(--primary-green); border-radius: 20px; background: transparent; color: var(--primary-green); font-weight: 500; cursor: pointer; white-space: nowrap; }
+.filter-btn.active { background: var(--primary-green); color: white; }
+
+.post-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid var(--primary-green); }
+.post-card h4 { color: var(--primary-dark); margin-bottom: 5px; }
+.post-biome-tag { display: inline-block; background: var(--light-green); color: var(--primary-dark); font-size: 11px; padding: 3px 8px; border-radius: 10px; margin-bottom: 8px; font-weight: 600;}
+.post-card p { font-size: 13px; color: #555; margin-bottom: 5px;}
+.post-card .author { font-size: 12px; color: #888; font-style: italic; margin-top: 10px; }
+
+/* Bottom Nav */
+.bottom-nav { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--white); display: flex; justify-content: space-around; padding: 10px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+.nav-item { display: flex; flex-direction: column; align-items: center; font-size: 12px; color: #888; cursor: pointer; }
+.nav-item.active { color: var(--primary-green); font-weight: 600; }
+.nav-item span { margin-bottom: 2px; }
