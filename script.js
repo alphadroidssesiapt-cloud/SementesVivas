@@ -1,133 +1,162 @@
-// Base de dados simulada (Firebase substituído para funcionar estático)
-let currentUser = null;
-let seedsDatabase = [
-    { id: 1, name: "Araucária", biome: "Mata Atlântica", author: "Maria Silva", desc: "Árvore nativa do sul do Brasil, fundamental para a fauna local.", tips: "Plantar em solo profundo e húmido. Necessita de frio para germinar bem." },
-    { id: 2, name: "Pequi", biome: "Cerrado", author: "João Souza", desc: "Fruto símbolo do Cerrado, muito resistente à seca.", tips: "Requer bastante sol. Solo bem drenado, não tolera encharcamento." }
-];
+// 1. IMPORTAR FIREBASE (ES6 Modules)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Controlo de Navegação Geral
-function showScreen(screenId) {
+// SUBSTITUA ESTE BLOCO PELAS SUAS CHAVES DO PASSO 1
+const firebaseConfig = {
+    apiKey: "SUA_API_KEY",
+    authDomain: "SEU_PROJETO.firebaseapp.com",
+    projectId: "SEU_PROJETO",
+    storageBucket: "SEU_PROJETO.appspot.com",
+    messagingSenderId: "SEU_SENDER_ID",
+    appId: "SEU_APP_ID"
+};
+
+// 2. INICIALIZAR FIREBASE
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// 3. EXPOR FUNÇÕES PARA O HTML (Como o script é um module, o HTML precisa disto para acionar cliques)
+window.showScreen = (screenId) => {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
-}
-
-function switchView(viewId) {
+};
+window.switchView = (viewId) => {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById(viewId).classList.add('active');
-}
+};
+window.showDashboard = () => window.switchView('dashboard-view');
+window.showDonate = () => window.switchView('donate-view');
+window.showAvailable = () => {
+    window.switchView('available-view');
+    window.renderSeeds();
+};
 
-// Lógica de Autenticação
-function registerUser() {
+// 4. AUTENTICAÇÃO
+window.registerUser = async () => {
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-password').value;
     const name = document.getElementById('reg-name').value;
-    if (!name) return alert('Por favor, preencha o nome de utilizador!');
-    currentUser = name;
-    loginSuccess();
-}
+    
+    if (!email || !password || !name) return alert('Preencha todos os campos!');
 
-function login() {
-    const email = document.getElementById('login-email').value;
-    if (!email) return alert('Por favor, insira o seu e-mail!');
-    currentUser = email.split('@')[0]; // Usa o prefixo do e-mail como nome para a simulação
-    loginSuccess();
-}
-
-function loginSuccess() {
-    document.getElementById('user-greeting').innerText = `Olá, ${currentUser}`;
-    showScreen('main-app');
-    showDashboard();
-}
-
-function logout() {
-    currentUser = null;
-    showScreen('login-screen');
-}
-
-// Funções de Mudança de Vistas (App Interna)
-function showDashboard() { switchView('dashboard-view'); }
-function showDonate() { switchView('donate-view'); }
-function showAvailable() {
-    switchView('available-view');
-    renderSeeds(); // Atualiza a grelha ao entrar
-}
-
-// Lógica de Doação com IA
-function processAIDonation() {
-    const photo = document.getElementById('seed-photo').files[0];
-    const name = document.getElementById('donate-seed-name').value;
-
-    if (!photo || !name) {
-        return alert('Por favor, capte a foto da semente e insira o nome.');
+    try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        alert('Conta criada com sucesso!');
+        // O login é feito automaticamente após o registo no Firebase
+    } catch (error) {
+        alert('Erro ao registar: ' + error.message);
     }
+};
+
+window.login = async () => {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+        alert('Erro no login. Verifique as credenciais.');
+    }
+};
+
+window.logout = async () => {
+    await signOut(auth);
+};
+
+// Verificar estado da sessão em tempo real
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // Se logado
+        document.getElementById('user-greeting').innerText = `Olá, ${user.email.split('@')[0]}`;
+        window.showScreen('main-app');
+        window.showDashboard();
+    } else {
+        // Se não logado
+        window.showScreen('login-screen');
+    }
+});
+
+// 5. BASE DE DADOS (FIRESTORE)
+window.processAIDonation = async () => {
+    const name = document.getElementById('donate-seed-name').value;
+    const user = auth.currentUser;
+
+    if (!name) return alert('Por favor, informe o nome da semente.');
+    if (!user) return alert('Precisa estar logado para doar.');
 
     const btn = document.getElementById('btn-donate');
     const loading = document.getElementById('ai-loading');
-    
     btn.disabled = true;
     loading.classList.remove('hidden');
 
-    // Simula o tempo de processamento da IA (2.5 segundos)
-    setTimeout(() => {
+    try {
         const biomes = ["Cerrado", "Mata Atlântica", "Amazónia", "Caatinga", "Pampa", "Pantanal"];
         const randomBiome = biomes[Math.floor(Math.random() * biomes.length)];
-        
-        // Dados criados "por IA" com base apenas no nome introduzido
-        const newSeed = {
-            id: Date.now(),
+
+        // Escrever no Firestore
+        await addDoc(collection(db, "seeds"), {
             name: name,
             biome: randomBiome,
-            author: currentUser,
-            desc: `(Gerado por IA) A semente de ${name} possui um alto índice de germinação quando armazenada corretamente. É essencial para a restauração ecológica do bioma ${randomBiome}.`,
-            tips: `(Gerado por IA) Dica: Quebre a dormência da semente mergulhando-a em água morna durante 12 horas antes do plantio. Mantenha em luz indireta na fase inicial.`
-        };
+            author: user.email.split('@')[0], // Pega o nome antes do @
+            desc: `(IA) Semente de ${name}, muito resiliente. Fundamental para o ecossistema do bioma ${randomBiome}.`,
+            tips: `(IA) Dica: Mantenha em luz indireta na fase inicial e faça rega diária sem encharcar o solo.`,
+            timestamp: new Date()
+        });
 
-        seedsDatabase.push(newSeed);
-        
+        alert('Semente registada com sucesso!');
+        document.getElementById('donate-seed-name').value = '';
+        window.showAvailable();
+
+    } catch (error) {
+        alert('Erro ao guardar semente: ' + error.message);
+        console.error(error);
+    } finally {
         btn.disabled = false;
         loading.classList.add('hidden');
-        
-        // Limpa o formulário
-        document.getElementById('seed-photo').value = '';
-        document.getElementById('donate-seed-name').value = '';
-        
-        alert('Semente analisada pela IA e cadastrada com sucesso!');
-        showAvailable(); // Redireciona para ver as sementes
-        
-    }, 2500);
-}
+    }
+};
 
-// Renderizar Sementes e Lógica do Modal
-function renderSeeds() {
+window.renderSeeds = async () => {
     const container = document.getElementById('seeds-grid-container');
-    container.innerHTML = '';
+    container.innerHTML = '<p style="margin-left:20px;">A carregar sementes da base de dados global...</p>';
 
-    seedsDatabase.forEach(seed => {
-        const box = document.createElement('div');
-        box.className = 'seed-box';
-        // Passa o objeto semente para abrir o modal
-        box.onclick = () => openModal(seed); 
-        box.innerHTML = `
-            <h4>${seed.name}</h4>
-            <span class="badge">${seed.biome}</span>
-            <p style="margin-top: 15px; font-size: 14px; color: #666;">Por: ${seed.author}</p>
-        `;
-        container.appendChild(box);
-    });
-}
+    try {
+        // Ler do Firestore
+        const querySnapshot = await getDocs(collection(db, "seeds"));
+        container.innerHTML = ''; 
 
-function openModal(seed) {
+        if(querySnapshot.empty) {
+            container.innerHTML = '<p style="margin-left:20px;">Ainda não existem sementes cadastradas.</p>';
+            return;
+        }
+
+        querySnapshot.forEach((doc) => {
+            const seed = doc.data();
+            const box = document.createElement('div');
+            box.className = 'seed-box';
+            box.onclick = () => window.openModal(seed); 
+            box.innerHTML = `
+                <h4>${seed.name}</h4>
+                <span class="badge">${seed.biome}</span>
+                <p style="margin-top: 15px; font-size: 14px; color: #666;">Por: ${seed.author}</p>
+            `;
+            container.appendChild(box);
+        });
+    } catch (error) {
+        container.innerHTML = '<p style="margin-left:20px;color:red;">Erro ao carregar do Firebase.</p>';
+        console.error("Erro Firestore:", error);
+    }
+};
+
+// 6. LÓGICA DO MODAL
+window.openModal = (seed) => {
     document.getElementById('modal-title').innerText = seed.name;
     document.getElementById('modal-biome').innerText = seed.biome;
     document.getElementById('modal-author').innerText = seed.author;
     document.getElementById('modal-desc').innerText = seed.desc;
     document.getElementById('modal-tips').innerText = seed.tips;
     document.getElementById('seed-modal').classList.remove('hidden');
-}
-
-function closeModal() {
-    document.getElementById('seed-modal').classList.add('hidden');
-}
-
-// Inicializa a aplicação forçando a mostrar o ecrã de login
-document.addEventListener('DOMContentLoaded', () => {
-    showScreen('login-screen');
-});
+};
+window.closeModal = () => document.getElementById('seed-modal').classList.add('hidden');
