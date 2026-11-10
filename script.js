@@ -1,113 +1,133 @@
-let currentUser = "";
-
-// Inicializa algumas sementes de exemplo caso o localstorage esteja vazio
-const defaultSeeds = [
-    { name: "Semente de Pequi", biome: "Cerrado", qtd: "20 unidades", desc: "Ótimas sementes colhidas este mês.", author: "João Silva" },
-    { name: "Muda de Pau-Brasil", biome: "Mata Atlântica", qtd: "5 mudas", desc: "Mudas prontas para plantio em áreas sombreadas.", author: "Comunidade SOS" }
+// Base de dados simulada (Firebase substituído para funcionar estático)
+let currentUser = null;
+let seedsDatabase = [
+    { id: 1, name: "Araucária", biome: "Mata Atlântica", author: "Maria Silva", desc: "Árvore nativa do sul do Brasil, fundamental para a fauna local.", tips: "Plantar em solo profundo e húmido. Necessita de frio para germinar bem." },
+    { id: 2, name: "Pequi", biome: "Cerrado", author: "João Souza", desc: "Fruto símbolo do Cerrado, muito resistente à seca.", tips: "Requer bastante sol. Solo bem drenado, não tolera encharcamento." }
 ];
 
-document.addEventListener("DOMContentLoaded", () => {
-    if (!localStorage.getItem("seeds")) {
-        localStorage.setItem("seeds", JSON.stringify(defaultSeeds));
-    }
-    loadFeed("Todos");
-});
+// Controlo de Navegação Geral
+function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+}
+
+function switchView(viewId) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(viewId).classList.add('active');
+}
+
+// Lógica de Autenticação
+function registerUser() {
+    const name = document.getElementById('reg-name').value;
+    if (!name) return alert('Por favor, preencha o nome de utilizador!');
+    currentUser = name;
+    loginSuccess();
+}
 
 function login() {
-    const user = document.getElementById("username").value;
-    if (user.trim() !== "") {
-        currentUser = user;
-        document.getElementById("user-greeting").innerText = `Olá, ${currentUser.split(" ")[0]}!`;
-        showScreen("dashboard-screen");
-    } else {
-        alert("Por favor, insira um nome de usuário.");
-    }
+    const email = document.getElementById('login-email').value;
+    if (!email) return alert('Por favor, insira o seu e-mail!');
+    currentUser = email.split('@')[0]; // Usa o prefixo do e-mail como nome para a simulação
+    loginSuccess();
 }
 
-function showScreen(screenId) {
-    // Esconde todas as telas
-    document.querySelectorAll(".screen").forEach(screen => {
-        screen.classList.remove("active");
-    });
-    // Mostra a tela desejada
-    document.getElementById(screenId).classList.add("active");
+function loginSuccess() {
+    document.getElementById('user-greeting').innerText = `Olá, ${currentUser}`;
+    showScreen('main-app');
+    showDashboard();
+}
+
+function logout() {
+    currentUser = null;
+    showScreen('login-screen');
+}
+
+// Funções de Mudança de Vistas (App Interna)
+function showDashboard() { switchView('dashboard-view'); }
+function showDonate() { switchView('donate-view'); }
+function showAvailable() {
+    switchView('available-view');
+    renderSeeds(); // Atualiza a grelha ao entrar
+}
+
+// Lógica de Doação com IA
+function processAIDonation() {
+    const photo = document.getElementById('seed-photo').files[0];
+    const name = document.getElementById('donate-seed-name').value;
+
+    if (!photo || !name) {
+        return alert('Por favor, capte a foto da semente e insira o nome.');
+    }
+
+    const btn = document.getElementById('btn-donate');
+    const loading = document.getElementById('ai-loading');
     
-    if(screenId === 'feed-screen') {
-        loadFeed("Todos");
-    }
+    btn.disabled = true;
+    loading.classList.remove('hidden');
+
+    // Simula o tempo de processamento da IA (2.5 segundos)
+    setTimeout(() => {
+        const biomes = ["Cerrado", "Mata Atlântica", "Amazónia", "Caatinga", "Pampa", "Pantanal"];
+        const randomBiome = biomes[Math.floor(Math.random() * biomes.length)];
+        
+        // Dados criados "por IA" com base apenas no nome introduzido
+        const newSeed = {
+            id: Date.now(),
+            name: name,
+            biome: randomBiome,
+            author: currentUser,
+            desc: `(Gerado por IA) A semente de ${name} possui um alto índice de germinação quando armazenada corretamente. É essencial para a restauração ecológica do bioma ${randomBiome}.`,
+            tips: `(Gerado por IA) Dica: Quebre a dormência da semente mergulhando-a em água morna durante 12 horas antes do plantio. Mantenha em luz indireta na fase inicial.`
+        };
+
+        seedsDatabase.push(newSeed);
+        
+        btn.disabled = false;
+        loading.classList.add('hidden');
+        
+        // Limpa o formulário
+        document.getElementById('seed-photo').value = '';
+        document.getElementById('donate-seed-name').value = '';
+        
+        alert('Semente analisada pela IA e cadastrada com sucesso!');
+        showAvailable(); // Redireciona para ver as sementes
+        
+    }, 2500);
 }
 
-function publishSeed() {
-    const name = document.getElementById("seed-name").value;
-    const biome = document.getElementById("seed-biome").value;
-    const qtd = document.getElementById("seed-qtd").value;
-    const desc = document.getElementById("seed-desc").value;
+// Renderizar Sementes e Lógica do Modal
+function renderSeeds() {
+    const container = document.getElementById('seeds-grid-container');
+    container.innerHTML = '';
 
-    if (!name || !desc) {
-        alert("Preencha o nome da semente e a descrição!");
-        return;
-    }
-
-    const newSeed = {
-        name: name,
-        biome: biome,
-        qtd: qtd || "Não especificado",
-        desc: desc,
-        author: currentUser || "Usuário Anônimo"
-    };
-
-    // Salva no LocalStorage
-    let seeds = JSON.parse(localStorage.getItem("seeds"));
-    seeds.push(newSeed);
-    localStorage.setItem("seeds", JSON.stringify(seeds));
-
-    alert("Semente publicada com sucesso no mural da comunidade!");
-    
-    // Limpa o formulário
-    document.getElementById("seed-name").value = "";
-    document.getElementById("seed-qtd").value = "";
-    document.getElementById("seed-desc").value = "";
-
-    // Vai para o mural
-    showScreen("feed-screen");
-}
-
-function filterBiome(biomeName) {
-    // Atualiza visual dos botões de filtro
-    document.querySelectorAll(".filter-btn").forEach(btn => {
-        btn.classList.remove("active");
-        if(btn.innerText === biomeName) btn.classList.add("active");
-    });
-    loadFeed(biomeName);
-}
-
-function loadFeed(filterValue) {
-    const feedContainer = document.getElementById("seed-feed");
-    feedContainer.innerHTML = "";
-    
-    let seeds = JSON.parse(localStorage.getItem("seeds")) || [];
-
-    // Filtra pelo bioma selecionado
-    if (filterValue !== "Todos") {
-        seeds = seeds.filter(seed => seed.biome === filterValue);
-    }
-
-    if (seeds.length === 0) {
-        feedContainer.innerHTML = "<p style='text-align:center; color:#777; margin-top:20px;'>Nenhuma semente encontrada para este bioma.</p>";
-        return;
-    }
-
-    // Cria os cards de postagem invertendo o array para mostrar os mais recentes primeiro
-    seeds.slice().reverse().forEach(seed => {
-        const card = document.createElement("div");
-        card.className = "post-card";
-        card.innerHTML = `
-            <span class="post-biome-tag">${seed.biome}</span>
+    seedsDatabase.forEach(seed => {
+        const box = document.createElement('div');
+        box.className = 'seed-box';
+        // Passa o objeto semente para abrir o modal
+        box.onclick = () => openModal(seed); 
+        box.innerHTML = `
             <h4>${seed.name}</h4>
-            <p><strong>Quantidade:</strong> ${seed.qtd}</p>
-            <p>${seed.desc}</p>
-            <p class="author">Oferecido por: ${seed.author}</p>
+            <span class="badge">${seed.biome}</span>
+            <p style="margin-top: 15px; font-size: 14px; color: #666;">Por: ${seed.author}</p>
         `;
-        feedContainer.appendChild(card);
+        container.appendChild(box);
     });
 }
+
+function openModal(seed) {
+    document.getElementById('modal-title').innerText = seed.name;
+    document.getElementById('modal-biome').innerText = seed.biome;
+    document.getElementById('modal-author').innerText = seed.author;
+    document.getElementById('modal-desc').innerText = seed.desc;
+    document.getElementById('modal-tips').innerText = seed.tips;
+    document.getElementById('seed-modal').classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('seed-modal').classList.add('hidden');
+}
+
+// Inicializa a aplicação forçando a mostrar o ecrã de login
+document.addEventListener('DOMContentLoaded', () => {
+    showScreen('login-screen');
+});
