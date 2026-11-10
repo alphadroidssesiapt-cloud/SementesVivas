@@ -9,7 +9,7 @@
 </head>
 <body>
     <!-- Ecrã de Login -->
-    <section id="login-screen" class="screen active full-center">
+    <section id="login-screen" class="screen full-center">
         <div class="auth-card">
             <div class="logo-header">
                 <span class="material-icons logo-icon">eco</span>
@@ -39,7 +39,7 @@
             <h3>Criar Nova Conta</h3>
             <div class="input-group">
                 <label>Nome de utilizador:</label>
-                <input type="text" id="reg-name" placeholder="Seu nome completo ou apelido">
+                <input type="text" id="reg-name" placeholder="Seu apelido">
             </div>
             <div class="input-group">
                 <label>E-mail:</label>
@@ -66,13 +66,13 @@
                 <a href="#" onclick="showDonate()">Doar Semente</a>
             </div>
             <div class="nav-user">
-                <span id="user-greeting">Olá, Utilizador</span>
+                <span id="user-greeting">Olá!</span>
                 <button class="btn-logout" onclick="logout()" title="Sair"><span class="material-icons">logout</span></button>
             </div>
         </header>
 
         <main class="app-content">
-            <!-- Vista: Dashboard -->
+            <!-- Dashboard -->
             <div id="dashboard-view" class="view active">
                 <div class="welcome-banner">
                     <h2>O que deseja fazer hoje?</h2>
@@ -90,22 +90,17 @@
                         <span class="material-icons">menu_book</span>
                         <span>Aprender a Plantar</span>
                     </div>
-                    <div class="action-card">
-                        <span class="material-icons">map</span>
-                        <span>Mapa de Biomas</span>
-                    </div>
                 </div>
             </div>
 
-            <!-- Vista: Doar Semente com IA e Câmara -->
+            <!-- Doar Semente -->
             <div id="donate-view" class="view">
                 <div class="content-card">
                     <h2>Doar Semente</h2>
-                    <p>Tire uma foto da semente e informe apenas o nome. A nossa Inteligência Artificial completará a descrição, bioma e dicas de utilização!</p>
+                    <p>Tire uma foto da semente e informe o nome. A nossa Inteligência Artificial completará a descrição, bioma e dicas de utilização!</p>
                     
                     <div class="input-group" style="margin-top: 20px;">
                         <label>Foto da Semente (Obrigatório) *</label>
-                        <!-- O atributo 'capture="environment"' aciona a câmara do telemóvel -->
                         <input type="file" id="seed-photo" accept="image/*" capture="environment" class="file-input">
                     </div>
 
@@ -117,22 +112,22 @@
                     <button onclick="processAIDonation()" class="btn-primary" id="btn-donate">Analisar com IA e Publicar</button>
                     
                     <div id="ai-loading" class="hidden">
-                        <span class="material-icons spin">sync</span> A IA está a analisar a semente...
+                        <span class="material-icons spin">sync</span> Guardando na Base de Dados Global...
                     </div>
                 </div>
             </div>
 
-            <!-- Vista: Sementes Disponíveis (Grelha) -->
+            <!-- Sementes Disponíveis -->
             <div id="available-view" class="view">
                 <h2>Sementes Disponíveis</h2>
                 <div class="seeds-grid" id="seeds-grid-container">
-                    <!-- As caixas de sementes serão injetadas aqui pelo JavaScript -->
+                    <!-- Sementes do Firestore aparecerão aqui -->
                 </div>
             </div>
         </main>
     </section>
 
-    <!-- Modal de Detalhes da Semente -->
+    <!-- Modal de Detalhes -->
     <div id="seed-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -150,6 +145,7 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Atenção ao type="module" -->
+    <script type="module" src="script.js"></script>
 </body>
 </html>
