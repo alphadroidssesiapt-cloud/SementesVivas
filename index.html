@@ -23,12 +23,6 @@
             align-items: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .header-menu span {
-            margin: 0 15px;
-            cursor: pointer;
-            color: #2c4c3b;
-            font-weight: bold;
-        }
         .header-user {
             display: flex;
             align-items: center;
@@ -42,10 +36,10 @@
             padding: 20px;
         }
         .view {
-            display: none; /* Esconde todas as telas por padrão */
+            display: none; 
         }
         .view.active {
-            display: block; /* Mostra apenas a tela ativa */
+            display: block; 
         }
 
         /* Cartões do Dashboard */
@@ -86,19 +80,51 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
-        button {
+        
+        /* Estilização personalizada para o botão da câmara */
+        .camera-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+            margin: 10px 0 20px 0;
+        }
+        .camera-btn {
+            background-color: #f0f0f0;
+            border: 2px dashed #2c4c3b;
+            color: #2c4c3b;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .camera-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            height: 100%;
+        }
+
+        button.btn-primary {
             background-color: #2c4c3b;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
+            width: 100%;
         }
-        button:hover {
+        button.btn-primary:hover {
             background-color: #1e3629;
         }
-        button:disabled {
+        button.btn-primary:disabled {
             background-color: #999;
             cursor: not-allowed;
         }
@@ -127,19 +153,14 @@
 </head>
 <body>
 
-    <!-- CABEÇALHO SUPERIOR -->
+    <!-- CABEÇALHO SUPERIOR (Sem o menu de navegação) -->
     <header>
         <div>
-            <h2 style="margin: 0; color: #1e3629;"> Sementes Vivas</h2>
-        </div>
-        <div class="header-menu">
-            <span onclick="window.showDashboard()">Início</span>
-            <span onclick="window.showAvailable()">Sementes Disponíveis</span>
-            <span onclick="window.showDonate()">Doar Semente</span>
+            <h2 style="margin: 0; color: #1e3629; cursor: pointer;" onclick="window.showDashboard()">🌱 Sementes Vivas</h2>
         </div>
         <div class="header-user">
             <span id="user-greeting">Olá, utilizador</span>
-            <button onclick="window.logout()" style="padding: 5px 10px; font-size: 14px; background: transparent; border: 1px solid #2c4c3b; color: #2c4c3b;">Sair 🚪</button>
+            <button onclick="window.logout()" style="padding: 5px 10px; font-size: 14px; background: transparent; border: 1px solid #2c4c3b; color: #2c4c3b; cursor: pointer; border-radius: 4px;">Sair 🚪</button>
         </div>
     </header>
 
@@ -165,26 +186,33 @@
             </div>
         </div>
 
-        <!-- TELA DE DOAR SEMENTE (COM FOTO) -->
+        <!-- TELA DE DOAR SEMENTE (Câmara Obrigatória) -->
         <div id="donate-view" class="view">
             <h2 style="color: #1e3629;">Cadastrar Nova Semente</h2>
-            <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                <label>Nome da Semente:</label>
+            <button onclick="window.showDashboard()" style="margin-bottom: 20px; background: none; border: none; color: #2c4c3b; cursor: pointer; text-decoration: underline; padding: 0;">⬅ Voltar ao Início</button>
+            
+            <div style="background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 600px;">
+                <label style="font-weight: bold; color: #333;">Nome da Semente:</label>
                 <input type="text" id="donate-seed-name" placeholder="Ex: Girassol, Feijão, Milho...">
                 
-                <label>Tirar Foto ou Enviar Imagem:</label>
-                <!-- O capture="environment" abre a câmara traseira no telemóvel -->
-                <input type="file" id="donate-seed-photo" accept="image/*" capture="environment">
+                <label style="font-weight: bold; color: #333; display: block; margin-top: 10px;">Fotografar Semente:</label>
                 
-                <button id="btn-donate" onclick="window.processDonation()">Salvar no Banco de Dados</button>
-                <p id="upload-loading" style="display: none; color: #d68100; margin-top: 15px;">A guardar semente e foto no Firebase... aguarde.</p>
+                <!-- O capture="environment" obriga a usar a câmara e bloqueia o upload de ficheiros no telemóvel -->
+                <div class="camera-btn-wrapper">
+                    <div class="camera-btn" id="camera-label">📷 Clique aqui para tirar a foto</div>
+                    <input type="file" id="donate-seed-photo" accept="image/*" capture="environment" onchange="document.getElementById('camera-label').innerText = '✅ Foto tirada com sucesso!'">
+                </div>
+                
+                <button id="btn-donate" class="btn-primary" onclick="window.processDonation()">Salvar no Banco de Dados</button>
+                <p id="upload-loading" style="display: none; color: #d68100; margin-top: 15px; text-align: center; font-weight: bold;">A guardar semente e foto no Firebase... aguarde.</p>
             </div>
         </div>
 
         <!-- TELA DE SEMENTES DISPONÍVEIS -->
         <div id="available-view" class="view">
             <h2 style="color: #1e3629;">Sementes Doadas pela Comunidade</h2>
-            <button onclick="window.showDashboard()" style="margin-bottom: 20px;">⬅ Voltar ao Início</button>
+            <button onclick="window.showDashboard()" style="margin-bottom: 20px; background: none; border: none; color: #2c4c3b; cursor: pointer; text-decoration: underline; padding: 0;">⬅ Voltar ao Início</button>
+            
             <div id="seeds-grid-container">
                 <!-- As sementes vão aparecer aqui dinamicamente -->
             </div>
