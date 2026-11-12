@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-// Nota: Removemos o import do Firebase Storage, pois já não será necessário com o Base64
 
 const firebaseConfig = {
   apiKey: "AIzaSyAZUFBGcCz0o0ZeSvXkdbwJXBzFFBemgt0",
@@ -51,6 +50,7 @@ window.logout = async () => {
     alert("Sessão terminada!");
 };
 
+// OCR - Leitura da imagem (Texto da IA alterado)
 document.getElementById('donate-seed-photo').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -58,7 +58,7 @@ document.getElementById('donate-seed-photo').addEventListener('change', async (e
     const lbl = document.getElementById('camera-label');
     const nameInput = document.getElementById('donate-seed-name');
     
-    lbl.innerText = '🔄 A IA está a ler a imagem... aguarde';
+    lbl.innerText = '🔄 A processar imagem... aguarde';
     lbl.className = 'camera-btn';
 
     try {
@@ -67,29 +67,58 @@ document.getElementById('donate-seed-photo').addEventListener('change', async (e
         
         if (textoExtraido) {
             nameInput.value = textoExtraido.split('\n')[0].substring(0, 30);
-            lbl.innerText = '✅ IA detetou texto! Verifique o nome abaixo.';
+            lbl.innerText = '✅ Foto processada com sucesso!';
             lbl.className = 'camera-btn success';
         } else {
-            lbl.innerText = '✅ Foto tirada! (Nenhum texto claro detetado)';
+            lbl.innerText = '✅ Foto processada com sucesso!';
             lbl.className = 'camera-btn success';
         }
     } catch (error) {
-        lbl.innerText = '✅ Foto tirada! (Falha ao ler texto)';
+        lbl.innerText = '✅ Foto adicionada!';
         lbl.className = 'camera-btn success';
     }
 });
 
-// Função para converter o ficheiro de imagem em texto Base64
-const converterParaBase64 = (file) => {
+// FUNÇÃO NOVA: Comprime a imagem antes de converter para Base64 para não estourar o limite de 1MB do Firestore
+const comprimirEConverterBase64 = (file) => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const max_size = 600; // Reduz a imagem para 600px no máximo
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > max_size) {
+                        height *= max_size / width;
+                        width = max_size;
+                    }
+                } else {
+                    if (height > max_size) {
+                        width *= max_size / height;
+                        height = max_size;
+                    }
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // Converte para JPEG com 70% de qualidade
+                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                resolve(compressedBase64);
+            };
+        };
         reader.onerror = error => reject(error);
     });
 };
 
-// SALVAR NO BANCO DE DADOS EM FORMATO TEXTO (BASE64)
 window.processDonation = async () => {
     const name = document.getElementById('donate-seed-name').value;
     const photoInput = document.getElementById('donate-seed-photo');
@@ -106,13 +135,12 @@ window.processDonation = async () => {
 
     try {
         const file = photoInput.files[0];
-        // Converte a imagem em texto
-        const fotoBase64Texto = await converterParaBase64(file);
+        // Usa a nova função que reduz o peso da foto
+        const fotoBase64Texto = await comprimirEConverterBase64(file);
 
-        // Salva diretamente no Firestore sem usar o Storage
         await addDoc(collection(db, "seeds"), {
             name: name,
-            fotoBase64: fotoBase64Texto, // Mesmo formato da imagem enviada
+            fotoBase64: fotoBase64Texto, 
             author: user ? user.email.split('@')[0] : 'Usuário Anónimo',
             timestamp: serverTimestamp()
         });
@@ -121,7 +149,7 @@ window.processDonation = async () => {
         window.showAvailable();
 
     } catch (error) {
-        alert('Erro ao guardar na base de dados.');
+        alert('Erro ao guardar na base de dados. Verifique as regras do Firestore.');
         console.error("Erro detalhado:", error);
     } finally {
         btn.disabled = false;
@@ -133,7 +161,7 @@ window.renderSeeds = async () => {
     const container = document.getElementById('seeds-grid-container');
     if(!container) return;
     
-    container.innerHTML = '<p style="color: #666; font-style: italic;">A procurar sementes na base de dados global...</p>';
+    container.innerHTML = '<p style="color: #666; font-style: italic;">A procurar sementes na base de dados...</p>';
 
     try {
         const querySnapshot = await getDocs(collection(db, "seeds"));
@@ -149,7 +177,6 @@ window.renderSeeds = async () => {
             const box = document.createElement('div');
             box.className = 'seed-box'; 
             
-            // O navegador consegue ler o texto Base64 diretamente na tag <img>
             const imageHtml = seed.fotoBase64 ? `<img src="${seed.fotoBase64}" alt="Foto de ${seed.name}">` : '';
 
             box.innerHTML = `
