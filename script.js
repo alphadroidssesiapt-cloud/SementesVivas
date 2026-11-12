@@ -24,19 +24,23 @@ window.switchView = (viewId) => {
 };
 
 window.showDashboard = () => window.switchView('dashboard-view');
+window.showLearn = () => window.switchView('learn-view');
+
 window.showDonate = () => {
-    // Limpa o formulário sempre que a tela de doação é aberta
     document.getElementById('donate-seed-name').value = '';
     document.getElementById('donate-seed-photo').value = '';
-    document.getElementById('camera-label').innerText = '📷 Clique aqui para tirar a foto';
+    const lbl = document.getElementById('camera-label');
+    lbl.innerText = '📷 Clique aqui para tirar a foto';
+    lbl.className = 'camera-btn';
     window.switchView('donate-view');
 };
-window.showLearn = () => alert("Módulo 'Aprender a Plantar' em desenvolvimento!");
+
 window.showAvailable = () => {
     window.switchView('available-view');
     window.renderSeeds(); 
 };
 
+// Autenticação
 onAuthStateChanged(auth, (user) => {
     const greeting = document.getElementById('user-greeting');
     if (user && greeting) {
@@ -47,9 +51,43 @@ onAuthStateChanged(auth, (user) => {
 window.logout = async () => {
     await signOut(auth);
     alert("Sessão terminada!");
-    // Redirecionaria para o login num ambiente completo
 };
 
+// INTEGRAÇÃO DO OCR (Tesseract.js)
+document.getElementById('donate-seed-photo').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const lbl = document.getElementById('camera-label');
+    const nameInput = document.getElementById('donate-seed-name');
+    
+    lbl.innerText = '🔄 A IA está a ler a imagem... aguarde';
+    lbl.className = 'camera-btn';
+
+    try {
+        const result = await Tesseract.recognize(file, 'por', {
+            logger: m => console.log(m) // Mostra progresso na consola (F12)
+        });
+        
+        const textoExtraido = result.data.text.trim();
+        
+        if (textoExtraido) {
+            // Pega a primeira linha identificada para sugerir o nome
+            nameInput.value = textoExtraido.split('\n')[0].substring(0, 30);
+            lbl.innerText = '✅ IA detetou texto! Verifique o nome abaixo.';
+            lbl.className = 'camera-btn success';
+        } else {
+            lbl.innerText = '✅ Foto tirada! (Nenhum texto claro detetado pela IA)';
+            lbl.className = 'camera-btn success';
+        }
+    } catch (error) {
+        console.error("Erro no OCR:", error);
+        lbl.innerText = '✅ Foto tirada! (Falha ao ler texto)';
+        lbl.className = 'camera-btn success';
+    }
+});
+
+// SALVAR NO BANCO DE DADOS
 window.processDonation = async () => {
     const name = document.getElementById('donate-seed-name').value;
     const photoInput = document.getElementById('donate-seed-photo');
@@ -69,11 +107,9 @@ window.processDonation = async () => {
         const nomeArquivo = Date.now() + '_' + file.name;
         const storageRef = ref(storage, 'sementes/' + nomeArquivo);
 
-        // Upload da foto para o Firebase Storage usando uploadBytesResumable para maior estabilidade
         const uploadTask = await uploadBytesResumable(storageRef, file);
         const photoUrl = await getDownloadURL(uploadTask.ref);
 
-        // Salvar dados no Firestore
         await addDoc(collection(db, "seeds"), {
             name: name,
             imageUrl: photoUrl,
@@ -81,11 +117,11 @@ window.processDonation = async () => {
             timestamp: serverTimestamp()
         });
 
-        alert('Semente cadastrada com sucesso!');
+        alert('Semente cadastrada com sucesso e salva no Banco de Dados!');
         window.showAvailable();
 
     } catch (error) {
-        alert('Ocorreu um erro ao guardar na base de dados. Tente novamente.');
+        alert('Erro ao guardar: Verifique se as Regras do Storage estão públicas.');
         console.error("Erro detalhado:", error);
     } finally {
         btn.disabled = false;
@@ -93,6 +129,7 @@ window.processDonation = async () => {
     }
 };
 
+// EXIBIR SEMENTES
 window.renderSeeds = async () => {
     const container = document.getElementById('seeds-grid-container');
     if(!container) return;
@@ -125,5 +162,50 @@ window.renderSeeds = async () => {
     } catch (error) {
         container.innerHTML = '<p style="color:red;">Não foi possível carregar as sementes. Verifique a ligação ao Firebase.</p>';
         console.error(error);
+    }
+};
+
+// BANCO DE DADOS LOCAL - APRENDER A PLANTAR
+const baseDeDadosPlantio = {
+    "feijão": "Plante a semente a cerca de 3 cm de profundidade num solo bem drenado. Germina em 3 a 8 dias. Mantenha o solo levemente húmido.",
+    "girassol": "Plante a 2 cm de profundidade. Necessita de exposição solar direta (pelo menos 6 horas por dia). Espaçamento ideal de 30 a 50 cm entre as plantas.",
+    "milho": "Plante a 3 a 5 cm de profundidade. É uma planta que consome muitos nutrientes, por isso, adube o solo com azoto. Gosta de sol intenso.",
+    "tomate": "As sementes são pequenas, plante superficialmente (0,5 cm). Após a planta ter 4 folhas verdadeiras, transplante para o local definitivo.",
+    "alface": "As sementes de alface precisam de luz para germinar. Pressione-as levemente contra o solo húmido sem as enterrar totalmente.",
+    "abóbora": "Plante as sementes em 'covas' (pequenos montes de terra) a 2 cm de profundidade, colocando 2 a 3 sementes por cova. Exige muito espaço para a rama crescer."
+};
+
+window.searchSeedInfo = () => {
+    const input = document.getElementById('search-seed-input').value.toLowerCase().trim();
+    const resultDiv = document.getElementById('learn-results');
+
+    if (!input) {
+        resultDiv.innerHTML = '<p style="color:red; font-weight:bold;">Por favor, digite o nome de uma semente para pesquisar.</p>';
+        return;
+    }
+
+    let plantaEncontrada = false;
+
+    // Procura na base de dados simulada
+    for (const [nomeSemente, instrucoes] of Object.entries(baseDeDadosPlantio)) {
+        if (input.includes(nomeSemente) || nomeSemente.includes(input)) {
+            resultDiv.innerHTML = `
+                <div style="background:#fff; border-left: 5px solid #2e7d32; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 4px;">
+                    <h3 style="color:#2e7d32; margin-top:0;">📖 Como plantar: ${nomeSemente.toUpperCase()}</h3>
+                    <p style="font-size: 16px; line-height: 1.6; color: #444;">${instrucoes}</p>
+                </div>
+            `;
+            plantaEncontrada = true;
+            break;
+        }
+    }
+
+    if (!plantaEncontrada) {
+        resultDiv.innerHTML = `
+            <div style="background:#fff; padding: 20px; border-radius: 4px; border: 1px solid #ddd;">
+                <p>Ainda não temos instruções detalhadas no nosso sistema para <strong>"${input}"</strong>.</p>
+                <p><strong>Sugestão:</strong> Siga as regras gerais acima (Rega, Luz e Profundidade) que funcionam para mais de 80% das sementes comuns!</p>
+            </div>
+        `;
     }
 };
