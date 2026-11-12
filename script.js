@@ -1,10 +1,8 @@
-// 1. IMPORTAR FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+import { getFirestore, collection, addDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-// 2. CHAVES DO FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyAZUFBGcCz0o0ZeSvXkdbwJXBzFFBemgt0",
   authDomain: "sementesvivas-7b21e.firebaseapp.com",
@@ -14,30 +12,31 @@ const firebaseConfig = {
   appId: "1:800525003943:web:1c05341ca393178a02ff82"
 };
 
-// 3. INICIALIZAR FIREBASE
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app); 
 
-// 4. LÓGICA DE NAVEGAÇÃO DAS TELAS
 window.switchView = (viewId) => {
-    // Procura todas as divs com a classe 'view' e esconde-as
     document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
-    // Mostra apenas a que chamámos
     const view = document.getElementById(viewId);
     if(view) view.style.display = 'block';
 };
 
 window.showDashboard = () => window.switchView('dashboard-view');
-window.showDonate = () => window.switchView('donate-view');
+window.showDonate = () => {
+    // Limpa o formulário sempre que a tela de doação é aberta
+    document.getElementById('donate-seed-name').value = '';
+    document.getElementById('donate-seed-photo').value = '';
+    document.getElementById('camera-label').innerText = '📷 Clique aqui para tirar a foto';
+    window.switchView('donate-view');
+};
 window.showLearn = () => alert("Módulo 'Aprender a Plantar' em desenvolvimento!");
 window.showAvailable = () => {
     window.switchView('available-view');
-    window.renderSeeds(); // Carrega as sementes quando abre esta tela
+    window.renderSeeds(); 
 };
 
-// 5. AUTENTICAÇÃO BÁSICA
 onAuthStateChanged(auth, (user) => {
     const greeting = document.getElementById('user-greeting');
     if (user && greeting) {
@@ -48,21 +47,20 @@ onAuthStateChanged(auth, (user) => {
 window.logout = async () => {
     await signOut(auth);
     alert("Sessão terminada!");
+    // Redirecionaria para o login num ambiente completo
 };
 
-// 6. CADASTRAR SEMENTE COM FOTO
 window.processDonation = async () => {
     const name = document.getElementById('donate-seed-name').value;
     const photoInput = document.getElementById('donate-seed-photo');
     const user = auth.currentUser;
 
     if (!name) return alert('Por favor, informe o nome da semente.');
-    if (photoInput.files.length === 0) return alert('Por favor, tire uma foto ou selecione uma imagem.');
+    if (photoInput.files.length === 0) return alert('É obrigatório tirar uma foto da semente.');
 
     const btn = document.getElementById('btn-donate');
     const loading = document.getElementById('upload-loading');
     
-    // Bloqueia o botão para não enviar 2 vezes seguidas
     btn.disabled = true;
     loading.style.display = 'block';
 
@@ -71,38 +69,35 @@ window.processDonation = async () => {
         const nomeArquivo = Date.now() + '_' + file.name;
         const storageRef = ref(storage, 'sementes/' + nomeArquivo);
 
-        // Upload da foto para o Firebase Storage
-        await uploadBytes(storageRef, file);
-        const photoUrl = await getDownloadURL(storageRef);
+        // Upload da foto para o Firebase Storage usando uploadBytesResumable para maior estabilidade
+        const uploadTask = await uploadBytesResumable(storageRef, file);
+        const photoUrl = await getDownloadURL(uploadTask.ref);
 
-        // Salvar dados de texto + link da foto no Firestore
+        // Salvar dados no Firestore
         await addDoc(collection(db, "seeds"), {
             name: name,
             imageUrl: photoUrl,
             author: user ? user.email.split('@')[0] : 'Usuário Anónimo',
-            timestamp: new Date()
+            timestamp: serverTimestamp()
         });
 
-        alert('Semente doada com sucesso!');
-        document.getElementById('donate-seed-name').value = '';
-        photoInput.value = '';
+        alert('Semente cadastrada com sucesso!');
         window.showAvailable();
 
     } catch (error) {
-        alert('Erro ao guardar: ' + error.message);
-        console.error(error);
+        alert('Ocorreu um erro ao guardar na base de dados. Tente novamente.');
+        console.error("Erro detalhado:", error);
     } finally {
         btn.disabled = false;
         loading.style.display = 'none';
     }
 };
 
-// 7. MOSTRAR SEMENTES NA TELA
 window.renderSeeds = async () => {
     const container = document.getElementById('seeds-grid-container');
     if(!container) return;
     
-    container.innerHTML = '<p>A carregar sementes da base de dados...</p>';
+    container.innerHTML = '<p style="color: #666; font-style: italic;">A procurar sementes na base de dados global...</p>';
 
     try {
         const querySnapshot = await getDocs(collection(db, "seeds"));
@@ -116,19 +111,19 @@ window.renderSeeds = async () => {
         querySnapshot.forEach((doc) => {
             const seed = doc.data();
             const box = document.createElement('div');
-            box.className = 'seed-box'; // Usa o estilo CSS que colocámos no HTML
+            box.className = 'seed-box'; 
             
             const imageHtml = seed.imageUrl ? `<img src="${seed.imageUrl}" alt="Foto de ${seed.name}">` : '';
 
             box.innerHTML = `
                 ${imageHtml}
                 <h3 style="margin-top: 10px; color: #2c4c3b;">${seed.name}</h3>
-                <p style="font-size: 14px; color: #666;">Doador: ${seed.author}</p>
+                <p style="font-size: 14px; color: #666;"><strong>Doador:</strong> ${seed.author}</p>
             `;
             container.appendChild(box);
         });
     } catch (error) {
-        container.innerHTML = '<p style="color:red;">Erro ao carregar sementes.</p>';
+        container.innerHTML = '<p style="color:red;">Não foi possível carregar as sementes. Verifique a ligação ao Firebase.</p>';
         console.error(error);
     }
 };
