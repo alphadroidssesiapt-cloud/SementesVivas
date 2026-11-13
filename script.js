@@ -272,4 +272,60 @@ window.excluirSemente = async (id) => {
 };
 
 // PESQUISA DE PLANTIO
-window.searchSeedInfo = () => { /* Mantém-se o código de pesquisa de sementes sem alteração */ };
+// PESQUISA DE PLANTIO CONECTADA AO GOOGLE (GEMINI API)
+window.searchSeedInfo = async () => {
+    const queryInput = document.getElementById('search-seed-input').value.trim();
+    const resultsContainer = document.getElementById('learn-results');
+
+    if (!queryInput) {
+        resultsContainer.innerHTML = '<p style="color: #d32f2f;">Por favor, digite o nome de uma semente para pesquisar.</p>';
+        return;
+    }
+
+    resultsContainer.innerHTML = `
+        <div style="text-align: center; padding: 20px; color: #2c4c3b;">
+            <p> A consultar a base de conhecimento para <strong>"${queryInput}"</strong>...</p>
+        </div>
+    `;
+
+    try {
+        // Substitua pela sua chave de API do Google Gemini real
+        const apiKey = "SUA_CHAVE_DE_API_DO_GEMINI_AQUI"; 
+        
+        const prompt = `Crie um guia prático e curto de plantio para a planta/semente: "${queryInput}". 
+        Responda em formato HTML simples (usando tags <strong>, <br>, etc.) contendo:
+        - Nome comum e científico
+        - Luz necessária
+        - Rega ideal
+        - Solo recomendado
+        - Profundidade de plantio
+        - Uma dica extra de cultivo.
+        Mantenha a resposta limpa e sem blocos de markdown de código estranhos, apenas o HTML direto.`;
+
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }]
+            })
+        });
+
+        const data = await response.json();
+        const aiResponseText = data.candidates[0].content.parts[0].text;
+
+        resultsContainer.innerHTML = `
+            <div style="background: #e8f4ea; border-left: 5px solid #2c4c3b; padding: 20px; border-radius: 6px; color: #1e3629;">
+                ${aiResponseText}
+            </div>
+        `;
+
+    } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+        resultsContainer.innerHTML = `
+            <div style="background: #fff3e0; border-left: 5px solid #f57c00; padding: 20px; border-radius: 6px; color: #e65100;">
+                <h3 style="margin-top: 0;">Erro na pesquisa</h3>
+                <p>Não foi possível ligar ao serviço neste momento. Verifique a sua chave de API ou tente novamente mais tarde.</p>
+            </div>
+        `;
+    }
+};
