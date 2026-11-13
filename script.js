@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc, serverTimestamp, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAZUFBGcCz0o0ZeSvXkdbwJXBzFFBemgt0",
@@ -14,6 +14,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+let currentCommunity = "Aparecida do Taboado";
+let userProfileCache = null;
 
 // CONTROLO DE ABAS / VISTAS
 window.switchView = (viewId) => {
@@ -34,7 +37,7 @@ window.showDonate = () => {
     window.switchView('donate-view');
 };
 window.showAvailable = () => { window.switchView('available-view'); window.renderSeeds(); };
-window.showProfile = () => { window.switchView('profile-view'); window.renderMyProfile(); };
+window.showProfile = () => { window.switchView('profile-view'); window.loadProfileData(); window.renderMyProfile(); };
 window.showChat = () => { window.switchView('chat-view'); window.renderChat(); };
 
 // AUTENTICAÇÃO
@@ -56,7 +59,14 @@ window.register = async () => {
     const pass = document.getElementById('auth-password').value;
     const errorMsg = document.getElementById('auth-error');
     try {
-        await createUserWithEmailAndPassword(auth, email, pass);
+        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        // Criar perfil padrão no Firestore
+        await setDoc(doc(db, "users", cred.user.uid), {
+            displayName: email.split('@')[0],
+            community: "Aparecida do Taboado",
+            avatarBase64: "",
+            email: email
+        });
         errorMsg.style.display = 'none';
         alert("Conta criada com sucesso!");
     } catch (error) {
@@ -67,21 +77,33 @@ window.register = async () => {
 
 window.logout = async () => { await signOut(auth); };
 
-onAuthStateChanged(auth, (user) => {
+// CONTROLO DE SESSÃO E VISIBILIDADE DA TELA DE LOGIN
+onAuthStateChanged(auth, async (user) => {
     const header = document.getElementById('main-header');
     const greeting = document.getElementById('user-greeting');
+    
     if (user) {
+        // Carrega dados do perfil do utilizador
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+            userProfileCache = userDoc.data();
+            currentCommunity = userProfileCache.community || "Aparecida do Taboado";
+            greeting.innerText = `Olá, ${userProfileCache.displayName || user.email.split('@')[0]}`;
+        } else {
+            greeting.innerText = `Olá, ${user.email.split('@')[0]}`;
+        }
+        
         header.style.display = 'flex';
-        greeting.innerText = `Olá, ${user.email.split('@')[0]}`;
         window.showDashboard();
     } else {
         header.style.display = 'none';
+        userProfileCache = null;
         window.switchView('login-view');
     }
 });
 
 // COMPRESSÃO DE IMAGEM
-const comprimirEConverterBase64 = (file) => {
+const comprimirEConverterBase64 = (file, max_size = 600, quality = 0.7) => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -90,7 +112,6 @@ const comprimirEConverterBase64 = (file) => {
             img.src = event.target.result;
             img.onload = () => {
                 const canvas = document.createElement('canvas');
-                const max_size = 600;
                 let width = img.width, height = img.height;
                 if (width > height) {
                     if (width > max_size) { height *= max_size / width; width = max_size; }
@@ -100,14 +121,69 @@ const comprimirEConverterBase64 = (file) => {
                 canvas.width = width; canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
-                resolve(canvas.toDataURL('image/jpeg', 0.7));
+                resolve(canvas.toDataURL('image/jpeg', quality));
             };
         };
         reader.onerror = error => reject(error);
     });
 };
 
-// OCR - LER FOTO COM TESSERACT
+// GESTÃO DE PERFIL
+window.loadProfileData = async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    if (userDoc.exists()) {
+        const data = userDoc.data();
+        document.getElementById('profile-name').value = data.displayName || '';
+        document.getElementById('profile-community').value = data.community || 'Aparecida do Taboado';
+        
+        const preview = document.getElementById('profile-avatar-preview');
+        const placeholder = document.getElementById('profile-avatar-placeholder');
+        if (data.avatarBase64) {
+            preview.src = data.avatarBase64;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+        } else {
+            preview.style.display = 'none';
+            placeholder.style.display = 'flex';
+        }
+    }
+};
+
+window.saveProfile = async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const name = document.getElementById('profile-name').value.trim();
+    const community = document.getElementById('profile-community').value;
+    const photoInput = document.getElementById('profile-photo-input');
+
+    let avatarBase64 = userProfileCache?.avatarBase64 || "";
+
+    if (photoInput.files.length > 0) {
+        avatarBase64 = await comprimirEConverterBase64(photoInput.files[0], 200, 0.6); // Avatar menor
+    }
+
+    try {
+        await setDoc(doc(db, "users", user.uid), {
+            displayName: name || user.email.split('@')[0],
+            community: community,
+            avatarBase64: avatarBase64,
+            email: user.email
+        }, { merge: true });
+
+        userProfileCache = { displayName: name, community, avatarBase64, email: user.email };
+        currentCommunity = community;
+        document.getElementById('user-greeting').innerText = `Olá, ${name || user.email.split('@')[0]}`;
+        alert("Perfil atualizado com sucesso!");
+        window.loadProfileData();
+    } catch (e) {
+        alert("Erro ao atualizar o perfil.");
+    }
+};
+
+// OCR - LER FOTO DA SEMENTE COM TESSERACT
 document.getElementById('donate-seed-photo').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -126,7 +202,7 @@ document.getElementById('donate-seed-photo').addEventListener('change', async (e
     }
 });
 
-// SALVAR SEMENTE (DOAÇÃO OU TROCA)
+// SALVAR SEMENTE
 window.processDonation = async () => {
     const name = document.getElementById('donate-seed-name').value.trim();
     const type = document.getElementById('donate-seed-type').value;
@@ -140,14 +216,15 @@ window.processDonation = async () => {
     btn.disabled = true; loading.style.display = 'block';
 
     try {
-        const fotoBase64Texto = await comprimirEConverterBase64(photoInput.files[0]);
+        const fotoBase64Texto = await comprimirEConverterBase64(photoInput.files[0], 600, 0.7);
         await addDoc(collection(db, "seeds"), {
             name: name,
-            type: type, 
+            type: type,
             fotoBase64: fotoBase64Texto,
-            author: user.email.split('@')[0],
+            author: userProfileCache?.displayName || user.email.split('@')[0],
             authorEmail: user.email,
             userId: user.uid,
+            community: userProfileCache?.community || "Aparecida do Taboado",
             status: 'disponível',
             timestamp: serverTimestamp()
         });
@@ -194,6 +271,7 @@ window.renderSeeds = async () => {
                     <span class="badge-tipo ${badgeClass}">${badgeText}</span>
                     <h4 style="color: var(--primary); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
                     <p style="font-size: 13px; color: var(--text-muted);">Doador: <strong>${seed.author}</strong></p>
+                    <p style="font-size: 12px; color: var(--text-muted);">📍 ${seed.community || 'Geral'}</p>
                 </div>
                 <div>${actionHtml}</div>
             `;
@@ -204,14 +282,13 @@ window.renderSeeds = async () => {
     }
 };
 
-// RESERVAR SEMENTE E NOTIFICAR VIA E-MAIL
 window.reservarSemente = async (id, authorEmail, seedName) => {
     const user = auth.currentUser;
     if(confirm(`Deseja reservar a semente "${seedName}"? Isto abrirá o seu leitor de e-mail para notificar o doador (${authorEmail}).`)) {
         try {
             await updateDoc(doc(db, "seeds", id), {
                 status: 'reservada',
-                reservadoPor: user.email.split('@')[0]
+                reservadoPor: userProfileCache?.displayName || user.email.split('@')[0]
             });
             
             const subject = encodeURIComponent(`Reserva da semente: ${seedName} - Sementes Vivas`);
@@ -225,30 +302,56 @@ window.reservarSemente = async (id, authorEmail, seedName) => {
     }
 };
 
-// CHAT COMUNITÁRIO
+// CHAT COMUNITÁRIO SEPARADO POR COMUNIDADE
+window.changeChatCommunity = () => {
+    currentCommunity = document.getElementById('chat-community-select').value;
+    window.renderChat();
+};
+
 window.renderChat = async () => {
     const container = document.getElementById('chat-messages');
+    const select = document.getElementById('chat-community-select');
+    if (select) select.value = currentCommunity;
+
     container.innerHTML = '<p style="color: var(--text-muted); text-align: center;">A carregar mensagens...</p>';
     try {
-        const q = query(collection(db, "chat"), orderBy("timestamp", "asc"));
-        const querySnapshot = await getDocs(q);
+        const querySnapshot = await getDocs(collection(db, "chat"));
         container.innerHTML = '';
         
-        if (querySnapshot.empty) {
-            container.innerHTML = '<p style="color: var(--text-muted); text-align: center;">Ainda não há mensagens no chat. Seja o primeiro a falar!</p>';
+        let messages = [];
+        querySnapshot.forEach(docSnap => {
+            const data = docSnap.data();
+            if (data.community === currentCommunity) {
+                messages.push(data);
+            }
+        });
+
+        // Ordenar por timestamp localmente para evitar erros de índice composto
+        messages.sort((a, b) => {
+            if (!a.timestamp || !b.timestamp) return 0;
+            return a.timestamp.toMillis() - b.timestamp.toMillis();
+        });
+
+        if (messages.length === 0) {
+            container.innerHTML = `<p style="color: var(--text-muted); text-align: center;">Ainda não há mensagens na comunidade de ${currentCommunity}. Seja o primeiro a falar!</p>`;
             return;
         }
 
         const user = auth.currentUser;
-        querySnapshot.forEach((docSnap) => {
-            const msg = docSnap.data();
+        messages.forEach((msg) => {
             const isMine = user && msg.userId === user.uid;
+            const avatarHtml = msg.avatar 
+                ? `<img src="${msg.avatar}" class="chat-avatar">` 
+                : `<div class="chat-avatar" style="background:#e8f4ea; display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--secondary);">🌱</div>`;
 
             const div = document.createElement('div');
             div.className = `chat-msg ${isMine ? 'mine' : ''}`;
             div.innerHTML = `
-                <div class="chat-msg-author">${msg.author}</div>
-                <div class="chat-msg-text">${msg.text}</div>
+                ${avatarHtml}
+                <div class="chat-msg-content">
+                    <div class="chat-msg-author">${msg.author}</div>
+                    <div class="chat-msg-text">${msg.text}</div>
+                </div>
             `;
             container.appendChild(div);
         });
@@ -269,8 +372,10 @@ window.enviarMensagemChat = async () => {
     try {
         await addDoc(collection(db, "chat"), {
             text: text,
-            author: user.email.split('@')[0],
+            author: userProfileCache?.displayName || user.email.split('@')[0],
             userId: user.uid,
+            avatar: userProfileCache?.avatarBase64 || "",
+            community: currentCommunity,
             timestamp: serverTimestamp()
         });
         input.value = '';
@@ -286,11 +391,11 @@ window.checkChatEnter = (e) => {
     }
 };
 
-// MEU PERFIL
+// MEU PERFIL E SEUS ANÚNCIOS
 window.renderMyProfile = async () => {
     const container = document.getElementById('my-seeds-container');
     const user = auth.currentUser;
-    container.innerHTML = '<p style="color: var(--text-muted);">A carregar o seu perfil...</p>';
+    container.innerHTML = '<p style="color: var(--text-muted);">A carregar as suas sementes...</p>';
     
     try {
         const querySnapshot = await getDocs(collection(db, "seeds"));
