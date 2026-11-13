@@ -11,28 +11,44 @@
 </head>
 <body>
 
-    <!-- CABEÇALHO / ABAS DE NAVEGAÇÃO -->
+    <!-- CABEÇALHO COM SISTEMA DE ABAS -->
     <header id="main-header" style="display: none;">
-        <div class="nav-brand" onclick="window.showDashboard()">
-            <span class="material-icons" style="color: var(--secondary);">spa</span> Sementes Vivas
+        <div class="header-top">
+            <div class="nav-brand" onclick="window.showDashboard()">
+                <span class="material-icons" style="color: var(--secondary);">spa</span> Sementes Vivas
+            </div>
+            <div class="nav-user">
+                <span id="user-greeting" style="font-size: 14px; font-weight: 500;">Olá</span>
+                <button onclick="window.logout()" class="btn-logout">Sair 🚪</button>
+            </div>
         </div>
-        <div class="nav-links">
-            <a href="#" onclick="window.showDashboard()">Início</a>
-            <a href="#" onclick="window.showAvailable()">Explorar</a>
-            <a href="#" onclick="window.showDonate()">Cadastrar</a>
-            <a href="#" onclick="window.showLearn()">Aprender</a>
-            <a href="#" onclick="window.showChat()">💬 Chat</a>
-        </div>
-        <div class="nav-user">
-            <span id="user-greeting" style="font-size: 14px; font-weight: 500;">Olá</span>
-            <button onclick="window.showProfile()" class="btn-profile-nav">👤 Perfil</button>
-            <button onclick="window.logout()" class="btn-logout">Sair 🚪</button>
-        </div>
+
+        <!-- BARRA DE ABAS -->
+        <nav class="tabs-bar">
+            <button class="tab-btn active" id="tab-dashboard-view" onclick="window.showDashboard()">
+                <span class="material-icons">home</span> Início
+            </button>
+            <button class="tab-btn" id="tab-available-view" onclick="window.showAvailable()">
+                <span class="material-icons">inventory_2</span> Explorar Sementes
+            </button>
+            <button class="tab-btn" id="tab-donate-view" onclick="window.showDonate()">
+                <span class="material-icons">add_circle_outline</span> Cadastrar Semente
+            </button>
+            <button class="tab-btn" id="tab-chat-view" onclick="window.showChat()">
+                <span class="material-icons">forum</span> Chat Comunidade
+            </button>
+            <button class="tab-btn" id="tab-learn-view" onclick="window.showLearn()">
+                <span class="material-icons">menu_book</span> Aprender a Plantar
+            </button>
+            <button class="tab-btn" id="tab-profile-view" onclick="window.showProfile()">
+                <span class="material-icons">person</span> Meu Perfil
+            </button>
+        </nav>
     </header>
 
     <div class="app-content">
         
-        <!-- TELA DE LOGIN / CADASTRO -->
+        <!-- TELA DE LOGIN / CADASTRO (Isolada) -->
         <div id="login-view" class="view active full-center">
             <div class="auth-card">
                 <div class="logo-header">
@@ -57,7 +73,7 @@
             </div>
         </div>
 
-        <!-- PAINEL PRINCIPAL (INÍCIO) -->
+        <!-- ABA 1: PAINEL PRINCIPAL (INÍCIO) -->
         <div id="dashboard-view" class="view">
             <div class="welcome-banner">
                 <h2>O que deseja fazer hoje? 🌱</h2>
@@ -86,9 +102,15 @@
             </div>
         </div>
 
-        <!-- CADASTRAR SEMENTE -->
+        <!-- ABA 2: SEMENTES DISPONÍVEIS -->
+        <div id="available-view" class="view">
+            <h2 style="color: var(--primary); margin-bottom: 5px;">Sementes da Comunidade</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">Encontre sementes para iniciar o seu cultivo.</p>
+            <div id="seeds-grid-container" class="seeds-grid"></div>
+        </div>
+
+        <!-- ABA 3: CADASTRAR SEMENTE -->
         <div id="donate-view" class="view">
-            <button onclick="window.showDashboard()" class="btn-back">⬅ Voltar ao Painel</button>
             <div class="content-card">
                 <h2 style="color: var(--primary); margin-bottom: 20px;">Cadastrar Nova Semente</h2>
                 
@@ -120,17 +142,8 @@
             </div>
         </div>
 
-        <!-- SEMENTES DISPONÍVEIS -->
-        <div id="available-view" class="view">
-            <button onclick="window.showDashboard()" class="btn-back">⬅ Voltar ao Painel</button>
-            <h2 style="color: var(--primary); margin-bottom: 5px;">Sementes da Comunidade</h2>
-            <p style="color: var(--text-muted); margin-bottom: 20px;">Encontre sementes para iniciar o seu cultivo.</p>
-            <div id="seeds-grid-container" class="seeds-grid"></div>
-        </div>
-
-        <!-- CHAT DA COMUNIDADE -->
+        <!-- ABA 4: CHAT DA COMUNIDADE -->
         <div id="chat-view" class="view">
-            <button onclick="window.showDashboard()" class="btn-back">⬅ Voltar ao Painel</button>
             <div class="chat-container">
                 <div class="chat-header">
                     <h2>💬 Chat Comunitário</h2>
@@ -154,11 +167,29 @@
             </div>
         </div>
 
-        <!-- MEU PERFIL -->
+        <!-- ABA 5: APRENDER A PLANTAR -->
+        <div id="learn-view" class="view">
+            <div class="content-card" style="max-width: 800px;">
+                <h2 style="color: var(--primary); margin-bottom: 15px;">Guia de Cultivo Inteligente</h2>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Pesquise qualquer planta ou semente para ver dicas e informações detalhadas.</p>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="search-seed-input" placeholder="Ex: Girassol, Alface, Tomate..." style="margin: 0; flex: 1;">
+                    <button class="btn-primary" onclick="window.searchSeedInfo()" style="width: auto; padding: 0 25px;">Pesquisar</button>
+                </div>
+                <div id="learn-results" style="margin-top: 25px;"></div>
+            </div>
+        </div>
+
+        <!-- ABA 6: MEU PERFIL (Com sub-abas internas) -->
         <div id="profile-view" class="view">
-            <button onclick="window.showDashboard()" class="btn-back">⬅ Voltar ao Painel</button>
-            <div class="content-card" style="margin-bottom: 30px;">
-                <h2 style="color: var(--primary); margin-bottom: 15px;">👤 O Meu Perfil</h2>
+            <div class="sub-tabs-bar">
+                <button class="sub-tab-btn active" id="subtab-edit" onclick="window.switchProfileSubTab('edit')">⚙️ Editar Dados & Avatar</button>
+                <button class="sub-tab-btn" id="subtab-seeds" onclick="window.switchProfileSubTab('seeds')">🌱 Minhas Sementes</button>
+            </div>
+
+            <!-- Sub-aba 1: Dados do Perfil -->
+            <div id="profile-sub-edit" class="content-card">
+                <h2 style="color: var(--primary); margin-bottom: 15px;">👤 Personalizar Perfil</h2>
                 
                 <div style="text-align: center; margin-bottom: 20px;">
                     <img id="profile-avatar-preview" src="" alt="Avatar" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--secondary); display: none; margin: 0 auto 10px auto;">
@@ -186,21 +217,10 @@
                 <button class="btn-primary" onclick="window.saveProfile()">Guardar Alterações de Perfil</button>
             </div>
 
-            <h3 style="color: var(--primary); margin-bottom: 15px;">Minhas Sementes Cadastradas</h3>
-            <div id="my-seeds-container" class="seeds-grid"></div>
-        </div>
-
-        <!-- APRENDER A PLANTAR -->
-        <div id="learn-view" class="view">
-            <button onclick="window.showDashboard()" class="btn-back">⬅ Voltar ao Painel</button>
-            <div class="content-card" style="max-width: 800px;">
-                <h2 style="color: var(--primary); margin-bottom: 15px;">Guia de Cultivo Inteligente</h2>
-                <p style="color: var(--text-muted); margin-bottom: 20px;">Pesquise qualquer planta ou semente para ver dicas e informações detalhadas.</p>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="search-seed-input" placeholder="Ex: Girassol, Alface, Tomate..." style="margin: 0; flex: 1;">
-                    <button class="btn-primary" onclick="window.searchSeedInfo()" style="width: auto; padding: 0 25px;">Pesquisar</button>
-                </div>
-                <div id="learn-results" style="margin-top: 25px;"></div>
+            <!-- Sub-aba 2: Sementes do Utilizador -->
+            <div id="profile-sub-seeds" style="display: none;">
+                <h3 style="color: var(--primary); margin-bottom: 15px;">Minhas Sementes Cadastradas</h3>
+                <div id="my-seeds-container" class="seeds-grid"></div>
             </div>
         </div>
 
