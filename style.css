@@ -1,13 +1,13 @@
 :root {
-    --primary: #132e22;       /* Verde Floresta Profundo */
-    --secondary: #2d6a4f;     /* Verde Folha Vivo */
-    --accent: #52b788;        /* Verde Broto */
-    --earth: #bc6c25;         /* Tom Terroso / Argila */
-    --amber: #dda15e;         /* Tom Semente / Areia Quente */
-    --bg-light: #f7f9f5;      /* Fundo Creme Natural */
+    --primary: #132e22;
+    --secondary: #2d6a4f;
+    --accent: #52b788;
+    --earth: #bc6c25;
+    --amber: #dda15e;
+    --bg-light: #f7f9f5;
     --card-bg: #ffffff;
-    --text-main: #2b3a2f;     /* Texto principal suave */
-    --text-muted: #657466;    /* Texto secundário */
+    --text-main: #2b3a2f;
+    --text-muted: #657466;
     --border-color: #e2e8df;
 }
 
@@ -263,6 +263,59 @@ header {
     box-shadow: 0 6px 20px rgba(19, 46, 34, 0.04);
 }
 
+/* Layout de Chats Privados (Meus Chats) */
+.private-chat-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    padding: 25px;
+    box-shadow: 0 6px 20px rgba(19, 46, 34, 0.04);
+    min-height: 500px;
+}
+
+@media (max-width: 768px) {
+    .private-chat-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.chat-list-panel {
+    border-right: 1px solid var(--border-color);
+    padding-right: 15px;
+    overflow-y: auto;
+    max-height: 480px;
+}
+
+.chat-thread-item {
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 10px;
+    cursor: pointer;
+    background: #fafcf9;
+    transition: all 0.2s;
+}
+
+.chat-thread-item:hover {
+    border-color: var(--secondary);
+    background: #edf6ed;
+}
+
+.chat-thread-item.active {
+    border-color: var(--primary);
+    background: #edf6ed;
+    border-left: 4px solid var(--primary);
+}
+
+.chat-room-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 /* Chat Comunitário */
 .chat-container {
     background: var(--card-bg);
@@ -273,7 +326,7 @@ header {
     padding: 30px;
     box-shadow: 0 6px 20px rgba(19, 46, 34, 0.04);
 }
-.chat-header { margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+.chat-header { margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; }
 .chat-messages-box {
     height: 400px;
     overflow-y: auto;
@@ -281,7 +334,7 @@ header {
     border-radius: 12px;
     padding: 20px;
     background: #fbfcf9;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     display: flex;
     flex-direction: column;
     gap: 14px;
@@ -304,8 +357,8 @@ header {
     flex-direction: row-reverse;
 }
 .chat-avatar {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--secondary);
