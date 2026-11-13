@@ -22,7 +22,7 @@ body, html {
     color: var(--text-main);
 }
 
-/* Cabeçalho Superior e Barra de Abas */
+/* Cabeçalho e Barra de Abas */
 header {
     background: var(--card-bg);
     border-bottom: 1px solid var(--border-color);
@@ -30,6 +30,7 @@ header {
     position: sticky;
     top: 0;
     z-index: 100;
+    display: flex;
     flex-direction: column;
 }
 
@@ -70,7 +71,7 @@ header {
 }
 .btn-logout:hover { background: #ffebee; color: #d32f2f; border-color: #ffcdd2; }
 
-/* Estilo das Abas Principais */
+/* Barra de Abas Principais */
 .tabs-bar {
     display: flex;
     gap: 5px;
@@ -148,7 +149,7 @@ header {
 .view { display: none; }
 .view.active { display: block; }
 
-/* Tela de login isolada sem !important conflituoso */
+/* Tela de login isolada */
 .full-center {
     display: flex;
     justify-content: center;
@@ -235,18 +236,4 @@ header {
     border-radius: 12px;
     cursor: pointer;
     border: 1px solid var(--border-color);
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-}
-.action-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-    border-color: var(--secondary);
-}
-.action-card .material-icons { font-size: 38px; color: var(--secondary); margin-bottom: 15px; display: block; }
-.action-card h3 { color: var(--primary); font-size: 18px; }
-
-/* Cartão de Conteúdo Geral */
-.content-card {
-    background: var(--card-bg);
-    padding
+    transition: all 0
