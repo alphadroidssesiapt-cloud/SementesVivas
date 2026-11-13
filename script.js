@@ -143,7 +143,7 @@ window.processDonation = async () => {
         const fotoBase64Texto = await comprimirEConverterBase64(photoInput.files[0]);
         await addDoc(collection(db, "seeds"), {
             name: name,
-            type: type, // 'Doação' ou 'Troca'
+            type: type, 
             fotoBase64: fotoBase64Texto,
             author: user.email.split('@')[0],
             authorEmail: user.email,
@@ -374,9 +374,6 @@ window.searchSeedInfo = async () => {
                 <h3 style="margin-top: 0;">Nenhum resultado encontrado</h3>
                 <p style="font-size: 14px;">Não encontrámos um artigo exato para "${queryInput}". Tente pesquisar pelo nome comum (ex: "Tomateiro", "Girassol").</p>
             </div>
-        `;
-    }
-};
         `;
     }
 };
