@@ -272,7 +272,7 @@ window.excluirSemente = async (id) => {
 };
 
 // PESQUISA DE PLANTIO
-// PESQUISA DE PLANTIO DINÂMICA VIA WIKIPÉDIA (Sem chave de API)
+// PESQUISA DE PLANTIO VIA WIKIPÉDIA (Sem chave de API)
 window.searchSeedInfo = async () => {
     const queryInput = document.getElementById('search-seed-input').value.trim();
     const resultsContainer = document.getElementById('learn-results');
@@ -284,12 +284,11 @@ window.searchSeedInfo = async () => {
 
     resultsContainer.innerHTML = `
         <div style="text-align: center; padding: 20px; color: #2c4c3b;">
-            <p> A pesquisar informações para <strong>"${queryInput}"</strong>...</p>
+            <p>🌱 A pesquisar informações para <strong>"${queryInput}"</strong>...</p>
         </div>
     `;
 
     try {
-        // Faz a busca na API pública da Wikipédia em português
         const response = await fetch(`https://pt.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(queryInput)}`);
         
         if (!response.ok) {
