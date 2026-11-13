@@ -17,6 +17,7 @@ const db = getFirestore(app);
 
 let currentCommunity = "Aparecida do Taboado";
 let userProfileCache = null;
+let activePrivateChatId = null;
 
 // SISTEMA DE ABAS PRINCIPAIS
 window.switchView = (viewId) => {
@@ -53,6 +54,10 @@ window.showProfile = () => {
     window.switchProfileSubTab('edit');
 };
 window.showChat = () => { window.switchView('chat-view'); window.renderChat(); };
+window.showPrivateChats = (chatIdToOpen = null) => {
+    window.switchView('private-chats-view');
+    window.loadPrivateChatList(chatIdToOpen);
+};
 
 // SUB-ABAS DENTRO DO PERFIL
 window.switchProfileSubTab = (subTab) => {
@@ -106,7 +111,7 @@ window.register = async () => {
 
 window.logout = async () => { await signOut(auth); };
 
-// CONTROLO DE SESSÃO COM REMOÇÃO DIRETA DO LOGIN
+// CONTROLO DE SESSÃO
 onAuthStateChanged(auth, async (user) => {
     const header = document.getElementById('main-header');
     const greeting = document.getElementById('user-greeting');
@@ -291,7 +296,7 @@ window.renderSeeds = async () => {
             if (seed.status === 'reservada') {
                 actionHtml = `<p style="color: #bc6c25; font-size: 13px; font-weight: 600; text-align: center; margin-top: 10px;">Reservada por ${seed.reservadoPor}</p>`;
             } else if (user && seed.userId !== user.uid) {
-                actionHtml = `<button class="btn-reserve" onclick="window.reservarSemente('${seedId}', '${seed.authorEmail}', '${seed.name}')">Reservar / Notificar Doador</button>`;
+                actionHtml = `<button class="btn-reserve" onclick="window.reservarSemente('${seedId}', '${seed.userId}', '${seed.author}', '${seed.name}')">Reservar e Abrir Chat</button>`;
             } else if (user && seed.userId === user.uid) {
                 actionHtml = `<p style="color: var(--text-muted); font-size: 13px; text-align: center; margin-top: 10px;">Esta semente é sua.</p>`;
             }
@@ -315,31 +320,195 @@ window.renderSeeds = async () => {
     }
 };
 
-// RESERVAR SEMENTE E NOTIFICAR VIA E-MAIL (Com fallback para cópia do e-mail)
-window.reservarSemente = async (id, authorEmail, seedName) => {
+// RESERVAR SEMENTE E CRIAR CHAT PRIVADO COM O DONO
+window.reservarSemente = async (seedId, ownerId, ownerName, seedName) => {
     const user = auth.currentUser;
-    if(confirm(`Deseja reservar a semente "${seedName}"?`)) {
+    if (!user) return;
+    
+    const myName = userProfileCache?.displayName || user.email.split('@')[0];
+
+    if(confirm(`Deseja reservar a semente "${seedName}" e iniciar um chat com ${ownerName}?`)) {
         try {
-            await updateDoc(doc(db, "seeds", id), {
+            // Atualiza o status da semente
+            await updateDoc(doc(db, "seeds", seedId), {
                 status: 'reservada',
-                reservadoPor: userProfileCache?.displayName || user.email.split('@')[0]
+                reservadoPor: myName
             });
             
-            const subject = encodeURIComponent(`Reserva da semente: ${seedName} - Sementes Vivas`);
-            const body = encodeURIComponent(`Olá!\n\nO utilizador ${user.email || userProfileCache?.displayName} acabou de reservar a sua semente "${seedName}" na plataforma Sementes Vivas.\n\nPor favor, entre em contacto para combinar a entrega ou troca.`);
-            
-            window.location.href = `mailto:${authorEmail}?subject=${subject}&body=${body}`;
+            // Cria a sala de conversa privada entre o interessado e o dono
+            const chatRoomRef = await addDoc(collection(db, "private_chats"), {
+                seedId: seedId,
+                seedName: seedName,
+                ownerId: ownerId,
+                ownerName: ownerName,
+                requesterId: user.uid,
+                requesterName: myName,
+                participants: [ownerId, user.uid],
+                createdAt: serverTimestamp()
+            });
 
-            alert(`Semente reservada com sucesso!\n\nE-mail do doador para contacto direto:\n${authorEmail}\n\n(Copie este e-mail caso a sua aplicação de correio não tenha aberto automaticamente).`);
+            // Adiciona uma mensagem inicial automática na sala
+            await addDoc(collection(db, "private_chats", chatRoomRef.id, "messages"), {
+                text: `Olá ${ownerName}! Acabei de reservar a semente "${seedName}". Como podemos combinar a entrega ou troca?`,
+                senderId: user.uid,
+                senderName: myName,
+                avatar: userProfileCache?.avatarBase64 || "",
+                timestamp: serverTimestamp()
+            });
 
-            window.renderSeeds();
+            // Redireciona diretamente para a aba Meus Chats abrindo essa conversa
+            window.showPrivateChats(chatRoomRef.id);
         } catch(e) {
-            alert("Erro ao efetuar a reserva.");
+            alert("Erro ao efetuar a reserva e abrir o chat.");
         }
     }
 };
 
-// CHAT COMUNITÁRIO
+// GESTÃO DA PÁGINA "MEUS CHATS" (Conversas Privadas)
+window.loadPrivateChatList = async (chatIdToOpen = null) => {
+    const listContainer = document.getElementById('private-chat-list');
+    const user = auth.currentUser;
+    if (!user) return;
+
+    listContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 13px;">A carregar conversas...</p>';
+
+    try {
+        const querySnapshot = await getDocs(collection(db, "private_chats"));
+        listContainer.innerHTML = '';
+        let threads = [];
+
+        querySnapshot.forEach(docSnap => {
+            const data = docSnap.data();
+            if (data.participants && data.participants.includes(user.uid)) {
+                threads.push({ id: docSnap.id, ...data });
+            }
+        });
+
+        threads.sort((a, b) => {
+            if (!a.createdAt || !b.createdAt) return 0;
+            return b.createdAt.toMillis() - a.createdAt.toMillis();
+        });
+
+        if (threads.length === 0) {
+            listContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 13px;">Ainda não tem nenhuma conversa ativa.</p>';
+            return;
+        }
+
+        threads.forEach(thread => {
+            const isOwner = thread.ownerId === user.uid;
+            const otherPersonName = isOwner ? thread.requesterName : thread.ownerName;
+            const roleLabel = isOwner ? 'Interessado na sua semente' : 'Doador da semente';
+
+            const item = document.createElement('div');
+            item.className = `chat-thread-item ${activePrivateChatId === thread.id ? 'active' : ''}`;
+            item.id = `thread-item-${thread.id}`;
+            item.onclick = () => window.openPrivateChatRoom(thread.id, thread.seedName, otherPersonName);
+            
+            item.innerHTML = `
+                <div style="font-weight: 700; color: var(--primary); font-size: 14px; margin-bottom: 3px;">${thread.seedName}</div>
+                <div style="font-size: 12px; color: var(--secondary); font-weight: 600;">${otherPersonName}</div>
+                <div style="font-size: 11px; color: var(--text-muted);">${roleLabel}</div>
+            `;
+            listContainer.appendChild(item);
+        });
+
+        if (chatIdToOpen) {
+            const targetThread = threads.find(t => t.id === chatIdToOpen);
+            if (targetThread) {
+                const otherName = targetThread.ownerId === user.uid ? targetThread.requesterName : targetThread.ownerName;
+                window.openPrivateChatRoom(targetThread.id, targetThread.seedName, otherName);
+            }
+        }
+    } catch (error) {
+        listContainer.innerHTML = '<p style="color: red; font-size: 13px;">Erro ao carregar conversas.</p>';
+    }
+};
+
+window.openPrivateChatRoom = async (chatId, seedName, otherPersonName) => {
+    activePrivateChatId = chatId;
+    
+    document.querySelectorAll('.chat-thread-item').forEach(el => el.classList.remove('active'));
+    const activeEl = document.getElementById(`thread-item-${chatId}`);
+    if (activeEl) activeEl.classList.add('active');
+
+    document.getElementById('private-chat-header').style.display = 'block';
+    document.getElementById('private-chat-title').innerText = `Semente: ${seedName}`;
+    document.getElementById('private-chat-subtitle').innerText = `A conversar com: ${otherPersonName}`;
+    document.getElementById('private-chat-input-box').style.display = 'flex';
+
+    const messagesContainer = document.getElementById('private-chat-messages');
+    messagesContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center;">A carregar mensagens...</p>';
+
+    try {
+        const msgsSnap = await getDocs(collection(db, "private_chats", chatId, "messages"));
+        messagesContainer.innerHTML = '';
+        let msgs = [];
+
+        msgsSnap.forEach(docSnap => msgs.push(docSnap.data()));
+        msgs.sort((a, b) => {
+            if (!a.timestamp || !b.timestamp) return 0;
+            return a.timestamp.toMillis() - b.timestamp.toMillis();
+        });
+
+        const user = auth.currentUser;
+        msgs.forEach(msg => {
+            const isMine = user && msg.senderId === user.uid;
+            const avatarHtml = msg.avatar 
+                ? `<img src="${msg.avatar}" class="chat-avatar">` 
+                : `<div class="chat-avatar" style="background:#edf6ed; display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--secondary);">U</div>`;
+
+            const div = document.createElement('div');
+            div.className = `chat-msg ${isMine ? 'mine' : ''}`;
+            div.innerHTML = `
+                ${avatarHtml}
+                <div class="chat-msg-content">
+                    <div class="chat-msg-author">${msg.senderName}</div>
+                    <div class="chat-msg-text">${msg.text}</div>
+                </div>
+            `;
+            messagesContainer.appendChild(div);
+        });
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    } catch (error) {
+        messagesContainer.innerHTML = '<p style="color: red; text-align: center;">Erro ao carregar mensagens.</p>';
+    }
+};
+
+window.sendPrivateMessage = async () => {
+    if (!activePrivateChatId) return;
+    const input = document.getElementById('private-chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const myName = userProfileCache?.displayName || user.email.split('@')[0];
+
+    try {
+        await addDoc(collection(db, "private_chats", activePrivateChatId, "messages"), {
+            text: text,
+            senderId: user.uid,
+            senderName: myName,
+            avatar: userProfileCache?.avatarBase64 || "",
+            timestamp: serverTimestamp()
+        });
+        input.value = '';
+        const titleText = document.getElementById('private-chat-title').innerText.replace('Semente: ', '');
+        const subText = document.getElementById('private-chat-subtitle').innerText.replace('A conversar com: ', '');
+        window.openPrivateChatRoom(activePrivateChatId, titleText, subText);
+    } catch (error) {
+        alert('Erro ao enviar mensagem.');
+    }
+};
+
+window.checkPrivateChatEnter = (e) => {
+    if (e.key === 'Enter') {
+        window.sendPrivateMessage();
+    }
+};
+
+// CHAT COMUNITÁRIO GERAL
 window.changeChatCommunity = () => {
     currentCommunity = document.getElementById('chat-community-select').value;
     window.renderChat();
