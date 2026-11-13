@@ -4,16 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sementes Vivas 🌱</title>
-    <!-- Google Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Tesseract.js para OCR -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- CABEÇALHO / ABAS DE NAVEGAÇÃO -->
     <header id="main-header" style="display: none;">
         <div class="nav-brand" onclick="window.showDashboard()">
             <span class="material-icons" style="color: var(--secondary);">spa</span> Sementes Vivas
@@ -34,7 +31,6 @@
 
     <div class="app-content">
         
-        <!-- TELA DE LOGIN / CADASTRO -->
         <div id="login-view" class="view active full-center">
             <div class="auth-card">
                 <div class="logo-header">
@@ -59,7 +55,6 @@
             </div>
         </div>
 
-        <!-- PAINEL PRINCIPAL (INÍCIO) -->
         <div id="dashboard-view" class="view">
             <div class="welcome-banner">
                 <h2>O que deseja fazer hoje? 🌱</h2>
@@ -88,7 +83,6 @@
             </div>
         </div>
 
-        <!-- CADASTRAR SEMENTE -->
         <div id="donate-view" class="view">
             <button onclick="window.showDashboard()" class="btn-back">⬅ Voltar ao Painel</button>
             <div class="content-card">
@@ -122,7 +116,6 @@
             </div>
         </div>
 
-        <!-- SEMENTES DISPONÍVEIS -->
         <div id="available-view" class="view">
             <button onclick="window.showDashboard()" class="btn-back">⬅ Voltar ao Painel</button>
             <h2 style="color: var(--primary); margin-bottom: 5px;">Sementes da Comunidade</h2>
@@ -130,7 +123,6 @@
             <div id="seeds-grid-container" class="seeds-grid"></div>
         </div>
 
-        <!-- CHAT DA COMUNIDADE -->
         <div id="chat-view" class="view">
             <button onclick="window.showDashboard()" class="btn-back">⬅ Voltar ao Painel</button>
             <div class="chat-container">
@@ -148,7 +140,6 @@
             </div>
         </div>
 
-        <!-- MEU PERFIL -->
         <div id="profile-view" class="view">
             <button onclick="window.showDashboard()" class="btn-back">⬅ Voltar ao Painel</button>
             <h2 style="color: var(--primary); margin-bottom: 5px;">👤 O Meu Perfil</h2>
@@ -156,7 +147,6 @@
             <div id="my-seeds-container" class="seeds-grid"></div>
         </div>
 
-        <!-- APRENDER A PLANTAR -->
         <div id="learn-view" class="view">
             <button onclick="window.showDashboard()" class="btn-back">⬅ Voltar ao Painel</button>
             <div class="content-card" style="max-width: 800px;">
@@ -172,9 +162,6 @@
 
     </div>
 
-    <script type="module" src="script.js"></script>
-</body>
-</html>
     <script type="module" src="script.js"></script>
 </body>
 </html>
