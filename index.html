@@ -11,6 +11,7 @@
 </head>
 <body>
 
+    <!-- CABEÇALHO / ABAS DE NAVEGAÇÃO -->
     <header id="main-header" style="display: none;">
         <div class="nav-brand" onclick="window.showDashboard()">
             <span class="material-icons" style="color: var(--secondary);">spa</span> Sementes Vivas
@@ -31,6 +32,7 @@
 
     <div class="app-content">
         
+        <!-- TELA DE LOGIN / CADASTRO -->
         <div id="login-view" class="view active full-center">
             <div class="auth-card">
                 <div class="logo-header">
@@ -55,6 +57,7 @@
             </div>
         </div>
 
+        <!-- PAINEL PRINCIPAL (INÍCIO) -->
         <div id="dashboard-view" class="view">
             <div class="welcome-banner">
                 <h2>O que deseja fazer hoje? 🌱</h2>
@@ -73,7 +76,7 @@
                 <div class="action-card" onclick="window.showChat()">
                     <span class="material-icons">forum</span>
                     <h3>Chat da Comunidade</h3>
-                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Converse com outros jardineiros em tempo real.</p>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Converse com jardineiros da sua região.</p>
                 </div>
                 <div class="action-card" onclick="window.showLearn()">
                     <span class="material-icons">menu_book</span>
@@ -83,6 +86,7 @@
             </div>
         </div>
 
+        <!-- CADASTRAR SEMENTE -->
         <div id="donate-view" class="view">
             <button onclick="window.showDashboard()" class="btn-back">⬅ Voltar ao Painel</button>
             <div class="content-card">
@@ -116,6 +120,7 @@
             </div>
         </div>
 
+        <!-- SEMENTES DISPONÍVEIS -->
         <div id="available-view" class="view">
             <button onclick="window.showDashboard()" class="btn-back">⬅ Voltar ao Painel</button>
             <h2 style="color: var(--primary); margin-bottom: 5px;">Sementes da Comunidade</h2>
@@ -123,12 +128,21 @@
             <div id="seeds-grid-container" class="seeds-grid"></div>
         </div>
 
+        <!-- CHAT DA COMUNIDADE -->
         <div id="chat-view" class="view">
             <button onclick="window.showDashboard()" class="btn-back">⬅ Voltar ao Painel</button>
             <div class="chat-container">
                 <div class="chat-header">
-                    <h2>💬 Chat Comunitário Sementes Vivas</h2>
-                    <p style="font-size: 13px; color: var(--text-muted);">Tire dúvidas, combine trocas e partilhe experiências com outros jardineiros.</p>
+                    <h2>💬 Chat Comunitário</h2>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Converse com cultivadores da sua região escolhida.</p>
+                    
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <label style="font-size: 13px; font-weight: 600;">Comunidade:</label>
+                        <select id="chat-community-select" class="select-styled" style="max-width: 250px; padding: 8px;" onchange="window.changeChatCommunity()">
+                            <option value="Aparecida do Taboado">Aparecida do Taboado</option>
+                            <option value="Paranaíba">Paranaíba</option>
+                        </select>
+                    </div>
                 </div>
                 <div id="chat-messages" class="chat-messages-box">
                     <p style="color: var(--text-muted); text-align: center; margin-top: 20px;">A carregar mensagens...</p>
@@ -140,13 +154,43 @@
             </div>
         </div>
 
+        <!-- MEU PERFIL -->
         <div id="profile-view" class="view">
             <button onclick="window.showDashboard()" class="btn-back">⬅ Voltar ao Painel</button>
-            <h2 style="color: var(--primary); margin-bottom: 5px;">👤 O Meu Perfil</h2>
-            <p style="color: var(--text-muted); margin-bottom: 20px;">Gerencie as suas sementes cadastradas.</p>
+            <div class="content-card" style="margin-bottom: 30px;">
+                <h2 style="color: var(--primary); margin-bottom: 15px;">👤 O Meu Perfil</h2>
+                
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img id="profile-avatar-preview" src="" alt="Avatar" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--secondary); display: none; margin: 0 auto 10px auto;">
+                    <div id="profile-avatar-placeholder" style="width: 90px; height: 90px; border-radius: 50%; background: #e8f4ea; color: var(--secondary); display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 10px auto; border: 3px solid var(--secondary);">🌱</div>
+                </div>
+
+                <div class="input-group">
+                    <label>Alterar Foto de Perfil</label>
+                    <input type="file" id="profile-photo-input" accept="image/*">
+                </div>
+
+                <div class="input-group">
+                    <label>Nome / Apelido no Chat</label>
+                    <input type="text" id="profile-name" placeholder="Como deseja aparecer...">
+                </div>
+
+                <div class="input-group">
+                    <label>Sua Comunidade / Cidade Principal</label>
+                    <select id="profile-community" class="select-styled">
+                        <option value="Aparecida do Taboado">Aparecida do Taboado</option>
+                        <option value="Paranaíba">Paranaíba</option>
+                    </select>
+                </div>
+
+                <button class="btn-primary" onclick="window.saveProfile()">Guardar Alterações de Perfil</button>
+            </div>
+
+            <h3 style="color: var(--primary); margin-bottom: 15px;">Minhas Sementes Cadastradas</h3>
             <div id="my-seeds-container" class="seeds-grid"></div>
         </div>
 
+        <!-- APRENDER A PLANTAR -->
         <div id="learn-view" class="view">
             <button onclick="window.showDashboard()" class="btn-back">⬅ Voltar ao Painel</button>
             <div class="content-card" style="max-width: 800px;">
