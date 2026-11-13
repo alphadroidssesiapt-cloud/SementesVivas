@@ -11,7 +11,6 @@
 </head>
 <body>
 
-    <!-- CABEÇALHO COM SISTEMA DE ABAS -->
     <header id="main-header" style="display: none;">
         <div class="header-top">
             <div class="nav-brand" onclick="window.showDashboard()">
@@ -23,7 +22,6 @@
             </div>
         </div>
 
-        <!-- BARRA DE ABAS -->
         <nav class="tabs-bar">
             <button class="tab-btn active" id="tab-dashboard-view" onclick="window.showDashboard()">
                 <span class="material-icons">home</span> Início
@@ -51,7 +49,6 @@
 
     <div class="app-content">
         
-        <!-- TELA DE LOGIN / CADASTRO -->
         <div id="login-view" class="view active full-center">
             <div class="auth-card">
                 <div class="logo-header">
@@ -76,7 +73,6 @@
             </div>
         </div>
 
-        <!-- ABA 1: PAINEL PRINCIPAL (INÍCIO) -->
         <div id="dashboard-view" class="view">
             <div class="welcome-banner">
                 <h2>O que deseja fazer hoje?</h2>
@@ -105,163 +101,4 @@
             </div>
         </div>
 
-        <!-- ABA 2: SEMENTES DISPONÍVEIS -->
-        <div id="available-view" class="view">
-            <h2 style="color: var(--primary); margin-bottom: 5px;">Sementes da Comunidade</h2>
-            <p style="color: var(--text-muted); margin-bottom: 20px;">Reserve uma semente para abrir um chat direto com o doador.</p>
-            <div id="seeds-grid-container" class="seeds-grid"></div>
-        </div>
-
-        <!-- ABA 3: CADASTRAR SEMENTE -->
-        <div id="donate-view" class="view">
-            <div class="content-card">
-                <h2 style="color: var(--primary); margin-bottom: 20px;">Cadastrar Nova Semente</h2>
-                
-                <div class="input-group">
-                    <label>Fotografar Semente (A leitura automática preencherá o nome)</label>
-                    <div class="camera-wrapper">
-                        <div class="camera-btn" id="camera-label">
-                            <span class="material-icons">camera_alt</span> Clique para fotografar ou carregar imagem
-                        </div>
-                        <input type="file" id="donate-seed-photo" accept="image/*" capture="environment">
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label>Nome da Semente</label>
-                    <input type="text" id="donate-seed-name" placeholder="Ex: Tomate Coração de Boi">
-                </div>
-
-                <div class="input-group">
-                    <label>Finalidade do Anúncio</label>
-                    <select id="donate-seed-type" class="select-styled">
-                        <option value="Doação">Doação (Gratuito)</option>
-                        <option value="Troca">Troca (Quero trocar por outra)</option>
-                    </select>
-                </div>
-                
-                <button id="btn-donate" class="btn-primary" onclick="window.processDonation()">Publicar Semente</button>
-                <p id="upload-loading" style="display: none; color: var(--secondary); margin-top: 15px; text-align: center; font-weight: 600;">A processar e guardar semente... aguarde.</p>
-            </div>
-        </div>
-
-        <!-- ABA 4: MEUS CHATS PRIVADOS (Negociação de Sementes) -->
-        <div id="private-chats-view" class="view">
-            <h2 style="color: var(--primary); margin-bottom: 5px;">Meus Chats de Sementes</h2>
-            <p style="color: var(--text-muted); margin-bottom: 20px;">Combine a entrega ou troca diretamente com os interessados.</p>
-            
-            <div class="private-chat-layout">
-                <!-- Lista de Conversas -->
-                <div class="chat-list-panel">
-                    <h4 style="color: var(--primary); margin-bottom: 12px; font-size: 14px;">Conversas Ativas</h4>
-                    <div id="private-chat-list">
-                        <p style="color: var(--text-muted); font-size: 13px;">A carregar conversas...</p>
-                    </div>
-                </div>
-
-                <!-- Área da Conversa Selecionada -->
-                <div class="chat-room-panel">
-                    <div id="private-chat-header" class="chat-header" style="display: none;">
-                        <h3 id="private-chat-title" style="color: var(--primary); font-size: 16px;">Semente</h3>
-                        <p id="private-chat-subtitle" style="font-size: 12px; color: var(--text-muted);">Participantes</p>
-                    </div>
-                    
-                    <div id="private-chat-messages" class="chat-messages-box" style="height: 340px;">
-                        <p style="color: var(--text-muted); text-align: center; margin-top: 130px;">Selecione uma conversa ao lado ou reserve uma semente para iniciar.</p>
-                    </div>
-                    
-                    <div id="private-chat-input-box" class="chat-input-area" style="display: none;">
-                        <input type="text" id="private-chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkPrivateChatEnter(event)">
-                        <button class="btn-primary" onclick="window.sendPrivateMessage()" style="width: auto; padding: 0 20px;">Enviar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ABA 5: CHAT DA COMUNIDADE -->
-        <div id="chat-view" class="view">
-            <div class="chat-container">
-                <div class="chat-header">
-                    <h2>Chat Comunitário</h2>
-                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Converse com cultivadores da sua região escolhida.</p>
-                    
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <label style="font-size: 13px; font-weight: 600;">Comunidade:</label>
-                        <select id="chat-community-select" class="select-styled" style="max-width: 250px; padding: 8px;" onchange="window.changeChatCommunity()">
-                            <option value="Aparecida do Taboado">Aparecida do Taboado</option>
-                            <option value="Paranaíba">Paranaíba</option>
-                        </select>
-                    </div>
-                </div>
-                <div id="chat-messages" class="chat-messages-box">
-                    <p style="color: var(--text-muted); text-align: center; margin-top: 20px;">A carregar mensagens...</p>
-                </div>
-                <div class="chat-input-area">
-                    <input type="text" id="chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkChatEnter(event)">
-                    <button class="btn-primary" onclick="window.enviarMensagemChat()" style="width: auto; padding: 0 20px;">Enviar</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ABA 6: APRENDER A PLANTAR -->
-        <div id="learn-view" class="view">
-            <div class="content-card" style="max-width: 800px;">
-                <h2 style="color: var(--primary); margin-bottom: 15px;">Guia de Cultivo Inteligente</h2>
-                <p style="color: var(--text-muted); margin-bottom: 20px;">Pesquise qualquer planta ou semente para ver dicas e informações detalhadas.</p>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="search-seed-input" placeholder="Ex: Girassol, Alface, Tomate..." style="margin: 0; flex: 1;">
-                    <button class="btn-primary" onclick="window.searchSeedInfo()" style="width: auto; padding: 0 25px;">Pesquisar</button>
-                </div>
-                <div id="learn-results" style="margin-top: 25px;"></div>
-            </div>
-        </div>
-
-        <!-- ABA 7: MEU PERFIL -->
-        <div id="profile-view" class="view">
-            <div class="sub-tabs-bar">
-                <button class="sub-tab-btn active" id="subtab-edit" onclick="window.switchProfileSubTab('edit')">Editar Dados e Avatar</button>
-                <button class="sub-tab-btn" id="subtab-seeds" onclick="window.switchProfileSubTab('seeds')">Minhas Sementes</button>
-            </div>
-
-            <!-- Sub-aba 1: Dados do Perfil -->
-            <div id="profile-sub-edit" class="content-card">
-                <h2 style="color: var(--primary); margin-bottom: 15px;">Personalizar Perfil</h2>
-                
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <img id="profile-avatar-preview" src="" alt="Avatar" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--secondary); display: none; margin: 0 auto 10px auto;">
-                    <div id="profile-avatar-placeholder" style="width: 90px; height: 90px; border-radius: 50%; background: #edf6ed; color: var(--secondary); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; margin: 0 auto 10px auto; border: 3px solid var(--secondary);">U</div>
-                </div>
-
-                <div class="input-group">
-                    <label>Alterar Foto de Perfil</label>
-                    <input type="file" id="profile-photo-input" accept="image/*">
-                </div>
-
-                <div class="input-group">
-                    <label>Nome / Apelido no Chat</label>
-                    <input type="text" id="profile-name" placeholder="Como deseja aparecer...">
-                </div>
-
-                <div class="input-group">
-                    <label>Sua Comunidade / Cidade Principal</label>
-                    <select id="profile-community" class="select-styled">
-                        <option value="Aparecida do Taboado">Aparecida do Taboado</option>
-                        <option value="Paranaíba">Paranaíba</option>
-                    </select>
-                </div>
-
-                <button class="btn-primary" onclick="window.saveProfile()">Guardar Alterações de Perfil</button>
-            </div>
-
-            <!-- Sub-aba 2: Sementes do Utilizador -->
-            <div id="profile-sub-seeds" style="display: none;">
-                <h3 style="color: var(--primary); margin-bottom: 15px;">Minhas Sementes Cadastradas</h3>
-                <div id="my-seeds-container" class="seeds-grid"></div>
-            </div>
-        </div>
-
-    </div>
-
-    <script type="module" src="script.js"></script>
-</body>
-</html>
+        <div id="available-view"
