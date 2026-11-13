@@ -20,12 +20,17 @@ let userProfileCache = null;
 
 // SISTEMA DE ABAS PRINCIPAIS
 window.switchView = (viewId) => {
-    // Esconde todas as vistas
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v => {
+        v.classList.remove('active');
+        v.style.display = 'none';
+    });
+    
     const view = document.getElementById(viewId);
-    if(view) view.classList.add('active');
+    if(view) {
+        view.classList.add('active');
+        view.style.display = (viewId === 'login-view') ? 'flex' : 'block';
+    }
 
-    // Atualiza visualmente qual aba está ativa na barra superior
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     const activeTabBtn = document.getElementById(`tab-${viewId}`);
     if (activeTabBtn) activeTabBtn.classList.add('active');
@@ -101,7 +106,7 @@ window.register = async () => {
 
 window.logout = async () => { await signOut(auth); };
 
-// CONTROLO DE SESSÃO (Esconde Login completamente ao entrar)
+// CONTROLO DE SESSÃO COM REMOÇÃO DIRETA DO LOGIN
 onAuthStateChanged(auth, async (user) => {
     const header = document.getElementById('main-header');
     const greeting = document.getElementById('user-greeting');
@@ -117,13 +122,16 @@ onAuthStateChanged(auth, async (user) => {
             greeting.innerText = `Olá, ${user.email.split('@')[0]}`;
         }
         
+        // Esconde completamente a tela de login
+        loginView.classList.remove('active');
         loginView.style.display = 'none';
+        
         header.style.display = 'flex';
         window.showDashboard();
     } else {
         header.style.display = 'none';
         userProfileCache = null;
-        loginView.style.display = '';
+        loginView.style.display = 'flex';
         window.switchView('login-view');
     }
 });
