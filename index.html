@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sementes Vivas 🌱</title>
+    <title>Sementes Vivas</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    <!-- CABEÇALHO COM SISTEMA DE ABAS -->
+    <!-- CABEÇALHO COM ABAS -->
     <header id="main-header" style="display: none;">
         <div class="header-top">
             <div class="nav-brand" onclick="window.showDashboard()">
@@ -19,11 +19,10 @@
             </div>
             <div class="nav-user">
                 <span id="user-greeting" style="font-size: 14px; font-weight: 500;">Olá</span>
-                <button onclick="window.logout()" class="btn-logout">Sair 🚪</button>
+                <button onclick="window.logout()" class="btn-logout">Sair</button>
             </div>
         </div>
 
-        <!-- BARRA DE ABAS -->
         <nav class="tabs-bar">
             <button class="tab-btn active" id="tab-dashboard-view" onclick="window.showDashboard()">
                 <span class="material-icons">home</span> Início
@@ -34,11 +33,14 @@
             <button class="tab-btn" id="tab-donate-view" onclick="window.showDonate()">
                 <span class="material-icons">add_circle_outline</span> Cadastrar Semente
             </button>
+            <button class="tab-btn" id="tab-private-chats-view" onclick="window.showPrivateChats()">
+                <span class="material-icons">chat</span> Meus Chats
+            </button>
             <button class="tab-btn" id="tab-chat-view" onclick="window.showChat()">
-                <span class="material-icons">forum</span> Chat Comunidade
+                <span class="material-icons">forum</span> Comunidade
             </button>
             <button class="tab-btn" id="tab-learn-view" onclick="window.showLearn()">
-                <span class="material-icons">menu_book</span> Aprender a Plantar
+                <span class="material-icons">menu_book</span> Aprender
             </button>
             <button class="tab-btn" id="tab-profile-view" onclick="window.showProfile()">
                 <span class="material-icons">person</span> Meu Perfil
@@ -48,7 +50,7 @@
 
     <div class="app-content">
         
-        <!-- TELA DE LOGIN / CADASTRO (Isolada) -->
+        <!-- TELA DE LOGIN / CADASTRO -->
         <div id="login-view" class="view active full-center">
             <div class="auth-card">
                 <div class="logo-header">
@@ -63,20 +65,20 @@
                 </div>
                 <div class="input-group">
                     <label>Senha</label>
-                    <input type="password" id="auth-password" placeholder="••••••••">
+                    <input type="password" id="auth-password" placeholder="••••••••" onkeypress="window.checkLoginEnter(event)">
                 </div>
                 
                 <button class="btn-primary" onclick="window.login()">Entrar na Conta</button>
                 <button class="btn-secondary" onclick="window.register()" style="margin-top: 10px;">Criar Nova Conta</button>
                 
-                <p id="auth-error" style="color: #d32f2f; font-size: 13px; margin-top: 15px; display: none; text-align: center;"></p>
+                <p id="auth-error" style="color: #c53030; font-size: 13px; margin-top: 15px; display: none; text-align: center;"></p>
             </div>
         </div>
 
-        <!-- ABA 1: PAINEL PRINCIPAL (INÍCIO) -->
+        <!-- PAINEL PRINCIPAL (INÍCIO) -->
         <div id="dashboard-view" class="view">
             <div class="welcome-banner">
-                <h2>O que deseja fazer hoje? 🌱</h2>
+                <h2>O que deseja fazer hoje?</h2>
             </div>
             <div class="action-grid">
                 <div class="action-card" onclick="window.showAvailable()">
@@ -89,33 +91,33 @@
                     <h3>Cadastrar Semente</h3>
                     <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Doe ou coloque sementes para troca.</p>
                 </div>
+                <div class="action-card" onclick="window.showPrivateChats()">
+                    <span class="material-icons">chat</span>
+                    <h3>Meus Chats</h3>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Converse diretamente sobre reservas e trocas.</p>
+                </div>
                 <div class="action-card" onclick="window.showChat()">
                     <span class="material-icons">forum</span>
                     <h3>Chat da Comunidade</h3>
-                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Converse com jardineiros da sua região.</p>
-                </div>
-                <div class="action-card" onclick="window.showLearn()">
-                    <span class="material-icons">menu_book</span>
-                    <h3>Aprender a Plantar</h3>
-                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Pesquise guias de cultivo instantâneos.</p>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Interaja com jardineiros da sua região.</p>
                 </div>
             </div>
         </div>
 
-        <!-- ABA 2: SEMENTES DISPONÍVEIS -->
+        <!-- SEMENTES DISPONÍVEIS -->
         <div id="available-view" class="view">
             <h2 style="color: var(--primary); margin-bottom: 5px;">Sementes da Comunidade</h2>
-            <p style="color: var(--text-muted); margin-bottom: 20px;">Encontre sementes para iniciar o seu cultivo.</p>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">Reserve uma semente para abrir um chat direto com o doador.</p>
             <div id="seeds-grid-container" class="seeds-grid"></div>
         </div>
 
-        <!-- ABA 3: CADASTRAR SEMENTE -->
+        <!-- CADASTRAR SEMENTE -->
         <div id="donate-view" class="view">
             <div class="content-card">
                 <h2 style="color: var(--primary); margin-bottom: 20px;">Cadastrar Nova Semente</h2>
                 
                 <div class="input-group">
-                    <label>Fotografar Semente (A IA preencherá o nome)</label>
+                    <label>Fotografar Semente (A leitura automática preencherá o nome)</label>
                     <div class="camera-wrapper">
                         <div class="camera-btn" id="camera-label">
                             <span class="material-icons">camera_alt</span> Clique para fotografar ou carregar imagem
@@ -132,8 +134,8 @@
                 <div class="input-group">
                     <label>Finalidade do Anúncio</label>
                     <select id="donate-seed-type" class="select-styled">
-                        <option value="Doação">🎁 Doação (Gratuito)</option>
-                        <option value="Troca">🔄 Troca (Quero trocar por outra)</option>
+                        <option value="Doação">Doação (Gratuito)</option>
+                        <option value="Troca">Troca (Quero trocar por outra)</option>
                     </select>
                 </div>
                 
@@ -142,11 +144,42 @@
             </div>
         </div>
 
-        <!-- ABA 4: CHAT DA COMUNIDADE -->
+        <!-- MEUS CHATS PRIVADOS -->
+        <div id="private-chats-view" class="view">
+            <h2 style="color: var(--primary); margin-bottom: 5px;">Meus Chats de Sementes</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">Combine a entrega ou troca diretamente com os interessados.</p>
+            
+            <div class="private-chat-layout">
+                <div class="chat-list-panel">
+                    <h4 style="color: var(--primary); margin-bottom: 12px; font-size: 14px;">Conversas Ativas</h4>
+                    <div id="private-chat-list">
+                        <p style="color: var(--text-muted); font-size: 13px;">A carregar conversas...</p>
+                    </div>
+                </div>
+
+                <div class="chat-room-panel">
+                    <div id="private-chat-header" class="chat-header" style="display: none;">
+                        <h3 id="private-chat-title" style="color: var(--primary); font-size: 16px;">Semente</h3>
+                        <p id="private-chat-subtitle" style="font-size: 12px; color: var(--text-muted);">Participantes</p>
+                    </div>
+                    
+                    <div id="private-chat-messages" class="chat-messages-box" style="height: 340px;">
+                        <p style="color: var(--text-muted); text-align: center; margin-top: 130px;">Selecione uma conversa ao lado ou reserve uma semente para iniciar.</p>
+                    </div>
+                    
+                    <div id="private-chat-input-box" class="chat-input-area" style="display: none;">
+                        <input type="text" id="private-chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkPrivateChatEnter(event)">
+                        <button class="btn-primary" onclick="window.sendPrivateMessage()" style="width: auto; padding: 0 20px;">Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHAT COMUNITÁRIO -->
         <div id="chat-view" class="view">
             <div class="chat-container">
                 <div class="chat-header">
-                    <h2>💬 Chat Comunitário</h2>
+                    <h2>Chat Comunitário</h2>
                     <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Converse com cultivadores da sua região escolhida.</p>
                     
                     <div style="display: flex; align-items: center; gap: 10px;">
@@ -167,33 +200,32 @@
             </div>
         </div>
 
-        <!-- ABA 5: APRENDER A PLANTAR -->
+        <!-- APRENDER A PLANTAR -->
         <div id="learn-view" class="view">
             <div class="content-card" style="max-width: 800px;">
                 <h2 style="color: var(--primary); margin-bottom: 15px;">Guia de Cultivo Inteligente</h2>
                 <p style="color: var(--text-muted); margin-bottom: 20px;">Pesquise qualquer planta ou semente para ver dicas e informações detalhadas.</p>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="search-seed-input" placeholder="Ex: Girassol, Alface, Tomate..." style="margin: 0; flex: 1;">
+                    <input type="text" id="search-seed-input" placeholder="Ex: Girassol, Alface, Tomate..." style="margin: 0; flex: 1;" onkeypress="window.checkSearchEnter(event)">
                     <button class="btn-primary" onclick="window.searchSeedInfo()" style="width: auto; padding: 0 25px;">Pesquisar</button>
                 </div>
                 <div id="learn-results" style="margin-top: 25px;"></div>
             </div>
         </div>
 
-        <!-- ABA 6: MEU PERFIL (Com sub-abas internas) -->
+        <!-- MEU PERFIL -->
         <div id="profile-view" class="view">
             <div class="sub-tabs-bar">
-                <button class="sub-tab-btn active" id="subtab-edit" onclick="window.switchProfileSubTab('edit')">⚙️ Editar Dados & Avatar</button>
-                <button class="sub-tab-btn" id="subtab-seeds" onclick="window.switchProfileSubTab('seeds')">🌱 Minhas Sementes</button>
+                <button class="sub-tab-btn active" id="subtab-edit" onclick="window.switchProfileSubTab('edit')">Editar Dados e Avatar</button>
+                <button class="sub-tab-btn" id="subtab-seeds" onclick="window.switchProfileSubTab('seeds')">Minhas Sementes</button>
             </div>
 
-            <!-- Sub-aba 1: Dados do Perfil -->
             <div id="profile-sub-edit" class="content-card">
-                <h2 style="color: var(--primary); margin-bottom: 15px;">👤 Personalizar Perfil</h2>
+                <h2 style="color: var(--primary); margin-bottom: 15px;">Personalizar Perfil</h2>
                 
                 <div style="text-align: center; margin-bottom: 20px;">
                     <img id="profile-avatar-preview" src="" alt="Avatar" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--secondary); display: none; margin: 0 auto 10px auto;">
-                    <div id="profile-avatar-placeholder" style="width: 90px; height: 90px; border-radius: 50%; background: #e8f4ea; color: var(--secondary); display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 10px auto; border: 3px solid var(--secondary);">🌱</div>
+                    <div id="profile-avatar-placeholder" style="width: 90px; height: 90px; border-radius: 50%; background: #e2f0d9; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; margin: 0 auto 10px auto; border: 3px solid var(--secondary);">U</div>
                 </div>
 
                 <div class="input-group">
@@ -217,7 +249,6 @@
                 <button class="btn-primary" onclick="window.saveProfile()">Guardar Alterações de Perfil</button>
             </div>
 
-            <!-- Sub-aba 2: Sementes do Utilizador -->
             <div id="profile-sub-seeds" style="display: none;">
                 <h3 style="color: var(--primary); margin-bottom: 15px;">Minhas Sementes Cadastradas</h3>
                 <div id="my-seeds-container" class="seeds-grid"></div>
