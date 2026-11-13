@@ -13,7 +13,7 @@
 </head>
 <body>
 
-    <!-- CABEÇALHO -->
+    <!-- CABEÇALHO / ABAS DE NAVEGAÇÃO -->
     <header id="main-header" style="display: none;">
         <div class="nav-brand" onclick="window.showDashboard()">
             <span class="material-icons" style="color: var(--secondary);">spa</span> Sementes Vivas
@@ -21,7 +21,9 @@
         <div class="nav-links">
             <a href="#" onclick="window.showDashboard()">Início</a>
             <a href="#" onclick="window.showAvailable()">Explorar</a>
+            <a href="#" onclick="window.showDonate()">Cadastrar</a>
             <a href="#" onclick="window.showLearn()">Aprender</a>
+            <a href="#" onclick="window.showChat()">💬 Chat</a>
         </div>
         <div class="nav-user">
             <span id="user-greeting" style="font-size: 14px; font-weight: 500;">Olá</span>
@@ -57,7 +59,7 @@
             </div>
         </div>
 
-        <!-- PAINEL PRINCIPAL -->
+        <!-- PAINEL PRINCIPAL (INÍCIO) -->
         <div id="dashboard-view" class="view">
             <div class="welcome-banner">
                 <h2>O que deseja fazer hoje? 🌱</h2>
@@ -73,6 +75,11 @@
                     <h3>Cadastrar Semente</h3>
                     <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Doe ou coloque sementes para troca.</p>
                 </div>
+                <div class="action-card" onclick="window.showChat()">
+                    <span class="material-icons">forum</span>
+                    <h3>Chat da Comunidade</h3>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Converse com outros jardineiros em tempo real.</p>
+                </div>
                 <div class="action-card" onclick="window.showLearn()">
                     <span class="material-icons">menu_book</span>
                     <h3>Aprender a Plantar</h3>
@@ -81,7 +88,7 @@
             </div>
         </div>
 
-        <!-- CADASTRAR / DOAR OU TROCAR SEMENTE -->
+        <!-- CADASTRAR SEMENTE -->
         <div id="donate-view" class="view">
             <button onclick="window.showDashboard()" class="btn-back">⬅ Voltar ao Painel</button>
             <div class="content-card">
@@ -121,6 +128,24 @@
             <h2 style="color: var(--primary); margin-bottom: 5px;">Sementes da Comunidade</h2>
             <p style="color: var(--text-muted); margin-bottom: 20px;">Encontre sementes para iniciar o seu cultivo.</p>
             <div id="seeds-grid-container" class="seeds-grid"></div>
+        </div>
+
+        <!-- CHAT DA COMUNIDADE -->
+        <div id="chat-view" class="view">
+            <button onclick="window.showDashboard()" class="btn-back">⬅ Voltar ao Painel</button>
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h2>💬 Chat Comunitário Sementes Vivas</h2>
+                    <p style="font-size: 13px; color: var(--text-muted);">Tire dúvidas, combine trocas e partilhe experiências com outros jardineiros.</p>
+                </div>
+                <div id="chat-messages" class="chat-messages-box">
+                    <p style="color: var(--text-muted); text-align: center; margin-top: 20px;">A carregar mensagens...</p>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkChatEnter(event)">
+                    <button class="btn-primary" onclick="window.enviarMensagemChat()" style="width: auto; padding: 0 20px;">Enviar</button>
+                </div>
+            </div>
         </div>
 
         <!-- MEU PERFIL -->
