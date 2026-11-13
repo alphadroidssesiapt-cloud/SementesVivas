@@ -17,8 +17,9 @@ const db = getFirestore(app);
 
 let currentCommunity = "Aparecida do Taboado";
 let userProfileCache = null;
+let activePrivateChatId = null;
 
-// SISTEMA DE ABAS PRINCIPAIS
+// SISTEMA DE ABAS
 window.switchView = (viewId) => {
     document.querySelectorAll('.view').forEach(v => {
         v.classList.remove('active');
@@ -43,7 +44,7 @@ window.showDonate = () => {
     document.getElementById('donate-seed-photo').value = '';
     document.getElementById('donate-seed-type').value = 'Doação';
     const lbl = document.getElementById('camera-label');
-    lbl.innerHTML = '<span class="material-icons">camera_alt</span> Clique para fotografar ou carregar imagem';
+    lbl.innerHTML = 'Clique para fotografar ou carregar imagem';
     lbl.className = 'camera-btn';
     window.switchView('donate-view');
 };
@@ -53,8 +54,12 @@ window.showProfile = () => {
     window.switchProfileSubTab('edit');
 };
 window.showChat = () => { window.switchView('chat-view'); window.renderChat(); };
+window.showPrivateChats = (chatIdToOpen = null) => {
+    window.switchView('private-chats-view');
+    window.loadPrivateChatList(chatIdToOpen);
+};
 
-// SUB-ABAS DENTRO DO PERFIL
+// SUB-ABAS DE PERFIL
 window.switchProfileSubTab = (subTab) => {
     document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(`subtab-${subTab}`).classList.add('active');
@@ -70,24 +75,61 @@ window.switchProfileSubTab = (subTab) => {
     }
 };
 
-// AUTENTICAÇÃO
+// AUTENTICAÇÃO COM SUPORTE A ENTER
 window.login = async () => {
-    const email = document.getElementById('auth-email').value;
-    const pass = document.getElementById('auth-password').value;
+    const emailField = document.getElementById('auth-email');
+    const passField = document.getElementById('auth-password');
     const errorMsg = document.getElementById('auth-error');
+    
+    const email = emailField ? emailField.value.trim() : '';
+    const pass = passField ? passField.value : '';
+
+    if (!email || !pass) {
+        errorMsg.innerText = "Por favor, preencha o e-mail e a senha.";
+        errorMsg.style.display = 'block';
+        return;
+    }
+
     try {
         await signInWithEmailAndPassword(auth, email, pass);
         errorMsg.style.display = 'none';
     } catch (error) {
-        errorMsg.innerText = "Erro ao entrar: Verifique o e-mail e senha.";
+        console.error("Erro detalhado no login:", error);
+        let mensagemErro = "Erro ao entrar. Verifique os dados.";
+        if (error.code === 'auth/user-not-found') {
+            mensagemErro = "Utilizador não encontrado. Crie uma conta primeiro.";
+        } else if (error.code === 'auth/wrong-password') {
+            mensagemErro = "Senha incorreta.";
+        } else if (error.code === 'auth/invalid-email') {
+            mensagemErro = "E-mail inválido.";
+        } else if (error.code === 'auth/invalid-credential') {
+            mensagemErro = "Credenciais inválidas ou e-mail/senha incorretos.";
+        }
+        errorMsg.innerText = mensagemErro;
         errorMsg.style.display = 'block';
     }
 };
 
+window.checkLoginEnter = (e) => {
+    if (e.key === 'Enter') {
+        window.login();
+    }
+};
+
 window.register = async () => {
-    const email = document.getElementById('auth-email').value;
-    const pass = document.getElementById('auth-password').value;
+    const emailField = document.getElementById('auth-email');
+    const passField = document.getElementById('auth-password');
     const errorMsg = document.getElementById('auth-error');
+    
+    const email = emailField ? emailField.value.trim() : '';
+    const pass = passField ? passField.value : '';
+
+    if (!email || !pass) {
+        errorMsg.innerText = "Por favor, preencha o e-mail e a senha.";
+        errorMsg.style.display = 'block';
+        return;
+    }
+
     try {
         const cred = await createUserWithEmailAndPassword(auth, email, pass);
         await setDoc(doc(db, "users", cred.user.uid), {
@@ -106,7 +148,7 @@ window.register = async () => {
 
 window.logout = async () => { await signOut(auth); };
 
-// CONTROLO DE SESSÃO COM REMOÇÃO DIRETA DO LOGIN
+// ESTADO DA SESSÃO
 onAuthStateChanged(auth, async (user) => {
     const header = document.getElementById('main-header');
     const greeting = document.getElementById('user-greeting');
@@ -122,21 +164,21 @@ onAuthStateChanged(auth, async (user) => {
             greeting.innerText = `Olá, ${user.email.split('@')[0]}`;
         }
         
-        // Esconde completamente a tela de login
-        loginView.classList.remove('active');
-        loginView.style.display = 'none';
-        
-        header.style.display = 'flex';
+        if (loginView) {
+            loginView.classList.remove('active');
+            loginView.style.display = 'none';
+        }
+        if (header) header.style.display = 'flex';
         window.showDashboard();
     } else {
-        header.style.display = 'none';
+        if (header) header.style.display = 'none';
         userProfileCache = null;
-        loginView.style.display = 'flex';
+        if (loginView) loginView.style.display = 'flex';
         window.switchView('login-view');
     }
 });
 
-// COMPRESSÃO DE IMAGEM
+// COMPRESSÃO DE IMAGENS
 const comprimirEConverterBase64 = (file, max_size = 600, quality = 0.7) => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -162,7 +204,7 @@ const comprimirEConverterBase64 = (file, max_size = 600, quality = 0.7) => {
     });
 };
 
-// GESTÃO DE PERFIL
+// PERFIL
 window.loadProfileData = async () => {
     const user = auth.currentUser;
     if (!user) return;
@@ -217,26 +259,29 @@ window.saveProfile = async () => {
     }
 };
 
-// OCR - LER FOTO DA SEMENTE COM TESSERACT
-document.getElementById('donate-seed-photo').addEventListener('change', async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const lbl = document.getElementById('camera-label');
-    lbl.innerHTML = '🔄 A ler texto da imagem...';
-    try {
-        const result = await Tesseract.recognize(file, 'por');
-        if (result.data.text.trim()) {
-            document.getElementById('donate-seed-name').value = result.data.text.trim().split('\n')[0].substring(0, 30);
+// OCR COM TESSERACT
+const seedPhotoInput = document.getElementById('donate-seed-photo');
+if (seedPhotoInput) {
+    seedPhotoInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const lbl = document.getElementById('camera-label');
+        lbl.innerHTML = 'A ler texto da imagem...';
+        try {
+            const result = await Tesseract.recognize(file, 'por');
+            if (result.data.text.trim()) {
+                document.getElementById('donate-seed-name').value = result.data.text.trim().split('\n')[0].substring(0, 30);
+            }
+            lbl.innerHTML = 'Foto processada com sucesso!';
+            lbl.className = 'camera-btn success';
+        } catch (e) {
+            lbl.innerHTML = 'Foto adicionada!';
+            lbl.className = 'camera-btn success';
         }
-        lbl.innerHTML = '✅ Foto processada com sucesso!';
-        lbl.className = 'camera-btn success';
-    } catch (e) {
-        lbl.innerHTML = '✅ Foto adicionada!';
-        lbl.className = 'camera-btn success';
-    }
-});
+    });
+}
 
-// SALVAR SEMENTE
+// CADASTRAR SEMENTE
 window.processDonation = async () => {
     const name = document.getElementById('donate-seed-name').value.trim();
     const type = document.getElementById('donate-seed-type').value;
@@ -271,7 +316,7 @@ window.processDonation = async () => {
     }
 };
 
-// RENDERIZAR SEMENTES DISPONÍVEIS
+// RENDERIZAR SEMENTES
 window.renderSeeds = async () => {
     const container = document.getElementById('seeds-grid-container');
     container.innerHTML = '<p style="color: var(--text-muted);">A carregar sementes...</p>';
@@ -290,9 +335,9 @@ window.renderSeeds = async () => {
             const badgeText = seed.type || 'Doação';
 
             if (seed.status === 'reservada') {
-                actionHtml = `<p style="color: #f57c00; font-size: 13px; font-weight: 600; text-align: center; margin-top: 10px;">🔒 Reservada por ${seed.reservadoPor}</p>`;
+                actionHtml = `<p style="color: var(--earth); font-size: 13px; font-weight: 600; text-align: center; margin-top: 10px;">Reservada por ${seed.reservadoPor}</p>`;
             } else if (user && seed.userId !== user.uid) {
-                actionHtml = `<button class="btn-reserve" onclick="window.reservarSemente('${seedId}', '${seed.authorEmail}', '${seed.name}')">📦 Reservar / Notificar Doador</button>`;
+                actionHtml = `<button class="btn-reserve" onclick="window.reservarSemente('${seedId}', '${seed.userId}', '${seed.author}', '${seed.name}')">Reservar e Abrir Chat</button>`;
             } else if (user && seed.userId === user.uid) {
                 actionHtml = `<p style="color: var(--text-muted); font-size: 13px; text-align: center; margin-top: 10px;">Esta semente é sua.</p>`;
             }
@@ -305,7 +350,7 @@ window.renderSeeds = async () => {
                     <span class="badge-tipo ${badgeClass}">${badgeText}</span>
                     <h4 style="color: var(--primary); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
                     <p style="font-size: 13px; color: var(--text-muted);">Doador: <strong>${seed.author}</strong></p>
-                    <p style="font-size: 12px; color: var(--text-muted);">📍 ${seed.community || 'Geral'}</p>
+                    <p style="font-size: 12px; color: var(--text-muted);">Comunidade: ${seed.community || 'Geral'}</p>
                 </div>
                 <div>${actionHtml}</div>
             `;
@@ -316,23 +361,186 @@ window.renderSeeds = async () => {
     }
 };
 
-window.reservarSemente = async (id, authorEmail, seedName) => {
+// CHAT PRIVADO POR SEMENTE
+window.reservarSemente = async (seedId, ownerId, ownerName, seedName) => {
     const user = auth.currentUser;
-    if(confirm(`Deseja reservar a semente "${seedName}"? Isto abrirá o seu leitor de e-mail para notificar o doador (${authorEmail}).`)) {
+    if (!user) return;
+    
+    const myName = userProfileCache?.displayName || user.email.split('@')[0];
+
+    if(confirm(`Deseja reservar a semente "${seedName}" e iniciar um chat com ${ownerName}?`)) {
         try {
-            await updateDoc(doc(db, "seeds", id), {
+            await updateDoc(doc(db, "seeds", seedId), {
                 status: 'reservada',
-                reservadoPor: userProfileCache?.displayName || user.email.split('@')[0]
+                reservadoPor: myName
             });
             
-            const subject = encodeURIComponent(`Reserva da semente: ${seedName} - Sementes Vivas`);
-            const body = encodeURIComponent(`Olá!\n\nO utilizador ${user.email} acabou de reservar a sua semente "${seedName}" na plataforma Sementes Vivas.\n\nPor favor, entre em contacto para combinar a entrega ou troca.`);
-            window.location.href = `mailto:${authorEmail}?subject=${subject}&body=${body}`;
+            const chatRoomRef = await addDoc(collection(db, "private_chats"), {
+                seedId: seedId,
+                seedName: seedName,
+                ownerId: ownerId,
+                ownerName: ownerName,
+                requesterId: user.uid,
+                requesterName: myName,
+                participants: [ownerId, user.uid],
+                createdAt: serverTimestamp()
+            });
 
-            window.renderSeeds();
+            await addDoc(collection(db, "private_chats", chatRoomRef.id, "messages"), {
+                text: `Olá ${ownerName}! Acabei de reservar a semente "${seedName}". Como podemos combinar a entrega ou troca?`,
+                senderId: user.uid,
+                senderName: myName,
+                avatar: userProfileCache?.avatarBase64 || "",
+                timestamp: serverTimestamp()
+            });
+
+            window.showPrivateChats(chatRoomRef.id);
         } catch(e) {
-            alert("Erro ao efetuar a reserva.");
+            alert("Erro ao efetuar a reserva e abrir o chat.");
         }
+    }
+};
+
+window.loadPrivateChatList = async (chatIdToOpen = null) => {
+    const listContainer = document.getElementById('private-chat-list');
+    const user = auth.currentUser;
+    if (!user) return;
+
+    listContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 13px;">A carregar conversas...</p>';
+
+    try {
+        const querySnapshot = await getDocs(collection(db, "private_chats"));
+        listContainer.innerHTML = '';
+        let threads = [];
+
+        querySnapshot.forEach(docSnap => {
+            const data = docSnap.data();
+            if (data.participants && data.participants.includes(user.uid)) {
+                threads.push({ id: docSnap.id, ...data });
+            }
+        });
+
+        threads.sort((a, b) => {
+            if (!a.createdAt || !b.createdAt) return 0;
+            return b.createdAt.toMillis() - a.createdAt.toMillis();
+        });
+
+        if (threads.length === 0) {
+            listContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 13px;">Ainda não tem nenhuma conversa ativa.</p>';
+            return;
+        }
+
+        threads.forEach(thread => {
+            const isOwner = thread.ownerId === user.uid;
+            const otherPersonName = isOwner ? thread.requesterName : thread.ownerName;
+            const roleLabel = isOwner ? 'Interessado na sua semente' : 'Doador da semente';
+
+            const item = document.createElement('div');
+            item.className = `chat-thread-item ${activePrivateChatId === thread.id ? 'active' : ''}`;
+            item.id = `thread-item-${thread.id}`;
+            item.onclick = () => window.openPrivateChatRoom(thread.id, thread.seedName, otherPersonName);
+            
+            item.innerHTML = `
+                <div style="font-weight: 700; color: var(--primary); font-size: 14px; margin-bottom: 3px;">${thread.seedName}</div>
+                <div style="font-size: 12px; color: var(--secondary); font-weight: 600;">${otherPersonName}</div>
+                <div style="font-size: 11px; color: var(--text-muted);">${roleLabel}</div>
+            `;
+            listContainer.appendChild(item);
+        });
+
+        if (chatIdToOpen) {
+            const targetThread = threads.find(t => t.id === chatIdToOpen);
+            if (targetThread) {
+                const otherName = targetThread.ownerId === user.uid ? targetThread.requesterName : targetThread.ownerName;
+                window.openPrivateChatRoom(targetThread.id, targetThread.seedName, otherName);
+            }
+        }
+    } catch (error) {
+        listContainer.innerHTML = '<p style="color: red; font-size: 13px;">Erro ao carregar conversas.</p>';
+    }
+};
+
+window.openPrivateChatRoom = async (chatId, seedName, otherPersonName) => {
+    activePrivateChatId = chatId;
+    
+    document.querySelectorAll('.chat-thread-item').forEach(el => el.classList.remove('active'));
+    const activeEl = document.getElementById(`thread-item-${chatId}`);
+    if (activeEl) activeEl.classList.add('active');
+
+    document.getElementById('private-chat-header').style.display = 'block';
+    document.getElementById('private-chat-title').innerText = `Semente: ${seedName}`;
+    document.getElementById('private-chat-subtitle').innerText = `A conversar com: ${otherPersonName}`;
+    document.getElementById('private-chat-input-box').style.display = 'flex';
+
+    const messagesContainer = document.getElementById('private-chat-messages');
+    messagesContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center;">A carregar mensagens...</p>';
+
+    try {
+        const msgsSnap = await getDocs(collection(db, "private_chats", chatId, "messages"));
+        messagesContainer.innerHTML = '';
+        let msgs = [];
+
+        msgsSnap.forEach(docSnap => msgs.push(docSnap.data()));
+        msgs.sort((a, b) => {
+            if (!a.timestamp || !b.timestamp) return 0;
+            return a.timestamp.toMillis() - b.timestamp.toMillis();
+        });
+
+        const user = auth.currentUser;
+        msgs.forEach(msg => {
+            const isMine = user && msg.senderId === user.uid;
+            const avatarHtml = msg.avatar 
+                ? `<img src="${msg.avatar}" class="chat-avatar">` 
+                : `<div class="chat-avatar" style="background:#eaf4ed; display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--secondary);">U</div>`;
+
+            const div = document.createElement('div');
+            div.className = `chat-msg ${isMine ? 'mine' : ''}`;
+            div.innerHTML = `
+                ${avatarHtml}
+                <div class="chat-msg-content">
+                    <div class="chat-msg-author">${msg.senderName}</div>
+                    <div class="chat-msg-text">${msg.text}</div>
+                </div>
+            `;
+            messagesContainer.appendChild(div);
+        });
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    } catch (error) {
+        messagesContainer.innerHTML = '<p style="color: red; text-align: center;">Erro ao carregar mensagens.</p>';
+    }
+};
+
+window.sendPrivateMessage = async () => {
+    if (!activePrivateChatId) return;
+    const input = document.getElementById('private-chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const myName = userProfileCache?.displayName || user.email.split('@')[0];
+
+    try {
+        await addDoc(collection(db, "private_chats", activePrivateChatId, "messages"), {
+            text: text,
+            senderId: user.uid,
+            senderName: myName,
+            avatar: userProfileCache?.avatarBase64 || "",
+            timestamp: serverTimestamp()
+        });
+        input.value = '';
+        const titleText = document.getElementById('private-chat-title').innerText.replace('Semente: ', '');
+        const subText = document.getElementById('private-chat-subtitle').innerText.replace('A conversar com: ', '');
+        window.openPrivateChatRoom(activePrivateChatId, titleText, subText);
+    } catch (error) {
+        alert('Erro ao enviar mensagem.');
+    }
+};
+
+window.checkPrivateChatEnter = (e) => {
+    if (e.key === 'Enter') {
+        window.sendPrivateMessage();
     }
 };
 
@@ -375,7 +583,7 @@ window.renderChat = async () => {
             const isMine = user && msg.userId === user.uid;
             const avatarHtml = msg.avatar 
                 ? `<img src="${msg.avatar}" class="chat-avatar">` 
-                : `<div class="chat-avatar" style="background:#e8f4ea; display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--secondary);">🌱</div>`;
+                : `<div class="chat-avatar" style="background:#eaf4ed; display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--secondary);">U</div>`;
 
             const div = document.createElement('div');
             div.className = `chat-msg ${isMine ? 'mine' : ''}`;
@@ -424,7 +632,7 @@ window.checkChatEnter = (e) => {
     }
 };
 
-// MINHAS SEMENTES NO PERFIL
+// MEU PERFIL E MINHAS SEMENTES
 window.renderMyProfile = async () => {
     const container = document.getElementById('my-seeds-container');
     const user = auth.currentUser;
@@ -446,7 +654,7 @@ window.renderMyProfile = async () => {
                 
                 const badgeClass = seed.type === 'Troca' ? 'badge-troca' : 'badge-doacao';
                 const badgeText = seed.type || 'Doação';
-                let statusText = seed.status === 'reservada' ? `<span style="color: #f57c00; font-weight: 600;">Reservada por ${seed.reservadoPor}</span>` : `<span style="color: #2e7d32; font-weight: 600;">Disponível</span>`;
+                let statusText = seed.status === 'reservada' ? `<span style="color: var(--earth); font-weight: 600;">Reservada por ${seed.reservadoPor}</span>` : `<span style="color: var(--secondary); font-weight: 600;">Disponível</span>`;
 
                 box.innerHTML = `
                     <div>
@@ -479,17 +687,17 @@ window.excluirSemente = async (id) => {
     }
 };
 
-// PESQUISA VIA WIKIPÉDIA
+// WIKIPÉDIA
 window.searchSeedInfo = async () => {
     const queryInput = document.getElementById('search-seed-input').value.trim();
     const resultsContainer = document.getElementById('learn-results');
 
     if (!queryInput) {
-        resultsContainer.innerHTML = '<p style="color: #d32f2f;">Por favor, digite o nome de uma semente para pesquisar.</p>';
+        resultsContainer.innerHTML = '<p style="color: #c53030;">Por favor, digite o nome de uma semente para pesquisar.</p>';
         return;
     }
 
-    resultsContainer.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--secondary);"><p>🌱 A pesquisar informações para <strong>"${queryInput}"</strong>...</p></div>`;
+    resultsContainer.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--secondary);"><p>A pesquisar informações para <strong>"${queryInput}"</strong>...</p></div>`;
 
     try {
         const response = await fetch(`https://pt.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(queryInput)}`);
@@ -497,21 +705,27 @@ window.searchSeedInfo = async () => {
         const data = await response.json();
 
         resultsContainer.innerHTML = `
-            <div style="background: #e8f4ea; border-left: 5px solid var(--primary); padding: 20px; border-radius: 8px; color: var(--primary);">
+            <div style="background: #eaf4ed; border-left: 5px solid var(--primary); padding: 20px; border-radius: 8px; color: var(--primary);">
                 <h3 style="margin-top: 0; margin-bottom: 10px;">${data.title}</h3>
                 <p style="line-height: 1.6; color: var(--text-main); font-size: 14px;">${data.extract}</p>
                 ${data.thumbnail ? `<img src="${data.thumbnail.source}" alt="${data.title}" style="max-width: 150px; border-radius: 6px; margin-top: 15px; display: block;">` : ''}
                 <p style="margin-top: 15px; font-size: 13px;">
-                    <a href="${data.content_urls.desktop.page}" target="_blank" style="color: var(--secondary); font-weight: 600; text-decoration: underline;">🔗 Ler artigo completo na Wikipédia</a>
+                    <a href="${data.content_urls.desktop.page}" target="_blank" style="color: var(--secondary); font-weight: 600; text-decoration: underline;">Ler artigo completo na Wikipédia</a>
                 </p>
             </div>
         `;
     } catch (error) {
         resultsContainer.innerHTML = `
-            <div style="background: #fff3e0; border-left: 5px solid #f57c00; padding: 20px; border-radius: 8px; color: #e65100;">
+            <div style="background: #fcf5e5; border-left: 5px solid var(--earth); padding: 20px; border-radius: 8px; color: #99581a;">
                 <h3 style="margin-top: 0;">Nenhum resultado encontrado</h3>
                 <p style="font-size: 14px;">Não encontrámos um artigo exato para "${queryInput}". Tente pesquisar pelo nome comum (ex: "Tomateiro", "Girassol").</p>
             </div>
         `;
+    }
+};
+
+window.checkSearchEnter = (e) => {
+    if (e.key === 'Enter') {
+        window.searchSeedInfo();
     }
 };
