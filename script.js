@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc, serverTimestamp, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAZUFBGcCz0o0ZeSvXkdbwJXBzFFBemgt0",
@@ -18,11 +18,17 @@ const db = getFirestore(app);
 let currentCommunity = "Aparecida do Taboado";
 let userProfileCache = null;
 
-// CONTROLO DE ABAS / VISTAS
+// SISTEMA DE ABAS PRINCIPAIS
 window.switchView = (viewId) => {
+    // Esconde todas as vistas
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     const view = document.getElementById(viewId);
     if(view) view.classList.add('active');
+
+    // Atualiza visualmente qual aba está ativa na barra superior
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    const activeTabBtn = document.getElementById(`tab-${viewId}`);
+    if (activeTabBtn) activeTabBtn.classList.add('active');
 };
 
 window.showDashboard = () => window.switchView('dashboard-view');
@@ -37,8 +43,27 @@ window.showDonate = () => {
     window.switchView('donate-view');
 };
 window.showAvailable = () => { window.switchView('available-view'); window.renderSeeds(); };
-window.showProfile = () => { window.switchView('profile-view'); window.loadProfileData(); window.renderMyProfile(); };
+window.showProfile = () => { 
+    window.switchView('profile-view'); 
+    window.switchProfileSubTab('edit');
+};
 window.showChat = () => { window.switchView('chat-view'); window.renderChat(); };
+
+// SUB-ABAS DENTRO DO PERFIL
+window.switchProfileSubTab = (subTab) => {
+    document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(`subtab-${subTab}`).classList.add('active');
+
+    if (subTab === 'edit') {
+        document.getElementById('profile-sub-edit').style.display = 'block';
+        document.getElementById('profile-sub-seeds').style.display = 'none';
+        window.loadProfileData();
+    } else {
+        document.getElementById('profile-sub-edit').style.display = 'none';
+        document.getElementById('profile-sub-seeds').style.display = 'block';
+        window.renderMyProfile();
+    }
+};
 
 // AUTENTICAÇÃO
 window.login = async () => {
@@ -60,7 +85,6 @@ window.register = async () => {
     const errorMsg = document.getElementById('auth-error');
     try {
         const cred = await createUserWithEmailAndPassword(auth, email, pass);
-        // Criar perfil padrão no Firestore
         await setDoc(doc(db, "users", cred.user.uid), {
             displayName: email.split('@')[0],
             community: "Aparecida do Taboado",
@@ -77,13 +101,13 @@ window.register = async () => {
 
 window.logout = async () => { await signOut(auth); };
 
-// CONTROLO DE SESSÃO E VISIBILIDADE DA TELA DE LOGIN
+// CONTROLO DE SESSÃO (Esconde Login completamente ao entrar)
 onAuthStateChanged(auth, async (user) => {
     const header = document.getElementById('main-header');
     const greeting = document.getElementById('user-greeting');
+    const loginView = document.getElementById('login-view');
     
     if (user) {
-        // Carrega dados do perfil do utilizador
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
             userProfileCache = userDoc.data();
@@ -93,11 +117,13 @@ onAuthStateChanged(auth, async (user) => {
             greeting.innerText = `Olá, ${user.email.split('@')[0]}`;
         }
         
+        loginView.style.display = 'none';
         header.style.display = 'flex';
         window.showDashboard();
     } else {
         header.style.display = 'none';
         userProfileCache = null;
+        loginView.style.display = '';
         window.switchView('login-view');
     }
 });
@@ -162,7 +188,7 @@ window.saveProfile = async () => {
     let avatarBase64 = userProfileCache?.avatarBase64 || "";
 
     if (photoInput.files.length > 0) {
-        avatarBase64 = await comprimirEConverterBase64(photoInput.files[0], 200, 0.6); // Avatar menor
+        avatarBase64 = await comprimirEConverterBase64(photoInput.files[0], 200, 0.6);
     }
 
     try {
@@ -302,7 +328,7 @@ window.reservarSemente = async (id, authorEmail, seedName) => {
     }
 };
 
-// CHAT COMUNITÁRIO SEPARADO POR COMUNIDADE
+// CHAT COMUNITÁRIO
 window.changeChatCommunity = () => {
     currentCommunity = document.getElementById('chat-community-select').value;
     window.renderChat();
@@ -326,7 +352,6 @@ window.renderChat = async () => {
             }
         });
 
-        // Ordenar por timestamp localmente para evitar erros de índice composto
         messages.sort((a, b) => {
             if (!a.timestamp || !b.timestamp) return 0;
             return a.timestamp.toMillis() - b.timestamp.toMillis();
@@ -391,7 +416,7 @@ window.checkChatEnter = (e) => {
     }
 };
 
-// MEU PERFIL E SEUS ANÚNCIOS
+// MINHAS SEMENTES NO PERFIL
 window.renderMyProfile = async () => {
     const container = document.getElementById('my-seeds-container');
     const user = auth.currentUser;
