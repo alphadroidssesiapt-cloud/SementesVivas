@@ -272,7 +272,7 @@ window.excluirSemente = async (id) => {
 };
 
 // PESQUISA DE PLANTIO
-// PESQUISA DE PLANTIO CONECTADA AO GOOGLE (GEMINI API)
+// PESQUISA DE PLANTIO DINÂMICA VIA WIKIPÉDIA (Sem chave de API)
 window.searchSeedInfo = async () => {
     const queryInput = document.getElementById('search-seed-input').value.trim();
     const resultsContainer = document.getElementById('learn-results');
@@ -284,47 +284,36 @@ window.searchSeedInfo = async () => {
 
     resultsContainer.innerHTML = `
         <div style="text-align: center; padding: 20px; color: #2c4c3b;">
-            <p> A consultar a base de conhecimento para <strong>"${queryInput}"</strong>...</p>
+            <p> A pesquisar informações para <strong>"${queryInput}"</strong>...</p>
         </div>
     `;
 
     try {
-        // Substitua pela sua chave de API do Google Gemini real
-        const apiKey = "SUA_CHAVE_DE_API_DO_GEMINI_AQUI"; 
+        // Faz a busca na API pública da Wikipédia em português
+        const response = await fetch(`https://pt.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(queryInput)}`);
         
-        const prompt = `Crie um guia prático e curto de plantio para a planta/semente: "${queryInput}". 
-        Responda em formato HTML simples (usando tags <strong>, <br>, etc.) contendo:
-        - Nome comum e científico
-        - Luz necessária
-        - Rega ideal
-        - Solo recomendado
-        - Profundidade de plantio
-        - Uma dica extra de cultivo.
-        Mantenha a resposta limpa e sem blocos de markdown de código estranhos, apenas o HTML direto.`;
-
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
-            })
-        });
+        if (!response.ok) {
+            throw new Error('Artigo não encontrado');
+        }
 
         const data = await response.json();
-        const aiResponseText = data.candidates[0].content.parts[0].text;
 
         resultsContainer.innerHTML = `
             <div style="background: #e8f4ea; border-left: 5px solid #2c4c3b; padding: 20px; border-radius: 6px; color: #1e3629;">
-                ${aiResponseText}
+                <h3 style="margin-top: 0; color: #2c4c3b;">${data.title}</h3>
+                <p style="line-height: 1.6;">${data.extract}</p>
+                ${data.thumbnail ? `<img src="${data.thumbnail.source}" alt="${data.title}" style="max-width: 150px; border-radius: 6px; margin-top: 10px; display: block;">` : ''}
+                <p style="margin-top: 15px; font-size: 13px;">
+                    <a href="${data.content_urls.desktop.page}" target="_blank" style="color: #2c4c3b; font-weight: bold; text-decoration: underline;">🔗 Ler artigo completo na Wikipédia</a>
+                </p>
             </div>
         `;
 
     } catch (error) {
-        console.error("Erro ao buscar dados:", error);
         resultsContainer.innerHTML = `
             <div style="background: #fff3e0; border-left: 5px solid #f57c00; padding: 20px; border-radius: 6px; color: #e65100;">
-                <h3 style="margin-top: 0;">Erro na pesquisa</h3>
-                <p>Não foi possível ligar ao serviço neste momento. Verifique a sua chave de API ou tente novamente mais tarde.</p>
+                <h3 style="margin-top: 0;">Nenhum resultado encontrado</h3>
+                <p>Não encontrámos um artigo exato para "${queryInput}". Tente pesquisar pelo nome comum da planta (ex: "Tomateiro", "Girassol", "Alface").</p>
             </div>
         `;
     }
