@@ -316,7 +316,7 @@ window.processDonation = async () => {
     }
 };
 
-// RENDERIZAR SEMENTES
+// RENDERIZAR SEMENTES (COM OPÇÃO DE CANCELAR PRÓPRIA RESERVA)
 window.renderSeeds = async () => {
     const container = document.getElementById('seeds-grid-container');
     container.innerHTML = '<p style="color: var(--text-muted);">A carregar sementes...</p>';
@@ -335,7 +335,14 @@ window.renderSeeds = async () => {
             const badgeText = seed.type || 'Doação';
 
             if (seed.status === 'reservada') {
-                actionHtml = `<p style="color: var(--earth); font-size: 13px; font-weight: 600; text-align: center; margin-top: 10px;">Reservada por ${seed.reservadoPor}</p>`;
+                if (user && seed.reservadoPorId === user.uid) {
+                    actionHtml = `
+                        <p style="color: var(--earth); font-size: 12px; font-weight: 600; text-align: center; margin-top: 8px;">Reservada por você</p>
+                        <button class="btn-cancel-reserve" onclick="window.removerReserva('${seedId}', 'explore')">Cancelar Minha Reserva</button>
+                    `;
+                } else {
+                    actionHtml = `<p style="color: var(--earth); font-size: 13px; font-weight: 600; text-align: center; margin-top: 10px;">Reservada por ${seed.reservadoPor}</p>`;
+                }
             } else if (user && seed.userId !== user.uid) {
                 actionHtml = `<button class="btn-reserve" onclick="window.reservarSemente('${seedId}', '${seed.userId}', '${seed.author}', '${seed.name}')">Reservar e Abrir Chat</button>`;
             } else if (user && seed.userId === user.uid) {
@@ -361,7 +368,7 @@ window.renderSeeds = async () => {
     }
 };
 
-// CHAT PRIVADO POR SEMENTE
+// RESERVAR SEMENTE E CRIAR CHAT PRIVADO
 window.reservarSemente = async (seedId, ownerId, ownerName, seedName) => {
     const user = auth.currentUser;
     if (!user) return;
@@ -372,7 +379,8 @@ window.reservarSemente = async (seedId, ownerId, ownerName, seedName) => {
         try {
             await updateDoc(doc(db, "seeds", seedId), {
                 status: 'reservada',
-                reservadoPor: myName
+                reservadoPor: myName,
+                reservadoPorId: user.uid
             });
             
             const chatRoomRef = await addDoc(collection(db, "private_chats"), {
@@ -401,6 +409,28 @@ window.reservarSemente = async (seedId, ownerId, ownerName, seedName) => {
     }
 };
 
+// FUNÇÃO PARA REMOVER RESERVA (TANTO PARA ANUNCIANTE QUANTO PARA INTERESSADO)
+window.removerReserva = async (seedId, originView) => {
+    if (confirm("Tem certeza que deseja remover a reserva desta semente? Ela voltará a ficar disponível para todos.")) {
+        try {
+            await updateDoc(doc(db, "seeds", seedId), {
+                status: 'disponível',
+                reservadoPor: null,
+                reservadoPorId: null
+            });
+            alert("Reserva removida com sucesso!");
+            if (originView === 'profile') {
+                window.renderMyProfile();
+            } else {
+                window.renderSeeds();
+            }
+        } catch (e) {
+            alert("Erro ao remover a reserva.");
+        }
+    }
+};
+
+// CHATS PRIVADOS
 window.loadPrivateChatList = async (chatIdToOpen = null) => {
     const listContainer = document.getElementById('private-chat-list');
     const user = auth.currentUser;
@@ -632,7 +662,7 @@ window.checkChatEnter = (e) => {
     }
 };
 
-// MEU PERFIL E MINHAS SEMENTES
+// MEU PERFIL E MINHAS SEMENTES (COM OPÇÃO PARA ANUNCIANTE REMOVER RESERVA)
 window.renderMyProfile = async () => {
     const container = document.getElementById('my-seeds-container');
     const user = auth.currentUser;
@@ -654,7 +684,14 @@ window.renderMyProfile = async () => {
                 
                 const badgeClass = seed.type === 'Troca' ? 'badge-troca' : 'badge-doacao';
                 const badgeText = seed.type || 'Doação';
-                let statusText = seed.status === 'reservada' ? `<span style="color: var(--earth); font-weight: 600;">Reservada por ${seed.reservadoPor}</span>` : `<span style="color: var(--secondary); font-weight: 600;">Disponível</span>`;
+                
+                let statusText = seed.status === 'reservada' 
+                    ? `<span style="color: var(--earth); font-weight: 600;">Reservada por ${seed.reservadoPor}</span>` 
+                    : `<span style="color: var(--secondary); font-weight: 600;">Disponível</span>`;
+
+                let removeReserveBtn = seed.status === 'reservada'
+                    ? `<button class="btn-cancel-reserve" onclick="window.removerReserva('${seedId}', 'profile')">Remover Reserva</button>`
+                    : '';
 
                 box.innerHTML = `
                     <div>
@@ -663,7 +700,10 @@ window.renderMyProfile = async () => {
                         <h4 style="color: var(--primary); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
                         <p style="font-size: 13px; margin-bottom: 4px;"><strong>Status:</strong> ${statusText}</p>
                     </div>
-                    <button class="btn-danger" onclick="window.excluirSemente('${seedId}')">Excluir Semente</button>
+                    <div>
+                        ${removeReserveBtn}
+                        <button class="btn-danger" onclick="window.excluirSemente('${seedId}')">Excluir Semente</button>
+                    </div>
                 `;
                 container.appendChild(box);
             }
