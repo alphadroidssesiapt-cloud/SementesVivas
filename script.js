@@ -19,6 +19,18 @@ let currentCommunity = "Aparecida do Taboado";
 let userProfileCache = null;
 let activePrivateChatId = null;
 
+// DETECÇÃO AUTOMÁTICA DO DISPOSITIVO DO UTILIZADOR AO CARREGAR
+window.addEventListener('DOMContentLoaded', () => {
+    const frame = document.getElementById('device-frame');
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    
+    if (isMobileDevice) {
+        frame.className = 'device-mobile';
+    } else {
+        frame.className = 'device-desktop';
+    }
+});
+
 // BASE DE DADOS DE BIOMAS E PORTAIS ESTADUAIS POR CIDADE/ESTADO
 const cityBiomeDatabase = {
     "Aparecida do Taboado": {
@@ -115,16 +127,6 @@ window.toggleTheme = () => {
     } else {
         htmlEl.setAttribute('data-theme', 'dark');
         themeIcon.innerText = 'light_mode';
-    }
-};
-
-// CONTROLE DE MODO DISPOSITIVO (RESPONSIVO OU SIMULADOR CELULAR)
-window.changeDeviceMode = (mode) => {
-    const frame = document.getElementById('device-frame');
-    if (mode === 'mobile') {
-        frame.className = 'device-mobile';
-    } else {
-        frame.className = 'device-desktop';
     }
 };
 
