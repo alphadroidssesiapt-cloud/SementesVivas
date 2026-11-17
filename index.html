@@ -193,3 +193,203 @@
                                 <h3 id="private-chat-title" style="font-size: 15px; font-weight: 700;">Semente</h3>
                                 <p id="private-chat-subtitle" style="font-size: 12px; color: var(--text-muted);">Participantes</p>
                             </div>
+                        </div>
+                        
+                        <div id="private-chat-messages" class="tg-messages-box">
+                            <div class="tg-empty-chat">Selecione uma conversa ao lado ou reserve uma semente para iniciar.</div>
+                        </div>
+                        
+                        <div id="private-chat-input-box" class="tg-input-area" style="display: none;">
+                            <input type="text" id="private-chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkPrivateChatEnter(event)">
+                            <button class="tg-send-btn" onclick="window.sendPrivateMessage()">
+                                <span class="material-icons">send</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHAT COMUNITÁRIO -->
+            <div id="chat-view" class="view">
+                <div class="telegram-community-container">
+                    <div class="tg-community-header">
+                        <div>
+                            <h2 style="color: var(--forest-dark); font-size: 18px;">Chat Comunitário</h2>
+                            <p style="font-size: 12px; color: var(--text-muted);">Conversas gerais da região</p>
+                        </div>
+                        <select id="chat-community-select" class="select-styled" style="max-width: 240px; padding: 8px 12px;" onchange="window.changeChatCommunity()">
+                            <option value="Aparecida do Taboado">Aparecida do Taboado - MS</option>
+                            <option value="Paranaíba">Paranaíba - MS</option>
+                            <option value="Três Lagoas">Três Lagoas - MS</option>
+                            <option value="Campo Grande">Campo Grande - MS</option>
+                            <option value="Dourados">Dourados - MS</option>
+                            <option value="Corumbá">Corumbá - MS</option>
+                            <option value="Bonito">Bonito - MS</option>
+                            <option value="Santa Fé do Sul">Santa Fé do Sul - SP</option>
+                            <option value="Jales">Jales - SP</option>
+                            <option value="Fernandópolis">Fernandópolis - SP</option>
+                        </select>
+                    </div>
+                    
+                    <div id="chat-messages" class="tg-messages-box" style="height: 420px;">
+                        <p style="color: var(--text-muted); text-align: center; margin-top: 20px;">A carregar mensagens...</p>
+                    </div>
+                    
+                    <div class="tg-input-area">
+                        <input type="text" id="chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkChatEnter(event)">
+                        <button class="tg-send-btn" onclick="window.enviarMensagemChat()">
+                            <span class="material-icons">send</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENCICLOPÉDIA DE SEMENTES NATIVAS & BIOMA -->
+            <div id="encyclopedia-view" class="view">
+                <div class="page-header-dark">
+                    <h2>Identificação de Bioma e Enciclopédia Nativa</h2>
+                    <p>Conecte sua localização via Google Maps para identificar o bioma e acessar o portal ambiental do seu estado.</p>
+                </div>
+
+                <div class="biome-locator-card">
+                    <div class="biome-locator-info">
+                        <span class="enc-tag" style="margin-bottom: 8px;">GEOLOCALIZAÇÃO AMBIENTAL</span>
+                        <h3 style="color: var(--forest-dark); font-size: 20px; margin-bottom: 8px;">Identificar Meu Bioma e Portal Estadual</h3>
+                        <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+                            Use o GPS ou selecione sua cidade para visualizar a região no Google Maps, descobrir o bioma local e acessar o órgão ambiental oficial do seu estado.
+                        </p>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button class="btn-lime-pill" onclick="window.detectBiomeWithMaps()">
+                                <span class="material-icons" style="font-size: 17px;">my_location</span> Detectar Minha Localização (GPS)
+                            </button>
+                            <button class="btn-outline-dark" style="width: auto; padding: 9px 18px;" onclick="window.identifyBiomeByCity()">
+                                Usar Minha Cidade do Perfil
+                            </button>
+                        </div>
+
+                        <div id="biome-result-box" class="biome-result-box" style="display: none;">
+                            <h4 id="biome-detected-title" style="color: var(--forest-dark); font-size: 16px; margin-bottom: 6px;">Bioma Identificado</h4>
+                            <p id="biome-detected-desc" style="font-size: 13px; color: var(--text-main); line-height: 1.5; margin-bottom: 14px;"></p>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <a id="gmaps-external-link" href="#" target="_blank" class="btn-outline-dark" style="width: auto; padding: 8px 16px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                                    <span class="material-icons" style="font-size: 16px;">map</span> Abrir no Google Maps
+                                </a>
+                                <a id="state-portal-link" href="#" target="_blank" class="btn-lime-pill" style="text-decoration: none;">
+                                    <span class="material-icons" style="font-size: 16px;">open_in_new</span> <span id="state-portal-label">Acessar Portal do Estado</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="biome-map-frame">
+                        <iframe id="google-maps-iframe" 
+                            src="https://maps.google.com/maps?q=Aparecida+do+Taboado,MS&t=k&z=11&ie=UTF8&iwloc=&output=embed" 
+                            width="100%" height="260" style="border:0; border-radius: 12px;" allowfullscreen="" loading="lazy">
+                        </iframe>
+                    </div>
+                </div>
+                
+                <div class="encyclopedia-grid" style="margin-top: 30px;">
+                    <div class="encyclopedia-card">
+                        <span class="enc-tag">Cerrado e Mata Atlântica</span>
+                        <h3>Ipê-Amarelo (Handroanthus albus)</h3>
+                        <p>Suas sementes são extremamente leves e aladas (possuem pequenas asas), o que permite que o vento as transporte por longas distâncias durante o período de seca.</p>
+                    </div>
+                    <div class="encyclopedia-card">
+                        <span class="enc-tag">Amazônia</span>
+                        <h3>Castanheira-do-Pará (Bertholletia excelsa)</h3>
+                        <p>O fruto duro guarda de 15 a 25 sementes. Sua germinação depende quase exclusivamente da cutia, roedor que enterra as sementes para guardar alimento.</p>
+                    </div>
+                    <div class="encyclopedia-card">
+                        <span class="enc-tag">Mata de Araucárias</span>
+                        <h3>Araucária (Araucaria angustifolia)</h3>
+                        <p>O pinhão é a semente desta árvore milenar e principal fonte de alimento da gralha-azul, ave fundamental para dispersar e enterrar as sementes no solo.</p>
+                    </div>
+                    <div class="encyclopedia-card">
+                        <span class="enc-tag">Cerrado</span>
+                        <h3>Baru (Dipteryx alata)</h3>
+                        <p>Típica do Cerrado brasileiro, a amêndoa do baru fica protegida por uma casca lenhosa extremamente dura, sendo rica em proteínas e símbolo de extrativismo sustentável.</p>
+                    </div>
+                    <div class="encyclopedia-card">
+                        <span class="enc-tag">Cerrado e Pantanal</span>
+                        <h3>Jatobá (Hymenaea courbaril)</h3>
+                        <p>Suas sementes ficam envolvidas por uma polpa farinácea doce dentro de uma vagem rija, adaptada originalmente para dispersão por grandes mamíferos.</p>
+                    </div>
+                    <div class="encyclopedia-card">
+                        <span class="enc-tag">Veredas</span>
+                        <h3>Buriti (Mauritia flexuosa)</h3>
+                        <p>Palmeira símbolo de áreas úmidas. Suas sementes possuem casca escamosa e sustentam diversas espécies da fauna silvestre em épocas de estiagem.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- APRENDER A PLANTAR -->
+            <div id="learn-view" class="view">
+                <div class="content-card" style="max-width: 800px;">
+                    <h2 style="color: var(--forest-dark); margin-bottom: 10px;">Guia de Cultivo Inteligente</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;">Pesquise qualquer planta ou semente na base botânica para ver detalhes.</p>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="search-seed-input" placeholder="Ex: Girassol, Alface, Tomate..." style="margin: 0; flex: 1;" onkeypress="window.checkSearchEnter(event)">
+                        <button class="btn-lime-pill" onclick="window.searchSeedInfo()" style="padding: 12px 28px;">Pesquisar</button>
+                    </div>
+                    <div id="learn-results" style="margin-top: 25px;"></div>
+                </div>
+            </div>
+
+            <!-- MEU PERFIL -->
+            <div id="profile-view" class="view">
+                <div class="sub-tabs-bar">
+                    <button class="sub-tab-btn active" id="subtab-edit" onclick="window.switchProfileSubTab('edit')">Editar Dados e Avatar</button>
+                    <button class="sub-tab-btn" id="subtab-seeds" onclick="window.switchProfileSubTab('seeds')">Minhas Sementes</button>
+                </div>
+
+                <div id="profile-sub-edit" class="content-card">
+                    <h2 style="color: var(--forest-dark); margin-bottom: 15px;">Personalizar Perfil</h2>
+                    
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <img id="profile-avatar-preview" src="" alt="Avatar" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--lime); display: none; margin: 0 auto 10px auto;">
+                        <div id="profile-avatar-placeholder" style="width: 90px; height: 90px; border-radius: 50%; background: var(--forest-dark); color: var(--lime); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; margin: 0 auto 10px auto; border: 3px solid var(--lime);">U</div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Alterar Foto de Perfil</label>
+                        <input type="file" id="profile-photo-input" accept="image/*">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Nome / Apelido no Chat</label>
+                        <input type="text" id="profile-name" placeholder="Como deseja aparecer...">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Sua Comunidade / Cidade Principal</label>
+                        <select id="profile-community" class="select-styled">
+                            <option value="Aparecida do Taboado">Aparecida do Taboado - MS</option>
+                            <option value="Paranaíba">Paranaíba - MS</option>
+                            <option value="Três Lagoas">Três Lagoas - MS</option>
+                            <option value="Campo Grande">Campo Grande - MS</option>
+                            <option value="Dourados">Dourados - MS</option>
+                            <option value="Corumbá">Corumbá - MS</option>
+                            <option value="Bonito">Bonito - MS</option>
+                            <option value="Santa Fé do Sul">Santa Fé do Sul - SP</option>
+                            <option value="Jales">Jales - SP</option>
+                            <option value="Fernandópolis">Fernandópolis - SP</option>
+                        </select>
+                    </div>
+
+                    <button class="btn-lime-full" onclick="window.saveProfile()">Guardar Alterações de Perfil</button>
+                </div>
+
+                <div id="profile-sub-seeds" style="display: none;">
+                    <h3 style="color: var(--forest-dark); margin-bottom: 15px;">Minhas Sementes Cadastradas</h3>
+                    <div id="my-seeds-container" class="seeds-grid"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
