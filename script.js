@@ -19,7 +19,7 @@ let currentCommunity = "Aparecida do Taboado";
 let userProfileCache = null;
 let activePrivateChatId = null;
 
-// DETECÇÃO AUTOMÁTICA DO DISPOSITIVO DO UTILIZADOR AO CARREGAR
+// DETECÇÃO AUTOMÁTICA DO DISPOSITIVO
 window.addEventListener('DOMContentLoaded', () => {
     const frame = document.getElementById('device-frame');
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
@@ -31,7 +31,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// BASE DE DADOS DE BIOMAS E PORTAIS ESTADUAIS POR CIDADE/ESTADO
 const cityBiomeDatabase = {
     "Aparecida do Taboado": {
         state: "MS",
@@ -115,7 +114,6 @@ const cityBiomeDatabase = {
     }
 };
 
-// CONTROLE DE MODO CLARO / ESCURO
 window.toggleTheme = () => {
     const htmlEl = document.documentElement;
     const themeIcon = document.getElementById('theme-icon');
@@ -130,7 +128,6 @@ window.toggleTheme = () => {
     }
 };
 
-// SISTEMA DE ABAS
 window.switchView = (viewId) => {
     document.querySelectorAll('.view').forEach(v => {
         v.classList.remove('active');
@@ -185,7 +182,6 @@ window.showPrivateChats = (chatIdToOpen = null) => {
     window.loadPrivateChatList(chatIdToOpen);
 };
 
-// IDENTIFICAÇÃO DE BIOMA VIA CIDADE DO PERFIL
 window.identifyBiomeByCity = () => {
     const city = userProfileCache?.community || currentCommunity || "Aparecida do Taboado";
     const info = cityBiomeDatabase[city] || cityBiomeDatabase["Aparecida do Taboado"];
@@ -208,10 +204,9 @@ window.identifyBiomeByCity = () => {
     resultBox.style.display = 'block';
 };
 
-// IDENTIFICAÇÃO DE BIOMA VIA GPS DO NAVEGADOR + GOOGLE MAPS
 window.detectBiomeWithMaps = () => {
     if (!navigator.geolocation) {
-        alert("Geolocalização não suportada pelo navegador. A usar cidade do perfil.");
+        alert("Geolocalização não suportada. A usar cidade do perfil.");
         return window.identifyBiomeByCity();
     }
 
@@ -249,22 +244,10 @@ window.detectBiomeWithMaps = () => {
                     biomeName = "Mata Atlântica / Cerrado Paulista";
                     portalUrl = "https://semil.sp.gov.br/";
                     portalLabel = "Secretaria de Meio Ambiente de SP (SEMIL)";
-                } else if (stateName.includes("Mato Grosso")) {
-                    biomeName = "Cerrado / Amazônia / Pantanal";
-                    portalUrl = "http://www.sema.mt.gov.br/";
-                    portalLabel = "Portal Ambiental de MT (SEMA)";
-                } else if (stateName.includes("Goiás")) {
-                    biomeName = "Cerrado";
-                    portalUrl = "https://www.meioambiente.go.gov.br/";
-                    portalLabel = "Portal Ambiental de GO (SEMAD)";
-                } else if (stateName.includes("Minas Gerais")) {
-                    biomeName = "Cerrado e Mata Atlântica";
-                    portalUrl = "http://www.meioambiente.mg.gov.br/";
-                    portalLabel = "Portal Ambiental de MG (SEMAD)";
                 }
 
                 titleEl.innerText = `${cityName} (${stateName || 'Brasil'}) — Bioma: ${biomeName}`;
-                document.getElementById('biome-detected-desc').innerText = `Coordenadas identificadas (${lat.toFixed(4)}, ${lng.toFixed(4)}). Utilize o botão abaixo para consultar legislação, viveiros e mudas nativas no órgão ambiental oficial do seu estado.`;
+                document.getElementById('biome-detected-desc').innerText = `Coordenadas identificadas (${lat.toFixed(4)}, ${lng.toFixed(4)}).`;
                 document.getElementById('state-portal-link').href = portalUrl;
                 document.getElementById('state-portal-label').innerText = portalLabel;
             } catch (e) {
@@ -272,13 +255,12 @@ window.detectBiomeWithMaps = () => {
             }
         },
         () => {
-            alert("Permissão de localização negada. A exibir bioma da cidade cadastrada no perfil.");
+            alert("Permissão de localização negada.");
             window.identifyBiomeByCity();
         }
     );
 };
 
-// SUB-ABAS DE PERFIL
 window.switchProfileSubTab = (subTab) => {
     document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(`subtab-${subTab}`).classList.add('active');
@@ -294,7 +276,6 @@ window.switchProfileSubTab = (subTab) => {
     }
 };
 
-// AUTENTICAÇÃO COM SUPORTE A ENTER
 window.login = async () => {
     const emailField = document.getElementById('auth-email');
     const passField = document.getElementById('auth-password');
@@ -313,26 +294,18 @@ window.login = async () => {
         await signInWithEmailAndPassword(auth, email, pass);
         errorMsg.style.display = 'none';
     } catch (error) {
-        console.error("Erro detalhado no login:", error);
         let mensagemErro = "Erro ao entrar. Verifique os dados.";
-        if (error.code === 'auth/user-not-found') {
-            mensagemErro = "Utilizador não encontrado. Crie uma conta primeiro.";
-        } else if (error.code === 'auth/wrong-password') {
-            mensagemErro = "Senha incorreta.";
-        } else if (error.code === 'auth/invalid-email') {
-            mensagemErro = "E-mail inválido.";
-        } else if (error.code === 'auth/invalid-credential') {
-            mensagemErro = "Credenciais inválidas ou e-mail/senha incorretos.";
-        }
+        if (error.code === 'auth/user-not-found') mensagemErro = "Utilizador não encontrado.";
+        else if (error.code === 'auth/wrong-password') mensagemErro = "Senha incorreta.";
+        else if (error.code === 'auth/invalid-email') mensagemErro = "E-mail inválido.";
+        else if (error.code === 'auth/invalid-credential') mensagemErro = "Credenciais inválidas.";
         errorMsg.innerText = mensagemErro;
         errorMsg.style.display = 'block';
     }
 };
 
 window.checkLoginEnter = (e) => {
-    if (e.key === 'Enter') {
-        window.login();
-    }
+    if (e.key === 'Enter') window.login();
 };
 
 window.register = async () => {
@@ -367,7 +340,6 @@ window.register = async () => {
 
 window.logout = async () => { await signOut(auth); };
 
-// ESTADO DA SESSÃO
 onAuthStateChanged(auth, async (user) => {
     const header = document.getElementById('main-header');
     const greeting = document.getElementById('user-greeting');
@@ -397,7 +369,6 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-// COMPRESSÃO DE IMAGENS
 const comprimirEConverterBase64 = (file, max_size = 600, quality = 0.7) => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -423,7 +394,6 @@ const comprimirEConverterBase64 = (file, max_size = 600, quality = 0.7) => {
     });
 };
 
-// PERFIL
 window.loadProfileData = async () => {
     const user = auth.currentUser;
     if (!user) return;
@@ -478,7 +448,6 @@ window.saveProfile = async () => {
     }
 };
 
-// OCR COM TESSERACT
 const seedPhotoInput = document.getElementById('donate-seed-photo');
 if (seedPhotoInput) {
     seedPhotoInput.addEventListener('change', async (e) => {
@@ -500,7 +469,6 @@ if (seedPhotoInput) {
     });
 }
 
-// CADASTRAR SEMENTE
 window.processDonation = async () => {
     const name = document.getElementById('donate-seed-name').value.trim();
     const type = document.getElementById('donate-seed-type').value;
@@ -535,7 +503,6 @@ window.processDonation = async () => {
     }
 };
 
-// RENDERIZAR SEMENTES COM IMAGENS REAIS
 window.renderSeeds = async () => {
     const container = document.getElementById('seeds-grid-container');
     container.innerHTML = '<p style="color: var(--text-muted);">A carregar sementes...</p>';
@@ -587,7 +554,6 @@ window.renderSeeds = async () => {
     }
 };
 
-// RESERVAR SEMENTE E CRIAR CHAT PRIVADO
 window.reservarSemente = async (seedId, ownerId, ownerName, seedName) => {
     const user = auth.currentUser;
     if (!user) return;
@@ -629,7 +595,7 @@ window.reservarSemente = async (seedId, ownerId, ownerName, seedName) => {
 };
 
 window.removerReserva = async (seedId, originView) => {
-    if (confirm("Tem certeza que deseja remover a reserva desta semente? Ela voltará a ficar disponível para todos.")) {
+    if (confirm("Tem certeza que deseja remover a reserva desta semente?")) {
         try {
             await updateDoc(doc(db, "seeds", seedId), {
                 status: 'disponível',
@@ -637,18 +603,14 @@ window.removerReserva = async (seedId, originView) => {
                 reservadoPorId: null
             });
             alert("Reserva removida com sucesso!");
-            if (originView === 'profile') {
-                window.renderMyProfile();
-            } else {
-                window.renderSeeds();
-            }
+            if (originView === 'profile') window.renderMyProfile();
+            else window.renderSeeds();
         } catch (e) {
             alert("Erro ao remover a reserva.");
         }
     }
 };
 
-// FORMATAR DATA E HORA COMPLETA ESTILO TELEGRAM (DD/MM/AAAA HH:MM)
 const formatTelegramDateTime = (timestamp) => {
     if (!timestamp) return 'Agora';
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
@@ -660,7 +622,6 @@ const formatTelegramDateTime = (timestamp) => {
     return `${dia}/${mes}/${ano} às ${hora}:${min}`;
 };
 
-// CHATS PRIVADOS (ESTILO TELEGRAM)
 window.loadPrivateChatList = async (chatIdToOpen = null) => {
     const listContainer = document.getElementById('private-chat-list');
     const user = auth.currentUser;
@@ -795,12 +756,9 @@ window.sendPrivateMessage = async () => {
 };
 
 window.checkPrivateChatEnter = (e) => {
-    if (e.key === 'Enter') {
-        window.sendPrivateMessage();
-    }
+    if (e.key === 'Enter') window.sendPrivateMessage();
 };
 
-// CHAT COMUNITÁRIO (ESTILO TELEGRAM COM DATA COMPLETA)
 window.changeChatCommunity = () => {
     currentCommunity = document.getElementById('chat-community-select').value;
     window.renderChat();
@@ -819,9 +777,7 @@ window.renderChat = async () => {
         let messages = [];
         querySnapshot.forEach(docSnap => {
             const data = docSnap.data();
-            if (data.community === currentCommunity) {
-                messages.push(data);
-            }
+            if (data.community === currentCommunity) messages.push(data);
         });
 
         messages.sort((a, b) => {
@@ -860,7 +816,7 @@ window.enviarMensagemChat = async () => {
     if (!text) return;
 
     const user = auth.currentUser;
-    if (!user) return alert('Precisa estar logado para enviar mensagens.');
+    if (!user) return alert('Precisa estar logado.');
 
     try {
         await addDoc(collection(db, "chat"), {
@@ -879,12 +835,9 @@ window.enviarMensagemChat = async () => {
 };
 
 window.checkChatEnter = (e) => {
-    if (e.key === 'Enter') {
-        window.enviarMensagemChat();
-    }
+    if (e.key === 'Enter') window.enviarMensagemChat();
 };
 
-// MEU PERFIL E MINHAS SEMENTES (COM IMAGENS REAIS)
 window.renderMyProfile = async () => {
     const container = document.getElementById('my-seeds-container');
     const user = auth.currentUser;
@@ -949,7 +902,6 @@ window.excluirSemente = async (id) => {
     }
 };
 
-// WIKIPÉDIA
 window.searchSeedInfo = async () => {
     const queryInput = document.getElementById('search-seed-input').value.trim();
     const resultsContainer = document.getElementById('learn-results');
@@ -980,14 +932,12 @@ window.searchSeedInfo = async () => {
         resultsContainer.innerHTML = `
             <div style="background: var(--bg-light); border-left: 5px solid var(--earth); padding: 20px; border-radius: 8px; color: #99581a;">
                 <h3 style="margin-top: 0;">Nenhum resultado encontrado</h3>
-                <p style="font-size: 14px;">Não encontrámos um artigo exato para "${queryInput}". Tente pesquisar pelo nome comum (ex: "Tomateiro", "Girassol").</p>
+                <p style="font-size: 14px;">Não encontrámos um artigo exato para "${queryInput}".</p>
             </div>
         `;
     }
 };
 
 window.checkSearchEnter = (e) => {
-    if (e.key === 'Enter') {
-        window.searchSeedInfo();
-    }
+    if (e.key === 'Enter') window.searchSeedInfo();
 };
