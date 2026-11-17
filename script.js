@@ -19,6 +19,7 @@ let currentCommunity = "Aparecida do Taboado";
 let userProfileCache = null;
 let activePrivateChatId = null;
 
+// DETECÇÃO AUTOMÁTICA DO DISPOSITIVO
 window.addEventListener('DOMContentLoaded', () => {
     const frame = document.getElementById('device-frame');
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
@@ -730,4 +731,213 @@ window.sendPrivateMessage = async () => {
     if (!activePrivateChatId) return;
     const input = document.getElementById('private-chat-input');
     const text = input.value.trim();
-    if
+    if (!text) return;
+
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const myName = userProfileCache?.displayName || user.email.split('@')[0];
+
+    try {
+        await addDoc(collection(db, "private_chats", activePrivateChatId, "messages"), {
+            text: text,
+            senderId: user.uid,
+            senderName: myName,
+            avatar: userProfileCache?.avatarBase64 || "",
+            timestamp: serverTimestamp()
+        });
+        input.value = '';
+        const titleText = document.getElementById('private-chat-title').innerText.replace('Semente: ', '');
+        const subText = document.getElementById('private-chat-subtitle').innerText.replace('A conversar com: ', '');
+        window.openPrivateChatRoom(activePrivateChatId, titleText, subText);
+    } catch (error) {
+        alert('Erro ao enviar mensagem.');
+    }
+};
+
+window.checkPrivateChatEnter = (e) => {
+    if (e.key === 'Enter') window.sendPrivateMessage();
+};
+
+window.changeChatCommunity = () => {
+    currentCommunity = document.getElementById('chat-community-select').value;
+    window.renderChat();
+};
+
+window.renderChat = async () => {
+    const container = document.getElementById('chat-messages');
+    const select = document.getElementById('chat-community-select');
+    if (select) select.value = currentCommunity;
+
+    container.innerHTML = '<p style="color: var(--text-muted); text-align: center;">A carregar mensagens...</p>';
+    try {
+        const querySnapshot = await getDocs(collection(db, "chat"));
+        container.innerHTML = '';
+        
+        let messages = [];
+        querySnapshot.forEach(docSnap => {
+            const data = docSnap.data();
+            if (data.community === currentCommunity) messages.push(data);
+        });
+
+        messages.sort((a, b) => {
+            if (!a.timestamp || !b.timestamp) return 0;
+            return a.timestamp.toMillis() - b.timestamp.toMillis();
+        });
+
+        if (messages.length === 0) {
+            container.innerHTML = `<p style="color: var(--text-muted); text-align: center;">Ainda não há mensagens na comunidade de ${currentCommunity}. Seja o primeiro a falar!</p>`;
+            return;
+        }
+
+        const user = auth.currentUser;
+        messages.forEach((msg) => {
+            const isMine = user && msg.userId === user.uid;
+            const dateTimeStr = formatTelegramDateTime(msg.timestamp);
+
+            const div = document.createElement('div');
+            div.className = `tg-msg-bubble ${isMine ? 'outgoing' : 'incoming'}`;
+            div.innerHTML = `
+                <div class="tg-msg-sender">${msg.author}</div>
+                <div class="tg-msg-text">${msg.text}</div>
+                <div class="tg-msg-time">${dateTimeStr}</div>
+            `;
+            container.appendChild(div);
+        });
+        container.scrollTop = container.scrollHeight;
+    } catch (error) {
+        container.innerHTML = '<p style="color:red; text-align:center;">Erro ao carregar o chat.</p>';
+    }
+};
+
+window.enviarMensagemChat = async () => {
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const user = auth.currentUser;
+    if (!user) return alert('Precisa estar logado.');
+
+    try {
+        await addDoc(collection(db, "chat"), {
+            text: text,
+            author: userProfileCache?.displayName || user.email.split('@')[0],
+            userId: user.uid,
+            avatar: userProfileCache?.avatarBase64 || "",
+            community: currentCommunity,
+            timestamp: serverTimestamp()
+        });
+        input.value = '';
+        window.renderChat();
+    } catch (error) {
+        alert('Erro ao enviar mensagem.');
+    }
+};
+
+window.checkChatEnter = (e) => {
+    if (e.key === 'Enter') window.enviarMensagemChat();
+};
+
+window.renderMyProfile = async () => {
+    const container = document.getElementById('my-seeds-container');
+    const user = auth.currentUser;
+    container.innerHTML = '<p style="color: var(--text-muted);">A carregar as suas sementes...</p>';
+    
+    try {
+        const querySnapshot = await getDocs(collection(db, "seeds"));
+        container.innerHTML = '';
+        let hasSeeds = false;
+
+        querySnapshot.forEach((docSnap) => {
+            const seed = docSnap.data();
+            const seedId = docSnap.id;
+            
+            if (seed.userId === user.uid || seed.authorEmail === user.email) {
+                hasSeeds = true;
+                const box = document.createElement('div');
+                box.className = 'seed-box';
+                
+                const badgeClass = seed.type === 'Troca' ? 'badge-troca' : 'badge-doacao';
+                const badgeText = seed.type || 'Doação';
+                
+                let statusText = seed.status === 'reservada' 
+                    ? `<span style="color: var(--earth); font-weight: 600;">Reservada por ${seed.reservadoPor}</span>` 
+                    : `<span style="color: var(--lime); font-weight: 600;">Disponível</span>`;
+
+                let removeReserveBtn = seed.status === 'reservada'
+                    ? `<button class="btn-cancel-reserve" onclick="window.removerReserva('${seedId}', 'profile')">Remover Reserva</button>`
+                    : '';
+
+                box.innerHTML = `
+                    <div>
+                        ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}" alt="${seed.name}">` : '<div style="height:180px;background:var(--bg-light);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#888;">Sem imagem</div>'}
+                        <span class="badge-tipo ${badgeClass}">${badgeText}</span>
+                        <h4 style="color: var(--text-main); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
+                        <p style="font-size: 13px; margin-bottom: 4px;"><strong>Status:</strong> ${statusText}</p>
+                    </div>
+                    <div>
+                        ${removeReserveBtn}
+                        <button class="btn-danger" onclick="window.excluirSemente('${seedId}')">Excluir Semente</button>
+                    </div>
+                `;
+                container.appendChild(box);
+            }
+        });
+
+        if(!hasSeeds) container.innerHTML = '<p style="color: var(--text-muted);">Ainda não cadastrou nenhuma semente.</p>';
+    } catch (error) {
+        container.innerHTML = '<p style="color:red;">Erro ao carregar o seu perfil.</p>';
+    }
+};
+
+window.excluirSemente = async (id) => {
+    if(confirm("Tem certeza absoluta que deseja excluir esta semente?")) {
+        try {
+            await deleteDoc(doc(db, "seeds", id));
+            alert("Semente excluída com sucesso!");
+            window.renderMyProfile();
+        } catch(e) {
+            alert("Erro ao excluir.");
+        }
+    }
+};
+
+window.searchSeedInfo = async () => {
+    const queryInput = document.getElementById('search-seed-input').value.trim();
+    const resultsContainer = document.getElementById('learn-results');
+
+    if (!queryInput) {
+        resultsContainer.innerHTML = '<p style="color: #c53030;">Por favor, digite o nome de uma semente para pesquisar.</p>';
+        return;
+    }
+
+    resultsContainer.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--lime);"><p>A pesquisar informações para <strong>"${queryInput}"</strong>...</p></div>`;
+
+    try {
+        const response = await fetch(`https://pt.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(queryInput)}`);
+        if (!response.ok) throw new Error('Artigo não encontrado');
+        const data = await response.json();
+
+        resultsContainer.innerHTML = `
+            <div style="background: var(--bg-light); border-left: 5px solid var(--lime); padding: 20px; border-radius: 8px; color: var(--text-main);">
+                <h3 style="margin-top: 0; margin-bottom: 10px;">${data.title}</h3>
+                <p style="line-height: 1.6; color: var(--text-main); font-size: 14px;">${data.extract}</p>
+                ${data.thumbnail ? `<img src="${data.thumbnail.source}" alt="${data.title}" style="max-width: 150px; border-radius: 6px; margin-top: 15px; display: block;">` : ''}
+                <p style="margin-top: 15px; font-size: 13px;">
+                    <a href="${data.content_urls.desktop.page}" target="_blank" style="color: var(--lime); font-weight: 600; text-decoration: underline;">Ler artigo completo na Wikipédia</a>
+                </p>
+            </div>
+        `;
+    } catch (error) {
+        resultsContainer.innerHTML = `
+            <div style="background: var(--bg-light); border-left: 5px solid var(--earth); padding: 20px; border-radius: 8px; color: #99581a;">
+                <h3 style="margin-top: 0;">Nenhum resultado encontrado</h3>
+                <p style="font-size: 14px;">Não encontrámos um artigo exato para "${queryInput}".</p>
+            </div>
+        `;
+    }
+};
+
+window.checkSearchEnter = (e) => {
+    if (e.key === 'Enter') window.searchSeedInfo();
+};
