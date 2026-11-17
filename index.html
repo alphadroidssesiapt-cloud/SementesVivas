@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    <!-- CABEÇALHO ESTILO FLORA (VERDE ESCURO + BOTÃO LIMA) -->
+    <!-- CABEÇALHO ESTILO FLORA -->
     <header id="main-header" style="display: none;">
         <div class="header-container">
             <div class="nav-brand" onclick="window.showDashboard()">
@@ -66,7 +66,7 @@
         </div>
     </div>
 
-    <!-- PAINEL PRINCIPAL (INÍCIO COM HERO BANNER DE ALTO IMPACTO) -->
+    <!-- PAINEL PRINCIPAL (INÍCIO) -->
     <div id="dashboard-view" class="view">
         <section class="hero-section">
             <div class="hero-overlay"></div>
@@ -164,60 +164,68 @@
             </div>
         </div>
 
-        <!-- MEUS CHATS PRIVADOS -->
+        <!-- MEUS CHATS PRIVADOS (ESTILO TELEGRAM) -->
         <div id="private-chats-view" class="view">
             <div class="page-header-dark">
                 <h2>Meus Chats de Sementes</h2>
                 <p>Combine a entrega ou troca diretamente com os interessados.</p>
             </div>
             
-            <div class="private-chat-layout">
-                <div class="chat-list-panel">
-                    <h4 style="color: var(--forest-dark); margin-bottom: 12px; font-size: 14px;">Conversas Ativas</h4>
+            <div class="telegram-chat-layout">
+                <div class="tg-sidebar">
+                    <div class="tg-sidebar-header">
+                        <h4>Conversas Ativas</h4>
+                    </div>
                     <div id="private-chat-list">
-                        <p style="color: var(--text-muted); font-size: 13px;">A carregar conversas...</p>
+                        <p style="color: var(--text-muted); font-size: 13px; padding: 10px;">A carregar conversas...</p>
                     </div>
                 </div>
 
-                <div class="chat-room-panel">
-                    <div id="private-chat-header" class="chat-header" style="display: none;">
-                        <h3 id="private-chat-title" style="color: var(--forest-dark); font-size: 16px;">Semente</h3>
-                        <p id="private-chat-subtitle" style="font-size: 12px; color: var(--text-muted);">Participantes</p>
+                <div class="tg-chat-pane">
+                    <div id="private-chat-header" class="tg-pane-header" style="display: none;">
+                        <div class="tg-pane-info">
+                            <h3 id="private-chat-title" style="font-size: 15px; font-weight: 700;">Semente</h3>
+                            <p id="private-chat-subtitle" style="font-size: 12px; color: var(--text-muted);">Participantes</p>
+                        </div>
                     </div>
                     
-                    <div id="private-chat-messages" class="chat-messages-box" style="height: 340px;">
-                        <p style="color: var(--text-muted); text-align: center; margin-top: 130px;">Selecione uma conversa ao lado ou reserve uma semente para iniciar.</p>
+                    <div id="private-chat-messages" class="tg-messages-box">
+                        <div class="tg-empty-chat">Selecione uma conversa ao lado ou reserve uma semente para iniciar.</div>
                     </div>
                     
-                    <div id="private-chat-input-box" class="chat-input-area" style="display: none;">
+                    <div id="private-chat-input-box" class="tg-input-area" style="display: none;">
                         <input type="text" id="private-chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkPrivateChatEnter(event)">
-                        <button class="btn-lime-pill" onclick="window.sendPrivateMessage()" style="padding: 12px 24px;">Enviar</button>
+                        <button class="tg-send-btn" onclick="window.sendPrivateMessage()">
+                            <span class="material-icons">send</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- CHAT COMUNITÁRIO -->
+        <!-- CHAT COMUNITÁRIO (ESTILO TELEGRAM) -->
         <div id="chat-view" class="view">
-            <div class="chat-container">
-                <div class="chat-header">
-                    <h2 style="color: var(--forest-dark);">Chat Comunitário</h2>
-                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Converse com cultivadores da sua região escolhida.</p>
-                    
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <label style="font-size: 13px; font-weight: 600;">Comunidade:</label>
-                        <select id="chat-community-select" class="select-styled" style="max-width: 250px; padding: 8px;" onchange="window.changeChatCommunity()">
-                            <option value="Aparecida do Taboado">Aparecida do Taboado</option>
-                            <option value="Paranaíba">Paranaíba</option>
-                        </select>
+            <div class="telegram-community-container">
+                <div class="tg-community-header">
+                    <div>
+                        <h2 style="color: var(--forest-dark); font-size: 18px;">Chat Comunitário</h2>
+                        <p style="font-size: 12px; color: var(--text-muted);">Conversas gerais da região</p>
                     </div>
+                    <select id="chat-community-select" class="select-styled" style="max-width: 220px; padding: 6px 12px;" onchange="window.changeChatCommunity()">
+                        <option value="Aparecida do Taboado">Aparecida do Taboado</option>
+                        <option value="Paranaíba">Paranaíba</option>
+                    </select>
                 </div>
-                <div id="chat-messages" class="chat-messages-box">
+                
+                <div id="chat-messages" class="tg-messages-box" style="height: 420px;">
                     <p style="color: var(--text-muted); text-align: center; margin-top: 20px;">A carregar mensagens...</p>
                 </div>
-                <div class="chat-input-area">
+                
+                <div class="tg-input-area">
                     <input type="text" id="chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkChatEnter(event)">
-                    <button class="btn-lime-pill" onclick="window.enviarMensagemChat()" style="padding: 12px 24px;">Enviar</button>
+                    <button class="tg-send-btn" onclick="window.enviarMensagemChat()">
+                        <span class="material-icons">send</span>
+                    </button>
                 </div>
             </div>
         </div>
