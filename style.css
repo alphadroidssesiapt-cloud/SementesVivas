@@ -13,7 +13,6 @@
     --tg-outgoing: #eef9e8;
 }
 
-/* TEMA ESCURO (DARK MODE) */
 [data-theme="dark"] {
     --forest-dark: #07130c;
     --forest-mid: #122b1b;
@@ -43,31 +42,66 @@ body, html {
     transition: background 0.3s, color 0.3s;
 }
 
-/* SIMULADOR DE DISPOSITIVO (CELULAR / DESKTOP) */
+/* CONTROLE DE DISPOSITIVOS */
 .device-desktop {
     width: 100%;
     min-height: 100vh;
 }
 
+/* MODO MOBILE DETECTADO AUTOMATICAMENTE */
 .device-mobile {
-    max-width: 412px;
-    height: 840px;
-    margin: 30px auto;
-    border: 14px solid #222;
-    border-radius: 40px;
-    overflow-y: auto;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    width: 100%;
+    min-height: 100vh;
     background-color: var(--bg-light);
-    position: relative;
 }
 
-/* BOTÕES DE TEMA E SELETOR DE DISPOSITIVO */
+.device-mobile .header-container {
+    padding: 10px 14px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+}
+.device-mobile .nav-links {
+    justify-content: flex-start;
+    padding-bottom: 4px;
+}
+.device-mobile .nav-actions {
+    justify-content: space-between;
+}
+.device-mobile .hero-section {
+    min-height: 320px;
+    padding: 30px 16px;
+}
+.device-mobile .hero-title {
+    font-size: 26px;
+}
+.device-mobile .app-content {
+    padding: 20px 14px;
+}
+.device-mobile .action-grid {
+    grid-template-columns: 1fr;
+}
+.device-mobile .telegram-chat-layout {
+    grid-template-columns: 1fr;
+    min-height: 420px;
+}
+.device-mobile .chat-list-panel, .device-mobile .tg-sidebar {
+    max-height: 140px;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+}
+.device-mobile .biome-locator-card {
+    grid-template-columns: 1fr;
+    padding: 18px;
+}
+
+/* BOTÃO DE TEMA */
 .btn-theme-toggle {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: var(--lime);
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -76,19 +110,6 @@ body, html {
     transition: 0.2s;
 }
 .btn-theme-toggle:hover { background: rgba(255, 255, 255, 0.2); }
-
-.device-select-styled {
-    background: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    outline: none;
-}
-.device-select-styled option { background: var(--forest-dark); color: #ffffff; }
 
 /* CABEÇALHO ESTILO FLORA */
 header {
@@ -213,7 +234,7 @@ header {
 .btn-outline-dark {
     width: 100%;
     background-color: transparent;
-    color: var(--forest-dark);
+    color: var(--text-main);
     border: 1px solid var(--border-color);
     padding: 12px;
     border-radius: 50px;
