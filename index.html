@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,322 +11,391 @@
 </head>
 <body>
 
-    <!-- CABEÇALHO ESTILO FLORA -->
-    <header id="main-header" style="display: none;">
-        <div class="header-container">
-            <div class="nav-brand" onclick="window.showDashboard()">
-                <span class="material-icons brand-icon">spa</span>
-                <div class="brand-text">
-                    <span class="brand-title">Sementes Vivas</span>
-                    <span class="brand-sub">REDE DE BIODIVERSIDADE</span>
-                </div>
-            </div>
+    <!-- MOLDURA DO DISPOSITIVO (ENVOLVE TODO O CONTEÚDO QUANDO O MODO CELULAR ESTÁ ATIVO) -->
+    <div id="device-frame" class="device-desktop">
 
-            <nav class="nav-links">
-                <button class="nav-link active" id="tab-dashboard-view" onclick="window.showDashboard()">Início</button>
-                <button class="nav-link" id="tab-available-view" onclick="window.showAvailable()">Explorar</button>
-                <button class="nav-link" id="tab-private-chats-view" onclick="window.showPrivateChats()">Meus Chats</button>
-                <button class="nav-link" id="tab-chat-view" onclick="window.showChat()">Comunidade</button>
-                <button class="nav-link" id="tab-encyclopedia-view" onclick="window.showEncyclopedia()">Enciclopédia</button>
-                <button class="nav-link" id="tab-learn-view" onclick="window.showLearn()">Aprender</button>
-                <button class="nav-link" id="tab-profile-view" onclick="window.showProfile()">Perfil</button>
-            </nav>
-
-            <div class="nav-actions">
-                <button class="btn-lime-pill" onclick="window.showDonate()">
-                    <span class="material-icons" style="font-size: 16px;">add_circle</span> Cadastrar Semente
-                </button>
-                <button onclick="window.logout()" class="btn-logout-dark" title="Sair da conta">Sair</button>
-            </div>
-        </div>
-    </header>
-
-    <!-- TELA DE LOGIN / CADASTRO CENTRALIZADA -->
-    <div id="login-view" class="view active full-center">
-        <div class="auth-card">
-            <div class="logo-header">
-                <span class="material-icons logo-icon">eco</span>
-                <h2>Sementes Vivas</h2>
-            </div>
-            <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 14px; text-align: center;">Conectando cultivadores, partilhando vida e biodiversidade.</p>
-            
-            <div class="input-group">
-                <label>E-mail</label>
-                <input type="email" id="auth-email" placeholder="seu@email.com">
-            </div>
-            <div class="input-group">
-                <label>Senha</label>
-                <input type="password" id="auth-password" placeholder="••••••••" onkeypress="window.checkLoginEnter(event)">
-            </div>
-            
-            <button class="btn-lime-full" onclick="window.login()">Entrar na Conta</button>
-            <button class="btn-outline-dark" onclick="window.register()" style="margin-top: 10px;">Criar Nova Conta</button>
-            
-            <p id="auth-error" style="color: #c53030; font-size: 13px; margin-top: 15px; display: none; text-align: center;"></p>
-        </div>
-    </div>
-
-    <!-- PAINEL PRINCIPAL (INÍCIO) -->
-    <div id="dashboard-view" class="view">
-        <section class="hero-section">
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <span id="user-greeting" class="hero-badge">Bem-vindo à comunidade</span>
-                <h1 class="hero-title">
-                    Partilha de sementes e <span class="text-lime">preservação da vida</span> em cada cultivo.
-                </h1>
-                <p class="hero-subtitle">
-                    Troque espécies crioulas, doe mudas nativas e fortaleça a biodiversidade local junto com cultivadores da sua região.
-                </p>
-                <div class="hero-buttons">
-                    <button class="btn-lime-hero" onclick="window.showAvailable()">
-                        <span class="material-icons" style="font-size: 18px;">inventory_2</span> Explorar Sementes Disponíveis
-                    </button>
-                    <button class="btn-glass-hero" onclick="window.showEncyclopedia()">
-                        Enciclopédia Nativa <span class="material-icons" style="font-size: 18px;">arrow_forward</span>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <div class="app-content">
-            <div class="section-heading">
-                <h2>Acesso Rápido</h2>
-                <p>Selecione uma área para começar a interagir com a rede</p>
-            </div>
-            <div class="action-grid">
-                <div class="action-card" onclick="window.showAvailable()">
-                    <div class="card-icon-circle"><span class="material-icons">inventory_2</span></div>
-                    <h3>Sementes Disponíveis</h3>
-                    <p>Explore doações e trocas ativas na comunidade.</p>
-                </div>
-                <div class="action-card" onclick="window.showDonate()">
-                    <div class="card-icon-circle"><span class="material-icons">add_a_photo</span></div>
-                    <h3>Cadastrar Semente</h3>
-                    <p>Publique novas sementes com leitura automática.</p>
-                </div>
-                <div class="action-card" onclick="window.showPrivateChats()">
-                    <div class="card-icon-circle"><span class="material-icons">chat</span></div>
-                    <h3>Meus Chats</h3>
-                    <p>Negocie reservas e combine entregas diretamente.</p>
-                </div>
-                <div class="action-card" onclick="window.showChat()">
-                    <div class="card-icon-circle"><span class="material-icons">forum</span></div>
-                    <h3>Chat Comunitário</h3>
-                    <p>Converse com jardineiros de Aparecida do Taboado e região.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- CONTEÚDO DAS OUTRAS ABAS -->
-    <div class="app-content">
-
-        <!-- SEMENTES DISPONÍVEIS -->
-        <div id="available-view" class="view">
-            <div class="page-header-dark">
-                <h2>Sementes da Comunidade</h2>
-                <p>Reserve uma semente para abrir uma conversa direta com o doador.</p>
-            </div>
-            <div id="seeds-grid-container" class="seeds-grid"></div>
-        </div>
-
-        <!-- CADASTRAR SEMENTE -->
-        <div id="donate-view" class="view">
-            <div class="content-card">
-                <h2 style="color: var(--forest-dark); margin-bottom: 20px;">Cadastrar Nova Semente</h2>
-                
-                <div class="input-group">
-                    <label>Fotografar Semente (A leitura automática preencherá o nome)</label>
-                    <div class="camera-wrapper">
-                        <div class="camera-btn" id="camera-label">
-                            <span class="material-icons">camera_alt</span> Clique para fotografar ou carregar imagem
-                        </div>
-                        <input type="file" id="donate-seed-photo" accept="image/*" capture="environment">
+        <!-- CABEÇALHO ESTILO FLORA -->
+        <header id="main-header" style="display: none;">
+            <div class="header-container">
+                <div class="nav-brand" onclick="window.showDashboard()">
+                    <span class="material-icons brand-icon">spa</span>
+                    <div class="brand-text">
+                        <span class="brand-title">Sementes Vivas</span>
+                        <span class="brand-sub">REDE DE BIODIVERSIDADE</span>
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <label>Nome da Semente</label>
-                    <input type="text" id="donate-seed-name" placeholder="Ex: Tomate Coração de Boi">
-                </div>
+                <nav class="nav-links">
+                    <button class="nav-link active" id="tab-dashboard-view" onclick="window.showDashboard()">Início</button>
+                    <button class="nav-link" id="tab-available-view" onclick="window.showAvailable()">Explorar</button>
+                    <button class="nav-link" id="tab-private-chats-view" onclick="window.showPrivateChats()">Meus Chats</button>
+                    <button class="nav-link" id="tab-chat-view" onclick="window.showChat()">Comunidade</button>
+                    <button class="nav-link" id="tab-encyclopedia-view" onclick="window.showEncyclopedia()">Bioma & Enciclopédia</button>
+                    <button class="nav-link" id="tab-learn-view" onclick="window.showLearn()">Aprender</button>
+                    <button class="nav-link" id="tab-profile-view" onclick="window.showProfile()">Perfil</button>
+                </nav>
 
-                <div class="input-group">
-                    <label>Finalidade do Anúncio</label>
-                    <select id="donate-seed-type" class="select-styled">
-                        <option value="Doação">Doação (Gratuito)</option>
-                        <option value="Troca">Troca (Quero trocar por outra)</option>
+                <div class="nav-actions">
+                    <!-- CONTROLES DE TEMA E DISPOSITIVO -->
+                    <button class="btn-theme-toggle" onclick="window.toggleTheme()" title="Alternar Modo Claro / Escuro">
+                        <span id="theme-icon" class="material-icons" style="font-size: 18px;">dark_mode</span>
+                    </button>
+                    <select id="device-selector" class="device-select-styled" onchange="window.changeDeviceMode(this.value)" title="Escolher Layout de Dispositivo">
+                        <option value="desktop">Modo Padrão (Responsivo)</option>
+                        <option value="mobile">Simulador de Celular</option>
                     </select>
+
+                    <button class="btn-lime-pill" onclick="window.showDonate()">
+                        <span class="material-icons" style="font-size: 16px;">add_circle</span> Cadastrar
+                    </button>
+                    <button onclick="window.logout()" class="btn-logout-dark" title="Sair da conta">Sair</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- TELA DE LOGIN / CADASTRO CENTRALIZADA -->
+        <div id="login-view" class="view active full-center">
+            <div class="auth-card">
+                <div class="logo-header">
+                    <span class="material-icons logo-icon">eco</span>
+                    <h2>Sementes Vivas</h2>
+                </div>
+                <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 14px; text-align: center;">Conectando cultivadores, partilhando vida e biodiversidade.</p>
+                
+                <div class="input-group">
+                    <label>E-mail</label>
+                    <input type="email" id="auth-email" placeholder="seu@email.com">
+                </div>
+                <div class="input-group">
+                    <label>Senha</label>
+                    <input type="password" id="auth-password" placeholder="••••••••" onkeypress="window.checkLoginEnter(event)">
                 </div>
                 
-                <button id="btn-donate" class="btn-lime-full" onclick="window.processDonation()">Publicar Semente</button>
-                <p id="upload-loading" style="display: none; color: var(--forest-mid); margin-top: 15px; text-align: center; font-weight: 600;">A processar e guardar semente... aguarde.</p>
+                <button class="btn-lime-full" onclick="window.login()">Entrar na Conta</button>
+                <button class="btn-outline-dark" onclick="window.register()" style="margin-top: 10px;">Criar Nova Conta</button>
+                
+                <p id="auth-error" style="color: #c53030; font-size: 13px; margin-top: 15px; display: none; text-align: center;"></p>
             </div>
         </div>
 
-        <!-- MEUS CHATS PRIVADOS (ESTILO TELEGRAM) -->
-        <div id="private-chats-view" class="view">
-            <div class="page-header-dark">
-                <h2>Meus Chats de Sementes</h2>
-                <p>Combine a entrega ou troca diretamente com os interessados.</p>
-            </div>
-            
-            <div class="telegram-chat-layout">
-                <div class="tg-sidebar">
-                    <div class="tg-sidebar-header">
-                        <h4>Conversas Ativas</h4>
-                    </div>
-                    <div id="private-chat-list">
-                        <p style="color: var(--text-muted); font-size: 13px; padding: 10px;">A carregar conversas...</p>
+        <!-- PAINEL PRINCIPAL (INÍCIO) -->
+        <div id="dashboard-view" class="view">
+            <section class="hero-section">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <span id="user-greeting" class="hero-badge">Bem-vindo à comunidade</span>
+                    <h1 class="hero-title">
+                        Partilha de sementes e <span class="text-lime">preservação da vida</span> em cada cultivo.
+                    </h1>
+                    <p class="hero-subtitle">
+                        Troque espécies crioulas, doe mudas nativas e fortaleça a biodiversidade local junto com cultivadores da sua região.
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn-lime-hero" onclick="window.showAvailable()">
+                            <span class="material-icons" style="font-size: 18px;">inventory_2</span> Explorar Sementes Disponíveis
+                        </button>
+                        <button class="btn-glass-hero" onclick="window.showEncyclopedia()">
+                            Identificar Meu Bioma <span class="material-icons" style="font-size: 18px;">public</span>
+                        </button>
                     </div>
                 </div>
+            </section>
 
-                <div class="tg-chat-pane">
-                    <div id="private-chat-header" class="tg-pane-header" style="display: none;">
-                        <div class="tg-pane-info">
-                            <h3 id="private-chat-title" style="font-size: 15px; font-weight: 700;">Semente</h3>
-                            <p id="private-chat-subtitle" style="font-size: 12px; color: var(--text-muted);">Participantes</p>
+            <div class="app-content">
+                <div class="section-heading">
+                    <h2>Acesso Rápido</h2>
+                    <p>Selecione uma área para começar a interagir com a rede</p>
+                </div>
+                <div class="action-grid">
+                    <div class="action-card" onclick="window.showAvailable()">
+                        <div class="card-icon-circle"><span class="material-icons">inventory_2</span></div>
+                        <h3>Sementes Disponíveis</h3>
+                        <p>Explore doações e trocas ativas na comunidade.</p>
+                    </div>
+                    <div class="action-card" onclick="window.showDonate()">
+                        <div class="card-icon-circle"><span class="material-icons">add_a_photo</span></div>
+                        <h3>Cadastrar Semente</h3>
+                        <p>Publique novas sementes com leitura automática.</p>
+                    </div>
+                    <div class="action-card" onclick="window.showPrivateChats()">
+                        <div class="card-icon-circle"><span class="material-icons">chat</span></div>
+                        <h3>Meus Chats</h3>
+                        <p>Negocie reservas e combine entregas diretamente.</p>
+                    </div>
+                    <div class="action-card" onclick="window.showEncyclopedia()">
+                        <div class="card-icon-circle"><span class="material-icons">public</span></div>
+                        <h3>Mapa do Bioma e Portal</h3>
+                        <p>Identifique seu bioma no Google Maps e acesse o site ambiental do estado.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTEÚDO DAS OUTRAS ABAS -->
+        <div class="app-content">
+
+            <!-- SEMENTES DISPONÍVEIS -->
+            <div id="available-view" class="view">
+                <div class="page-header-dark">
+                    <h2>Sementes da Comunidade</h2>
+                    <p>Reserve uma semente para abrir uma conversa direta com o doador.</p>
+                </div>
+                <div id="seeds-grid-container" class="seeds-grid"></div>
+            </div>
+
+            <!-- CADASTRAR SEMENTE -->
+            <div id="donate-view" class="view">
+                <div class="content-card">
+                    <h2 style="color: var(--forest-dark); margin-bottom: 20px;">Cadastrar Nova Semente</h2>
+                    
+                    <div class="input-group">
+                        <label>Fotografar Semente (A leitura automática preencherá o nome)</label>
+                        <div class="camera-wrapper">
+                            <div class="camera-btn" id="camera-label">
+                                <span class="material-icons">camera_alt</span> Clique para fotografar ou carregar imagem
+                            </div>
+                            <input type="file" id="donate-seed-photo" accept="image/*" capture="environment">
                         </div>
                     </div>
-                    
-                    <div id="private-chat-messages" class="tg-messages-box">
-                        <div class="tg-empty-chat">Selecione uma conversa ao lado ou reserve uma semente para iniciar.</div>
+
+                    <div class="input-group">
+                        <label>Nome da Semente</label>
+                        <input type="text" id="donate-seed-name" placeholder="Ex: Tomate Coração de Boi">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Finalidade do Anúncio</label>
+                        <select id="donate-seed-type" class="select-styled">
+                            <option value="Doação">Doação (Gratuito)</option>
+                            <option value="Troca">Troca (Quero trocar por outra)</option>
+                        </select>
                     </div>
                     
-                    <div id="private-chat-input-box" class="tg-input-area" style="display: none;">
-                        <input type="text" id="private-chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkPrivateChatEnter(event)">
-                        <button class="tg-send-btn" onclick="window.sendPrivateMessage()">
+                    <button id="btn-donate" class="btn-lime-full" onclick="window.processDonation()">Publicar Semente</button>
+                    <p id="upload-loading" style="display: none; color: var(--forest-mid); margin-top: 15px; text-align: center; font-weight: 600;">A processar e guardar semente... aguarde.</p>
+                </div>
+            </div>
+
+            <!-- MEUS CHATS PRIVADOS (ESTILO TELEGRAM) -->
+            <div id="private-chats-view" class="view">
+                <div class="page-header-dark">
+                    <h2>Meus Chats de Sementes</h2>
+                    <p>Combine a entrega ou troca diretamente com os interessados.</p>
+                </div>
+                
+                <div class="telegram-chat-layout">
+                    <div class="tg-sidebar">
+                        <div class="tg-sidebar-header">
+                            <h4>Conversas Ativas</h4>
+                        </div>
+                        <div id="private-chat-list">
+                            <p style="color: var(--text-muted); font-size: 13px; padding: 10px;">A carregar conversas...</p>
+                        </div>
+                    </div>
+
+                    <div class="tg-chat-pane">
+                        <div id="private-chat-header" class="tg-pane-header" style="display: none;">
+                            <div class="tg-pane-info">
+                                <h3 id="private-chat-title" style="font-size: 15px; font-weight: 700;">Semente</h3>
+                                <p id="private-chat-subtitle" style="font-size: 12px; color: var(--text-muted);">Participantes</p>
+                            </div>
+                        </div>
+                        
+                        <div id="private-chat-messages" class="tg-messages-box">
+                            <div class="tg-empty-chat">Selecione uma conversa ao lado ou reserve uma semente para iniciar.</div>
+                        </div>
+                        
+                        <div id="private-chat-input-box" class="tg-input-area" style="display: none;">
+                            <input type="text" id="private-chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkPrivateChatEnter(event)">
+                            <button class="tg-send-btn" onclick="window.sendPrivateMessage()">
+                                <span class="material-icons">send</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHAT COMUNITÁRIO (ESTILO TELEGRAM COM MAIS CIDADES) -->
+            <div id="chat-view" class="view">
+                <div class="telegram-community-container">
+                    <div class="tg-community-header">
+                        <div>
+                            <h2 style="color: var(--forest-dark); font-size: 18px;">Chat Comunitário</h2>
+                            <p style="font-size: 12px; color: var(--text-muted);">Conversas gerais da região</p>
+                        </div>
+                        <select id="chat-community-select" class="select-styled" style="max-width: 240px; padding: 8px 12px;" onchange="window.changeChatCommunity()">
+                            <option value="Aparecida do Taboado">Aparecida do Taboado - MS</option>
+                            <option value="Paranaíba">Paranaíba - MS</option>
+                            <option value="Três Lagoas">Três Lagoas - MS</option>
+                            <option value="Campo Grande">Campo Grande - MS</option>
+                            <option value="Dourados">Dourados - MS</option>
+                            <option value="Corumbá">Corumbá - MS</option>
+                            <option value="Bonito">Bonito - MS</option>
+                            <option value="Santa Fé do Sul">Santa Fé do Sul - SP</option>
+                            <option value="Jales">Jales - SP</option>
+                            <option value="Fernandópolis">Fernandópolis - SP</option>
+                        </select>
+                    </div>
+                    
+                    <div id="chat-messages" class="tg-messages-box" style="height: 420px;">
+                        <p style="color: var(--text-muted); text-align: center; margin-top: 20px;">A carregar mensagens...</p>
+                    </div>
+                    
+                    <div class="tg-input-area">
+                        <input type="text" id="chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkChatEnter(event)">
+                        <button class="tg-send-btn" onclick="window.enviarMensagemChat()">
                             <span class="material-icons">send</span>
                         </button>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- CHAT COMUNITÁRIO (ESTILO TELEGRAM) -->
-        <div id="chat-view" class="view">
-            <div class="telegram-community-container">
-                <div class="tg-community-header">
-                    <div>
-                        <h2 style="color: var(--forest-dark); font-size: 18px;">Chat Comunitário</h2>
-                        <p style="font-size: 12px; color: var(--text-muted);">Conversas gerais da região</p>
+            <!-- ENCICLOPÉDIA DE SEMENTES NATIVAS + GOOGLE MAPS BIOMA & PORTAL DO ESTADO -->
+            <div id="encyclopedia-view" class="view">
+                <div class="page-header-dark">
+                    <h2>Identificação de Bioma e Enciclopédia Nativa</h2>
+                    <p>Conecte sua localização via Google Maps para identificar o bioma e acessar o portal ambiental do seu estado.</p>
+                </div>
+
+                <!-- PAINEL DE IDENTIFICAÇÃO DE BIOMA VIA GOOGLE MAPS -->
+                <div class="biome-locator-card">
+                    <div class="biome-locator-info">
+                        <span class="enc-tag" style="margin-bottom: 8px;">GEOLOCALIZAÇÃO AMBIENTAL</span>
+                        <h3 style="color: var(--forest-dark); font-size: 20px; margin-bottom: 8px;">Identificar Meu Bioma e Portal Estadual</h3>
+                        <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+                            Use o GPS ou selecione sua cidade para visualizar a região no Google Maps, descobrir o bioma local e acessar o órgão ambiental oficial do seu estado.
+                        </p>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button class="btn-lime-pill" onclick="window.detectBiomeWithMaps()">
+                                <span class="material-icons" style="font-size: 17px;">my_location</span> Detectar Minha Localização (GPS)
+                            </button>
+                            <button class="btn-outline-dark" style="width: auto; padding: 9px 18px;" onclick="window.identifyBiomeByCity()">
+                                Usar Minha Cidade do Perfil
+                            </button>
+                        </div>
+
+                        <div id="biome-result-box" class="biome-result-box" style="display: none;">
+                            <h4 id="biome-detected-title" style="color: var(--forest-dark); font-size: 16px; margin-bottom: 6px;">Bioma Identificado</h4>
+                            <p id="biome-detected-desc" style="font-size: 13px; color: var(--text-main); line-height: 1.5; margin-bottom: 14px;"></p>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <a id="gmaps-external-link" href="#" target="_blank" class="btn-outline-dark" style="width: auto; padding: 8px 16px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                                    <span class="material-icons" style="font-size: 16px;">map</span> Abrir no Google Maps
+                                </a>
+                                <a id="state-portal-link" href="#" target="_blank" class="btn-lime-pill" style="text-decoration: none;">
+                                    <span class="material-icons" style="font-size: 16px;">open_in_new</span> <span id="state-portal-label">Acessar Portal do Estado</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <select id="chat-community-select" class="select-styled" style="max-width: 220px; padding: 6px 12px;" onchange="window.changeChatCommunity()">
-                        <option value="Aparecida do Taboado">Aparecida do Taboado</option>
-                        <option value="Paranaíba">Paranaíba</option>
-                    </select>
+
+                    <div class="biome-map-frame">
+                        <iframe id="google-maps-iframe" 
+                            src="https://maps.google.com/maps?q=Aparecida+do+Taboado,MS&t=k&z=11&ie=UTF8&iwloc=&output=embed" 
+                            width="100%" height="260" style="border:0; border-radius: 12px;" allowfullscreen="" loading="lazy">
+                        </iframe>
+                    </div>
                 </div>
                 
-                <div id="chat-messages" class="tg-messages-box" style="height: 420px;">
-                    <p style="color: var(--text-muted); text-align: center; margin-top: 20px;">A carregar mensagens...</p>
-                </div>
-                
-                <div class="tg-input-area">
-                    <input type="text" id="chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkChatEnter(event)">
-                    <button class="tg-send-btn" onclick="window.enviarMensagemChat()">
-                        <span class="material-icons">send</span>
-                    </button>
+                <div class="encyclopedia-grid" style="margin-top: 30px;">
+                    <div class="encyclopedia-card">
+                        <span class="enc-tag">Cerrado e Mata Atlântica</span>
+                        <h3>Ipê-Amarelo (Handroanthus albus)</h3>
+                        <p>Suas sementes são extremamente leves e aladas (possuem pequenas asas), o que permite que o vento as transporte por longas distâncias durante o período de seca.</p>
+                    </div>
+                    <div class="encyclopedia-card">
+                        <span class="enc-tag">Amazônia</span>
+                        <h3>Castanheira-do-Pará (Bertholletia excelsa)</h3>
+                        <p>O fruto duro guarda de 15 a 25 sementes. Sua germinação depende quase exclusivamente da cutia, roedor que enterra as sementes para guardar alimento.</p>
+                    </div>
+                    <div class="encyclopedia-card">
+                        <span class="enc-tag">Mata de Araucárias</span>
+                        <h3>Araucária (Araucaria angustifolia)</h3>
+                        <p>O pinhão é a semente desta árvore milenar e principal fonte de alimento da gralha-azul, ave fundamental para dispersar e enterrar as sementes no solo.</p>
+                    </div>
+                    <div class="encyclopedia-card">
+                        <span class="enc-tag">Cerrado</span>
+                        <h3>Baru (Dipteryx alata)</h3>
+                        <p>Típica do Cerrado brasileiro, a amêndoa do baru fica protegida por uma casca lenhosa extremamente dura, sendo rica em proteínas e símbolo de extrativismo sustentável.</p>
+                    </div>
+                    <div class="encyclopedia-card">
+                        <span class="enc-tag">Cerrado e Pantanal</span>
+                        <h3>Jatobá (Hymenaea courbaril)</h3>
+                        <p>Suas sementes ficam envolvidas por uma polpa farinácea doce dentro de uma vagem rija, adaptada originalmente para dispersão por grandes mamíferos.</p>
+                    </div>
+                    <div class="encyclopedia-card">
+                        <span class="enc-tag">Veredas</span>
+                        <h3>Buriti (Mauritia flexuosa)</h3>
+                        <p>Palmeira símbolo de áreas úmidas. Suas sementes possuem casca escamosa e sustentam diversas espécies da fauna silvestre em épocas de estiagem.</p>
+                    </div>
                 </div>
             </div>
+
+            <!-- APRENDER A PLANTAR -->
+            <div id="learn-view" class="view">
+                <div class="content-card" style="max-width: 800px;">
+                    <h2 style="color: var(--forest-dark); margin-bottom: 10px;">Guia de Cultivo Inteligente</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;">Pesquise qualquer planta ou semente na base botânica para ver detalhes.</p>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="search-seed-input" placeholder="Ex: Girassol, Alface, Tomate..." style="margin: 0; flex: 1;" onkeypress="window.checkSearchEnter(event)">
+                        <button class="btn-lime-pill" onclick="window.searchSeedInfo()" style="padding: 12px 28px;">Pesquisar</button>
+                    </div>
+                    <div id="learn-results" style="margin-top: 25px;"></div>
+                </div>
+            </div>
+
+            <!-- MEU PERFIL -->
+            <div id="profile-view" class="view">
+                <div class="sub-tabs-bar">
+                    <button class="sub-tab-btn active" id="subtab-edit" onclick="window.switchProfileSubTab('edit')">Editar Dados e Avatar</button>
+                    <button class="sub-tab-btn" id="subtab-seeds" onclick="window.switchProfileSubTab('seeds')">Minhas Sementes</button>
+                </div>
+
+                <div id="profile-sub-edit" class="content-card">
+                    <h2 style="color: var(--forest-dark); margin-bottom: 15px;">Personalizar Perfil</h2>
+                    
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <img id="profile-avatar-preview" src="" alt="Avatar" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--lime); display: none; margin: 0 auto 10px auto;">
+                        <div id="profile-avatar-placeholder" style="width: 90px; height: 90px; border-radius: 50%; background: var(--forest-dark); color: var(--lime); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; margin: 0 auto 10px auto; border: 3px solid var(--lime);">U</div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Alterar Foto de Perfil</label>
+                        <input type="file" id="profile-photo-input" accept="image/*">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Nome / Apelido no Chat</label>
+                        <input type="text" id="profile-name" placeholder="Como deseja aparecer...">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Sua Comunidade / Cidade Principal</label>
+                        <select id="profile-community" class="select-styled">
+                            <option value="Aparecida do Taboado">Aparecida do Taboado - MS</option>
+                            <option value="Paranaíba">Paranaíba - MS</option>
+                            <option value="Três Lagoas">Três Lagoas - MS</option>
+                            <option value="Campo Grande">Campo Grande - MS</option>
+                            <option value="Dourados">Dourados - MS</option>
+                            <option value="Corumbá">Corumbá - MS</option>
+                            <option value="Bonito">Bonito - MS</option>
+                            <option value="Santa Fé do Sul">Santa Fé do Sul - SP</option>
+                            <option value="Jales">Jales - SP</option>
+                            <option value="Fernandópolis">Fernandópolis - SP</option>
+                        </select>
+                    </div>
+
+                    <button class="btn-lime-full" onclick="window.saveProfile()">Guardar Alterações de Perfil</button>
+                </div>
+
+                <div id="profile-sub-seeds" style="display: none;">
+                    <h3 style="color: var(--forest-dark); margin-bottom: 15px;">Minhas Sementes Cadastradas</h3>
+                    <div id="my-seeds-container" class="seeds-grid"></div>
+                </div>
+            </div>
+
         </div>
 
-        <!-- ENCICLOPÉDIA DE SEMENTES NATIVAS BRASILEIRAS -->
-        <div id="encyclopedia-view" class="view">
-            <div class="page-header-dark">
-                <h2>Enciclopédia de Sementes Nativas do Brasil</h2>
-                <p>Descubra curiosidades ecológicas e culturais sobre espécies emblemáticas da nossa flora.</p>
-            </div>
-            
-            <div class="encyclopedia-grid">
-                <div class="encyclopedia-card">
-                    <span class="enc-tag">Cerrado e Mata Atlântica</span>
-                    <h3>Ipê-Amarelo (Handroanthus albus)</h3>
-                    <p>Suas sementes são extremamente leves e aladas (possuem pequenas asas), o que permite que o vento as transporte por longas distâncias durante o período de seca.</p>
-                </div>
-                <div class="encyclopedia-card">
-                    <span class="enc-tag">Amazônia</span>
-                    <h3>Castanheira-do-Pará (Bertholletia excelsa)</h3>
-                    <p>O fruto duro guarda de 15 a 25 sementes. Sua germinação depende quase exclusivamente da cutia, roedor que enterra as sementes para guardar alimento.</p>
-                </div>
-                <div class="encyclopedia-card">
-                    <span class="enc-tag">Mata de Araucárias</span>
-                    <h3>Araucária (Araucaria angustifolia)</h3>
-                    <p>O pinhão é a semente desta árvore milenar e principal fonte de alimento da gralha-azul, ave fundamental para dispersar e enterrar as sementes no solo.</p>
-                </div>
-                <div class="encyclopedia-card">
-                    <span class="enc-tag">Cerrado</span>
-                    <h3>Baru (Dipteryx alata)</h3>
-                    <p>Típica do Cerrado brasileiro, a amêndoa do baru fica protegida por uma casca lenhosa extremamente dura, sendo rica em proteínas e símbolo de extrativismo sustentável.</p>
-                </div>
-                <div class="encyclopedia-card">
-                    <span class="enc-tag">Cerrado e Pantanal</span>
-                    <h3>Jatobá (Hymenaea courbaril)</h3>
-                    <p>Suas sementes ficam envolvidas por uma polpa farinácea doce dentro de uma vagem rija, adaptada originalmente para dispersão por grandes mamíferos.</p>
-                </div>
-                <div class="encyclopedia-card">
-                    <span class="enc-tag">Veredas</span>
-                    <h3>Buriti (Mauritia flexuosa)</h3>
-                    <p>Palmeira símbolo de áreas úmidas. Suas sementes possuem casca escamosa e sustentam diversas espécies da fauna silvestre em épocas de estiagem.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- APRENDER A PLANTAR -->
-        <div id="learn-view" class="view">
-            <div class="content-card" style="max-width: 800px;">
-                <h2 style="color: var(--forest-dark); margin-bottom: 10px;">Guia de Cultivo Inteligente</h2>
-                <p style="color: var(--text-muted); margin-bottom: 20px;">Pesquise qualquer planta ou semente na base botânica para ver detalhes.</p>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="search-seed-input" placeholder="Ex: Girassol, Alface, Tomate..." style="margin: 0; flex: 1;" onkeypress="window.checkSearchEnter(event)">
-                    <button class="btn-lime-pill" onclick="window.searchSeedInfo()" style="padding: 12px 28px;">Pesquisar</button>
-                </div>
-                <div id="learn-results" style="margin-top: 25px;"></div>
-            </div>
-        </div>
-
-        <!-- MEU PERFIL -->
-        <div id="profile-view" class="view">
-            <div class="sub-tabs-bar">
-                <button class="sub-tab-btn active" id="subtab-edit" onclick="window.switchProfileSubTab('edit')">Editar Dados e Avatar</button>
-                <button class="sub-tab-btn" id="subtab-seeds" onclick="window.switchProfileSubTab('seeds')">Minhas Sementes</button>
-            </div>
-
-            <div id="profile-sub-edit" class="content-card">
-                <h2 style="color: var(--forest-dark); margin-bottom: 15px;">Personalizar Perfil</h2>
-                
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <img id="profile-avatar-preview" src="" alt="Avatar" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--lime); display: none; margin: 0 auto 10px auto;">
-                    <div id="profile-avatar-placeholder" style="width: 90px; height: 90px; border-radius: 50%; background: var(--forest-dark); color: var(--lime); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; margin: 0 auto 10px auto; border: 3px solid var(--lime);">U</div>
-                </div>
-
-                <div class="input-group">
-                    <label>Alterar Foto de Perfil</label>
-                    <input type="file" id="profile-photo-input" accept="image/*">
-                </div>
-
-                <div class="input-group">
-                    <label>Nome / Apelido no Chat</label>
-                    <input type="text" id="profile-name" placeholder="Como deseja aparecer...">
-                </div>
-
-                <div class="input-group">
-                    <label>Sua Comunidade / Cidade Principal</label>
-                    <select id="profile-community" class="select-styled">
-                        <option value="Aparecida do Taboado">Aparecida do Taboado</option>
-                        <option value="Paranaíba">Paranaíba</option>
-                    </select>
-                </div>
-
-                <button class="btn-lime-full" onclick="window.saveProfile()">Guardar Alterações de Perfil</button>
-            </div>
-
-            <div id="profile-sub-seeds" style="display: none;">
-                <h3 style="color: var(--forest-dark); margin-bottom: 15px;">Minhas Sementes Cadastradas</h3>
-                <div id="my-seeds-container" class="seeds-grid"></div>
-            </div>
-        </div>
-
-    </div>
+    </div> <!-- FIM DA MOLDURA DO DISPOSITIVO -->
 
     <script type="module" src="script.js"></script>
 </body>
