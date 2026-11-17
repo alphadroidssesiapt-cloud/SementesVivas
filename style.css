@@ -1,10 +1,11 @@
 :root {
     --primary: #1b4332;
     --secondary: #2d6a4f;
-    --accent: #52b788;
+    --accent: #40916c;
+    --vibrant: #52b788;
     --earth: #bc6c25;
     --sunflower: #e9c46a;
-    --bg-light: #f4f9f4;
+    --bg-light: #f2f7f2;
     --card-bg: #ffffff;
     --text-main: #2b2b2b;
     --text-muted: #555555;
@@ -28,7 +29,7 @@ body, html {
 header {
     background: var(--card-bg);
     border-bottom: 1px solid var(--border-color);
-    box-shadow: 0 4px 15px rgba(27, 67, 50, 0.05);
+    box-shadow: 0 4px 15px rgba(27, 67, 50, 0.06);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -82,7 +83,7 @@ header {
     padding: 0 40px;
     width: 100%;
     overflow-x: auto;
-    background: #eaf4ed;
+    background: #d8eddf;
 }
 
 .tab-btn {
@@ -107,13 +108,13 @@ header {
 
 .tab-btn:hover {
     color: var(--primary);
-    background-color: rgba(82, 183, 136, 0.15);
+    background-color: rgba(82, 183, 136, 0.25);
 }
 
 .tab-btn.active {
     color: var(--primary);
     font-weight: 700;
-    border-bottom: 3px solid var(--accent);
+    border-bottom: 3px solid var(--vibrant);
     background-color: #ffffff;
 }
 
@@ -189,7 +190,7 @@ header {
     color: var(--primary);
     margin-bottom: 8px;
 }
-.logo-icon { font-size: 36px; color: var(--accent); }
+.logo-icon { font-size: 36px; color: var(--vibrant); }
 
 /* Inputs e Formulários */
 .input-group { margin-bottom: 20px; }
@@ -204,7 +205,7 @@ header {
     background: #fafcfc;
     transition: all 0.2s;
 }
-.input-group input:focus, .select-styled:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(82, 183, 136, 0.2); }
+.input-group input:focus, .select-styled:focus { border-color: var(--vibrant); box-shadow: 0 0 0 3px rgba(82, 183, 136, 0.25); }
 
 /* Botões */
 .btn-primary {
@@ -236,8 +237,18 @@ header {
 }
 .btn-secondary:hover { background: #eaf4ed; }
 
-/* Início / Dashboard */
-.welcome-banner h2 { color: var(--primary); font-size: 26px; margin-bottom: 25px; }
+/* Início / Dashboard Vivo */
+.vivo-banner {
+    background: linear-gradient(135deg, #2d6a4f 0%, #52b788 100%);
+    padding: 30px;
+    border-radius: 16px;
+    color: white;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 20px rgba(45, 106, 79, 0.15);
+}
+.vivo-banner h2 { color: white; font-size: 28px; margin-bottom: 6px; }
+.vivo-banner p { color: #f4f9f4 !important; }
+
 .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
 .action-card {
     background: var(--card-bg);
@@ -246,15 +257,40 @@ header {
     cursor: pointer;
     border: 1px solid var(--border-color);
     transition: all 0.25s ease;
-    box-shadow: 0 4px 12px rgba(27, 67, 50, 0.03);
+    box-shadow: 0 4px 12px rgba(27, 67, 50, 0.04);
 }
 .action-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(45, 106, 79, 0.12);
-    border-color: var(--accent);
+    box-shadow: 0 12px 25px rgba(82, 183, 136, 0.2);
+    border-color: var(--vibrant);
 }
+.action-card.card-vivo-1 { border-top: 5px solid #2d6a4f; }
+.action-card.card-vivo-2 { border-top: 5px solid #52b788; }
+.action-card.card-vivo-3 { border-top: 5px solid #bc6c25; }
+.action-card.card-vivo-4 { border-top: 5px solid #e9c46a; }
+
 .action-card .material-icons { font-size: 42px; color: var(--secondary); margin-bottom: 15px; display: block; }
 .action-card h3 { color: var(--primary); font-size: 18px; margin-bottom: 6px; }
+
+/* Enciclopédia Grid */
+.encyclopedia-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+.encyclopedia-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-left: 5px solid var(--vibrant);
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 4px 12px rgba(27, 67, 50, 0.04);
+    transition: transform 0.2s;
+}
+.encyclopedia-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(45, 106, 79, 0.1);
+}
 
 /* Cartão de Conteúdo */
 .content-card {
@@ -302,7 +338,7 @@ header {
 }
 
 .chat-thread-item:hover {
-    border-color: var(--accent);
+    border-color: var(--vibrant);
     background: #eaf4ed;
 }
 
@@ -354,7 +390,7 @@ header {
 }
 .chat-msg.mine {
     background: #eaf4ed;
-    border-color: var(--accent);
+    border-color: var(--vibrant);
     align-self: flex-end;
     flex-direction: row-reverse;
 }
@@ -377,7 +413,7 @@ header {
 .camera-wrapper { position: relative; overflow: hidden; display: block; width: 100%; }
 .camera-btn {
     background: #fafcfc;
-    border: 2px dashed var(--accent);
+    border: 2px dashed var(--vibrant);
     color: var(--secondary);
     padding: 24px;
     text-align: center;
