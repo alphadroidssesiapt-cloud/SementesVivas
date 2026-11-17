@@ -19,6 +19,115 @@ let currentCommunity = "Aparecida do Taboado";
 let userProfileCache = null;
 let activePrivateChatId = null;
 
+// BASE DE DADOS DE BIOMAS E PORTAIS ESTADUAIS POR CIDADE/ESTADO
+const cityBiomeDatabase = {
+    "Aparecida do Taboado": {
+        state: "MS",
+        biome: "Cerrado (Transição Mata Atlântica)",
+        desc: "Região marcada por solos arenosos e vegetação típica de Cerrado, ideal para espécies como Ipê-Amarelo, Baru, Jatobá e Jatobá-do-Cerrado.",
+        portalUrl: "https://www.imasul.ms.gov.br/",
+        portalName: "Portal Ambiental do MS (IMASUL)",
+        mapQuery: "Aparecida+do+Taboado,MS"
+    },
+    "Paranaíba": {
+        state: "MS",
+        biome: "Cerrado",
+        desc: "Predominância de Cerrado típico e matas ciliares do rio Paranaíba. Sementes recomendadas: Pequi, Ipê-Roxo, Baru e Ingá.",
+        portalUrl: "https://www.imasul.ms.gov.br/",
+        portalName: "Portal Ambiental do MS (IMASUL)",
+        mapQuery: "Paranaiba,MS"
+    },
+    "Três Lagoas": {
+        state: "MS",
+        biome: "Cerrado",
+        desc: "Bacia do rio Paraná com grande diversidade de espécies melíferas e nativas do Cerrado sul-mato-grossense.",
+        portalUrl: "https://www.imasul.ms.gov.br/",
+        portalName: "Portal Ambiental do MS (IMASUL)",
+        mapQuery: "Tres+Lagoas,MS"
+    },
+    "Campo Grande": {
+        state: "MS",
+        biome: "Cerrado",
+        desc: "Coração do Cerrado em Mato Grosso do Sul, com rica presença de Guavira, Bocaiúva, Ipês e Figueiras.",
+        portalUrl: "https://www.imasul.ms.gov.br/",
+        portalName: "Portal Ambiental do MS (IMASUL)",
+        mapQuery: "Campo+Grande,MS"
+    },
+    "Dourados": {
+        state: "MS",
+        biome: "Mata Atlântica e Cerrado",
+        desc: "Zona de transição ecológica com solos férteis ideais para Peroba-Rosa, Erva-Mate nativa, Cedro e Araçá.",
+        portalUrl: "https://www.imasul.ms.gov.br/",
+        portalName: "Portal Ambiental do MS (IMASUL)",
+        mapQuery: "Dourados,MS"
+    },
+    "Corumbá": {
+        state: "MS",
+        biome: "Pantanal",
+        desc: "Maior planície alagável do mundo. Espécies adaptadas ao ciclo das águas como Piúva, Carandá, Acuri e Figueira-Branca.",
+        portalUrl: "https://www.imasul.ms.gov.br/",
+        portalName: "Portal Ambiental do MS (IMASUL)",
+        mapQuery: "Corumba,MS"
+    },
+    "Bonito": {
+        state: "MS",
+        biome: "Cerrado e Mata Atlântica (Serra da Bodoquena)",
+        desc: "Região calcária de águas cristalinas com florestas estacionais preservadas, rica em Aroeira, Angico e Jatobá.",
+        portalUrl: "https://www.imasul.ms.gov.br/",
+        portalName: "Portal Ambiental do MS (IMASUL)",
+        mapQuery: "Bonito,MS"
+    },
+    "Santa Fé do Sul": {
+        state: "SP",
+        biome: "Mata Atlântica (Floresta Estacional Semidecidual)",
+        desc: "Noroeste paulista na divisa com MS, propício para Jequitibá, Pau-Brasil, Pitanga, Grumixama e Ipês.",
+        portalUrl: "https://semil.sp.gov.br/",
+        portalName: "Secretaria de Meio Ambiente de SP (SEMIL)",
+        mapQuery: "Santa+Fe+do+Sul,SP"
+    },
+    "Jales": {
+        state: "SP",
+        biome: "Mata Atlântica e Cerrado",
+        desc: "Região paulista com remanescentes de mata nativa e pomares biodiversos de frutas do cerrado e mata atlântica.",
+        portalUrl: "https://semil.sp.gov.br/",
+        portalName: "Secretaria de Meio Ambiente de SP (SEMIL)",
+        mapQuery: "Jales,SP"
+    },
+    "Fernandópolis": {
+        state: "SP",
+        biome: "Mata Atlântica e Cerrado",
+        desc: "Ecótono entre o Cerrado e a Floresta Estacional de São Paulo, ideal para reflorestamento com espécies nativas regionais.",
+        portalUrl: "https://semil.sp.gov.br/",
+        portalName: "Secretaria de Meio Ambiente de SP (SEMIL)",
+        mapQuery: "Fernandopolis,SP"
+    }
+};
+
+// CONTROLE DE MODO CLARO / ESCURO
+window.toggleTheme = () => {
+    const htmlEl = document.documentElement;
+    const themeIcon = document.getElementById('theme-icon');
+    const currentTheme = htmlEl.getAttribute('data-theme');
+    
+    if (currentTheme === 'dark') {
+        htmlEl.setAttribute('data-theme', 'light');
+        themeIcon.innerText = 'dark_mode';
+    } else {
+        htmlEl.setAttribute('data-theme', 'dark');
+        themeIcon.innerText = 'light_mode';
+    }
+};
+
+// CONTROLE DE MODO DISPOSITIVO (RESPONSIVO OU SIMULADOR CELULAR)
+window.changeDeviceMode = (mode) => {
+    const frame = document.getElementById('device-frame');
+    if (mode === 'mobile') {
+        frame.className = 'device-mobile';
+    } else {
+        frame.className = 'device-desktop';
+    }
+};
+
 // SISTEMA DE ABAS
 window.switchView = (viewId) => {
     document.querySelectorAll('.view').forEach(v => {
@@ -33,7 +142,6 @@ window.switchView = (viewId) => {
     }
 
     document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
-    // Encontra o botão de navegação correspondente
     const mapTab = {
         'dashboard-view': 'tab-dashboard-view',
         'available-view': 'tab-available-view',
@@ -51,7 +159,10 @@ window.switchView = (viewId) => {
 
 window.showDashboard = () => window.switchView('dashboard-view');
 window.showLearn = () => window.switchView('learn-view');
-window.showEncyclopedia = () => window.switchView('encyclopedia-view');
+window.showEncyclopedia = () => {
+    window.switchView('encyclopedia-view');
+    window.identifyBiomeByCity();
+};
 window.showDonate = () => {
     document.getElementById('donate-seed-name').value = '';
     document.getElementById('donate-seed-photo').value = '';
@@ -70,6 +181,99 @@ window.showChat = () => { window.switchView('chat-view'); window.renderChat(); }
 window.showPrivateChats = (chatIdToOpen = null) => {
     window.switchView('private-chats-view');
     window.loadPrivateChatList(chatIdToOpen);
+};
+
+// IDENTIFICAÇÃO DE BIOMA VIA CIDADE DO PERFIL
+window.identifyBiomeByCity = () => {
+    const city = userProfileCache?.community || currentCommunity || "Aparecida do Taboado";
+    const info = cityBiomeDatabase[city] || cityBiomeDatabase["Aparecida do Taboado"];
+
+    const resultBox = document.getElementById('biome-result-box');
+    const titleEl = document.getElementById('biome-detected-title');
+    const descEl = document.getElementById('biome-detected-desc');
+    const gmapsLink = document.getElementById('gmaps-external-link');
+    const portalLink = document.getElementById('state-portal-link');
+    const portalLabel = document.getElementById('state-portal-label');
+    const iframe = document.getElementById('google-maps-iframe');
+
+    titleEl.innerText = `${city} (${info.state}) — Bioma: ${info.biome}`;
+    descEl.innerText = info.desc;
+    gmapsLink.href = `https://www.google.com/maps/search/?api=1&query=${info.mapQuery}`;
+    portalLink.href = info.portalUrl;
+    portalLabel.innerText = info.portalName;
+    iframe.src = `https://maps.google.com/maps?q=${info.mapQuery}&t=k&z=11&ie=UTF8&iwloc=&output=embed`;
+
+    resultBox.style.display = 'block';
+};
+
+// IDENTIFICAÇÃO DE BIOMA VIA GPS DO NAVEGADOR + GOOGLE MAPS
+window.detectBiomeWithMaps = () => {
+    if (!navigator.geolocation) {
+        alert("Geolocalização não suportada pelo navegador. A usar cidade do perfil.");
+        return window.identifyBiomeByCity();
+    }
+
+    const titleEl = document.getElementById('biome-detected-title');
+    const resultBox = document.getElementById('biome-result-box');
+    resultBox.style.display = 'block';
+    titleEl.innerText = "A obter coordenadas GPS...";
+
+    navigator.geolocation.getCurrentPosition(
+        async (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+
+            const iframe = document.getElementById('google-maps-iframe');
+            const gmapsLink = document.getElementById('gmaps-external-link');
+            iframe.src = `https://maps.google.com/maps?q=${lat},${lng}&t=k&z=13&ie=UTF8&iwloc=&output=embed`;
+            gmapsLink.href = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+                const data = await res.json();
+                const address = data.address || {};
+                const stateName = address.state || "";
+                const cityName = address.city || address.town || address.village || "Localização Atual";
+
+                let biomeName = "Cerrado Brasileiro";
+                let portalUrl = "https://www.gov.br/mma/pt-br";
+                let portalLabel = "Ministério do Meio Ambiente";
+
+                if (stateName.includes("Mato Grosso do Sul")) {
+                    biomeName = (lng < -56.0) ? "Pantanal Sul-Mato-Grossense" : "Cerrado (Transição Mata Atlântica)";
+                    portalUrl = "https://www.imasul.ms.gov.br/";
+                    portalLabel = "Portal Ambiental do MS (IMASUL)";
+                } else if (stateName.includes("São Paulo")) {
+                    biomeName = "Mata Atlântica / Cerrado Paulista";
+                    portalUrl = "https://semil.sp.gov.br/";
+                    portalLabel = "Secretaria de Meio Ambiente de SP (SEMIL)";
+                } else if (stateName.includes("Mato Grosso")) {
+                    biomeName = "Cerrado / Amazônia / Pantanal";
+                    portalUrl = "http://www.sema.mt.gov.br/";
+                    portalLabel = "Portal Ambiental de MT (SEMA)";
+                } else if (stateName.includes("Goiás")) {
+                    biomeName = "Cerrado";
+                    portalUrl = "https://www.meioambiente.go.gov.br/";
+                    portalLabel = "Portal Ambiental de GO (SEMAD)";
+                } else if (stateName.includes("Minas Gerais")) {
+                    biomeName = "Cerrado e Mata Atlântica";
+                    portalUrl = "http://www.meioambiente.mg.gov.br/";
+                    portalLabel = "Portal Ambiental de MG (SEMAD)";
+                }
+
+                titleEl.innerText = `${cityName} (${stateName || 'Brasil'}) — Bioma: ${biomeName}`;
+                document.getElementById('biome-detected-desc').innerText = `Coordenadas identificadas (${lat.toFixed(4)}, ${lng.toFixed(4)}). Utilize o botão abaixo para consultar legislação, viveiros e mudas nativas no órgão ambiental oficial do seu estado.`;
+                document.getElementById('state-portal-link').href = portalUrl;
+                document.getElementById('state-portal-label').innerText = portalLabel;
+            } catch (e) {
+                window.identifyBiomeByCity();
+            }
+        },
+        () => {
+            alert("Permissão de localização negada. A exibir bioma da cidade cadastrada no perfil.");
+            window.identifyBiomeByCity();
+        }
+    );
 };
 
 // SUB-ABAS DE PERFIL
@@ -366,9 +570,9 @@ window.renderSeeds = async () => {
             box.className = 'seed-box';
             box.innerHTML = `
                 <div>
-                    ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}" alt="${seed.name}">` : '<div style="height:180px;background:#eef2ed;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#888;">Sem imagem</div>'}
+                    ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}" alt="${seed.name}">` : '<div style="height:180px;background:var(--bg-light);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#888;">Sem imagem</div>'}
                     <span class="badge-tipo ${badgeClass}">${badgeText}</span>
-                    <h4 style="color: var(--forest-dark); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
+                    <h4 style="color: var(--text-main); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
                     <p style="font-size: 13px; color: var(--text-muted);">Doador: <strong>${seed.author}</strong></p>
                     <p style="font-size: 12px; color: var(--text-muted);">Comunidade: ${seed.community || 'Geral'}</p>
                 </div>
@@ -442,11 +646,16 @@ window.removerReserva = async (seedId, originView) => {
     }
 };
 
-// FORMATAR DATA / HORA ESTILO TELEGRAM
-const formatTelegramTime = (timestamp) => {
-    if (!timestamp) return '';
+// FORMATAR DATA E HORA COMPLETA ESTILO TELEGRAM (DD/MM/AAAA HH:MM)
+const formatTelegramDateTime = (timestamp) => {
+    if (!timestamp) return 'Agora';
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const dia = String(date.getDate()).padStart(2, '0');
+    const mes = String(date.getMonth() + 1).padStart(2, '0');
+    const ano = date.getFullYear();
+    const hora = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    return `${dia}/${mes}/${ano} às ${hora}:${min}`;
 };
 
 // CHATS PRIVADOS (ESTILO TELEGRAM)
@@ -490,8 +699,8 @@ window.loadPrivateChatList = async (chatIdToOpen = null) => {
             item.onclick = () => window.openPrivateChatRoom(thread.id, thread.seedName, otherPersonName);
             
             item.innerHTML = `
-                <div style="font-weight: 700; color: var(--forest-dark); font-size: 14px; margin-bottom: 2px;">${thread.seedName}</div>
-                <div style="font-size: 13px; color: var(--forest-mid); font-weight: 600;">${otherPersonName}</div>
+                <div style="font-weight: 700; color: var(--text-main); font-size: 14px; margin-bottom: 2px;">${thread.seedName}</div>
+                <div style="font-size: 13px; color: var(--lime); font-weight: 600;">${otherPersonName}</div>
                 <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">${roleLabel}</div>
             `;
             listContainer.appendChild(item);
@@ -538,14 +747,14 @@ window.openPrivateChatRoom = async (chatId, seedName, otherPersonName) => {
         const user = auth.currentUser;
         msgs.forEach(msg => {
             const isMine = user && msg.senderId === user.uid;
-            const timeStr = formatTelegramTime(msg.timestamp);
+            const dateTimeStr = formatTelegramDateTime(msg.timestamp);
 
             const div = document.createElement('div');
             div.className = `tg-msg-bubble ${isMine ? 'outgoing' : 'incoming'}`;
             div.innerHTML = `
                 <div class="tg-msg-sender">${msg.senderName}</div>
                 <div class="tg-msg-text">${msg.text}</div>
-                <div class="tg-msg-time">${timeStr}</div>
+                <div class="tg-msg-time">${dateTimeStr}</div>
             `;
             messagesContainer.appendChild(div);
         });
@@ -589,7 +798,7 @@ window.checkPrivateChatEnter = (e) => {
     }
 };
 
-// CHAT COMUNITÁRIO (ESTILO TELEGRAM)
+// CHAT COMUNITÁRIO (ESTILO TELEGRAM COM DATA COMPLETA)
 window.changeChatCommunity = () => {
     currentCommunity = document.getElementById('chat-community-select').value;
     window.renderChat();
@@ -626,14 +835,14 @@ window.renderChat = async () => {
         const user = auth.currentUser;
         messages.forEach((msg) => {
             const isMine = user && msg.userId === user.uid;
-            const timeStr = formatTelegramTime(msg.timestamp);
+            const dateTimeStr = formatTelegramDateTime(msg.timestamp);
 
             const div = document.createElement('div');
             div.className = `tg-msg-bubble ${isMine ? 'outgoing' : 'incoming'}`;
             div.innerHTML = `
                 <div class="tg-msg-sender">${msg.author}</div>
                 <div class="tg-msg-text">${msg.text}</div>
-                <div class="tg-msg-time">${timeStr}</div>
+                <div class="tg-msg-time">${dateTimeStr}</div>
             `;
             container.appendChild(div);
         });
@@ -698,7 +907,7 @@ window.renderMyProfile = async () => {
                 
                 let statusText = seed.status === 'reservada' 
                     ? `<span style="color: var(--earth); font-weight: 600;">Reservada por ${seed.reservadoPor}</span>` 
-                    : `<span style="color: var(--secondary); font-weight: 600;">Disponível</span>`;
+                    : `<span style="color: var(--lime); font-weight: 600;">Disponível</span>`;
 
                 let removeReserveBtn = seed.status === 'reservada'
                     ? `<button class="btn-cancel-reserve" onclick="window.removerReserva('${seedId}', 'profile')">Remover Reserva</button>`
@@ -706,9 +915,9 @@ window.renderMyProfile = async () => {
 
                 box.innerHTML = `
                     <div>
-                        ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}" alt="${seed.name}">` : '<div style="height:180px;background:#eef2ed;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#888;">Sem imagem</div>'}
+                        ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}" alt="${seed.name}">` : '<div style="height:180px;background:var(--bg-light);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#888;">Sem imagem</div>'}
                         <span class="badge-tipo ${badgeClass}">${badgeText}</span>
-                        <h4 style="color: var(--forest-dark); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
+                        <h4 style="color: var(--text-main); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
                         <p style="font-size: 13px; margin-bottom: 4px;"><strong>Status:</strong> ${statusText}</p>
                     </div>
                     <div>
@@ -748,7 +957,7 @@ window.searchSeedInfo = async () => {
         return;
     }
 
-    resultsContainer.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--secondary);"><p>A pesquisar informações para <strong>"${queryInput}"</strong>...</p></div>`;
+    resultsContainer.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--lime);"><p>A pesquisar informações para <strong>"${queryInput}"</strong>...</p></div>`;
 
     try {
         const response = await fetch(`https://pt.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(queryInput)}`);
@@ -756,18 +965,18 @@ window.searchSeedInfo = async () => {
         const data = await response.json();
 
         resultsContainer.innerHTML = `
-            <div style="background: #eaf4ed; border-left: 5px solid var(--primary); padding: 20px; border-radius: 8px; color: var(--primary);">
+            <div style="background: var(--bg-light); border-left: 5px solid var(--lime); padding: 20px; border-radius: 8px; color: var(--text-main);">
                 <h3 style="margin-top: 0; margin-bottom: 10px;">${data.title}</h3>
                 <p style="line-height: 1.6; color: var(--text-main); font-size: 14px;">${data.extract}</p>
                 ${data.thumbnail ? `<img src="${data.thumbnail.source}" alt="${data.title}" style="max-width: 150px; border-radius: 6px; margin-top: 15px; display: block;">` : ''}
                 <p style="margin-top: 15px; font-size: 13px;">
-                    <a href="${data.content_urls.desktop.page}" target="_blank" style="color: var(--secondary); font-weight: 600; text-decoration: underline;">Ler artigo completo na Wikipédia</a>
+                    <a href="${data.content_urls.desktop.page}" target="_blank" style="color: var(--lime); font-weight: 600; text-decoration: underline;">Ler artigo completo na Wikipédia</a>
                 </p>
             </div>
         `;
     } catch (error) {
         resultsContainer.innerHTML = `
-            <div style="background: #fcf5e5; border-left: 5px solid var(--earth); padding: 20px; border-radius: 8px; color: #99581a;">
+            <div style="background: var(--bg-light); border-left: 5px solid var(--earth); padding: 20px; border-radius: 8px; color: #99581a;">
                 <h3 style="margin-top: 0;">Nenhum resultado encontrado</h3>
                 <p style="font-size: 14px;">Não encontrámos um artigo exato para "${queryInput}". Tente pesquisar pelo nome comum (ex: "Tomateiro", "Girassol").</p>
             </div>
