@@ -276,6 +276,7 @@ window.switchProfileSubTab = (subTab) => {
     }
 };
 
+// LOGIN E CADASTRO COM DIAGNÓSTICO DETALHADO
 window.login = async () => {
     const emailField = document.getElementById('auth-email');
     const passField = document.getElementById('auth-password');
@@ -290,15 +291,20 @@ window.login = async () => {
         return;
     }
 
+    errorMsg.style.display = 'none';
+
     try {
         await signInWithEmailAndPassword(auth, email, pass);
-        errorMsg.style.display = 'none';
     } catch (error) {
-        let mensagemErro = "Erro ao entrar. Verifique os dados.";
-        if (error.code === 'auth/user-not-found') mensagemErro = "Utilizador não encontrado.";
+        console.error("Erro Firebase Login:", error.code, error.message);
+        let mensagemErro = `Erro (${error.code}): Verifique os dados.`;
+        if (error.code === 'auth/user-not-found') mensagemErro = "Utilizador não encontrado. Clique em 'Criar Nova Conta' primeiro.";
         else if (error.code === 'auth/wrong-password') mensagemErro = "Senha incorreta.";
-        else if (error.code === 'auth/invalid-email') mensagemErro = "E-mail inválido.";
-        else if (error.code === 'auth/invalid-credential') mensagemErro = "Credenciais inválidas.";
+        else if (error.code === 'auth/invalid-email') mensagemErro = "Formato de e-mail inválido.";
+        else if (error.code === 'auth/invalid-credential') mensagemErro = "E-mail ou senha incorretos (ou conta ainda não criada).";
+        else if (error.code === 'auth/operation-not-allowed') mensagemErro = "O login por E-mail/Senha não está ativado no painel do Firebase.";
+        else if (error.code === 'auth/unauthorized-domain') mensagemErro = "Este domínio não está autorizado no Firebase Authentication.";
+        
         errorMsg.innerText = mensagemErro;
         errorMsg.style.display = 'block';
     }
@@ -322,6 +328,8 @@ window.register = async () => {
         return;
     }
 
+    errorMsg.style.display = 'none';
+
     try {
         const cred = await createUserWithEmailAndPassword(auth, email, pass);
         await setDoc(doc(db, "users", cred.user.uid), {
@@ -330,10 +338,16 @@ window.register = async () => {
             avatarBase64: "",
             email: email
         });
-        errorMsg.style.display = 'none';
         alert("Conta criada com sucesso!");
     } catch (error) {
-        errorMsg.innerText = "Erro ao criar conta. A senha deve ter pelo menos 6 caracteres.";
+        console.error("Erro Firebase Registro:", error.code, error.message);
+        let mensagemErro = `Erro ao criar conta (${error.code}).`;
+        if (error.code === 'auth/weak-password') mensagemErro = "A senha deve ter pelo menos 6 caracteres.";
+        else if (error.code === 'auth/email-already-in-use') mensagemErro = "Este e-mail já está registado. Clique em 'Entrar na Conta'.";
+        else if (error.code === 'auth/operation-not-allowed') mensagemErro = "O cadastro por E-mail/Senha não está ativado no painel do Firebase.";
+        else if (error.code === 'auth/invalid-email') mensagemErro = "Formato de e-mail inválido.";
+        
+        errorMsg.innerText = mensagemErro;
         errorMsg.style.display = 'block';
     }
 };
