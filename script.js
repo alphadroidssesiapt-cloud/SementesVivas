@@ -39,6 +39,7 @@ window.switchView = (viewId) => {
 
 window.showDashboard = () => window.switchView('dashboard-view');
 window.showLearn = () => window.switchView('learn-view');
+window.showEncyclopedia = () => window.switchView('encyclopedia-view');
 window.showDonate = () => {
     document.getElementById('donate-seed-name').value = '';
     document.getElementById('donate-seed-photo').value = '';
@@ -316,7 +317,7 @@ window.processDonation = async () => {
     }
 };
 
-// RENDERIZAR SEMENTES (COM OPÇÃO DE CANCELAR PRÓPRIA RESERVA)
+// RENDERIZAR SEMENTES
 window.renderSeeds = async () => {
     const container = document.getElementById('seeds-grid-container');
     container.innerHTML = '<p style="color: var(--text-muted);">A carregar sementes...</p>';
@@ -409,7 +410,6 @@ window.reservarSemente = async (seedId, ownerId, ownerName, seedName) => {
     }
 };
 
-// FUNÇÃO PARA REMOVER RESERVA (TANTO PARA ANUNCIANTE QUANTO PARA INTERESSADO)
 window.removerReserva = async (seedId, originView) => {
     if (confirm("Tem certeza que deseja remover a reserva desta semente? Ela voltará a ficar disponível para todos.")) {
         try {
@@ -662,7 +662,7 @@ window.checkChatEnter = (e) => {
     }
 };
 
-// MEU PERFIL E MINHAS SEMENTES (COM OPÇÃO PARA ANUNCIANTE REMOVER RESERVA)
+// MEU PERFIL E MINHAS SEMENTES
 window.renderMyProfile = async () => {
     const container = document.getElementById('my-seeds-container');
     const user = auth.currentUser;
