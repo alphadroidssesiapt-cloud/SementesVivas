@@ -19,7 +19,6 @@ let currentCommunity = "Aparecida do Taboado";
 let userProfileCache = null;
 let activePrivateChatId = null;
 
-// DETECÇÃO AUTOMÁTICA DO DISPOSITIVO
 window.addEventListener('DOMContentLoaded', () => {
     const frame = document.getElementById('device-frame');
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
