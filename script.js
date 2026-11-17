@@ -32,9 +32,21 @@ window.switchView = (viewId) => {
         view.style.display = (viewId === 'login-view') ? 'flex' : 'block';
     }
 
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    const activeTabBtn = document.getElementById(`tab-${viewId}`);
-    if (activeTabBtn) activeTabBtn.classList.add('active');
+    document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+    // Encontra o botão de navegação correspondente
+    const mapTab = {
+        'dashboard-view': 'tab-dashboard-view',
+        'available-view': 'tab-available-view',
+        'private-chats-view': 'tab-private-chats-view',
+        'chat-view': 'tab-chat-view',
+        'encyclopedia-view': 'tab-encyclopedia-view',
+        'learn-view': 'tab-learn-view',
+        'profile-view': 'tab-profile-view'
+    };
+    if (mapTab[viewId]) {
+        const btn = document.getElementById(mapTab[viewId]);
+        if (btn) btn.classList.add('active');
+    }
 };
 
 window.showDashboard = () => window.switchView('dashboard-view');
@@ -160,9 +172,9 @@ onAuthStateChanged(auth, async (user) => {
         if (userDoc.exists()) {
             userProfileCache = userDoc.data();
             currentCommunity = userProfileCache.community || "Aparecida do Taboado";
-            greeting.innerText = `Olá, ${userProfileCache.displayName || user.email.split('@')[0]}`;
+            if(greeting) greeting.innerText = `Olá, ${userProfileCache.displayName || user.email.split('@')[0]}`;
         } else {
-            greeting.innerText = `Olá, ${user.email.split('@')[0]}`;
+            if(greeting) greeting.innerText = `Olá, ${user.email.split('@')[0]}`;
         }
         
         if (loginView) {
@@ -317,7 +329,7 @@ window.processDonation = async () => {
     }
 };
 
-// RENDERIZAR SEMENTES
+// RENDERIZAR SEMENTES COM IMAGENS REAIS
 window.renderSeeds = async () => {
     const container = document.getElementById('seeds-grid-container');
     container.innerHTML = '<p style="color: var(--text-muted);">A carregar sementes...</p>';
@@ -354,9 +366,9 @@ window.renderSeeds = async () => {
             box.className = 'seed-box';
             box.innerHTML = `
                 <div>
-                    ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}">` : ''}
+                    ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}" alt="${seed.name}">` : '<div style="height:180px;background:#eef2ed;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#888;">Sem imagem</div>'}
                     <span class="badge-tipo ${badgeClass}">${badgeText}</span>
-                    <h4 style="color: var(--primary); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
+                    <h4 style="color: var(--forest-dark); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
                     <p style="font-size: 13px; color: var(--text-muted);">Doador: <strong>${seed.author}</strong></p>
                     <p style="font-size: 12px; color: var(--text-muted);">Comunidade: ${seed.community || 'Geral'}</p>
                 </div>
@@ -430,13 +442,20 @@ window.removerReserva = async (seedId, originView) => {
     }
 };
 
-// CHATS PRIVADOS
+// FORMATAR DATA / HORA ESTILO TELEGRAM
+const formatTelegramTime = (timestamp) => {
+    if (!timestamp) return '';
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};
+
+// CHATS PRIVADOS (ESTILO TELEGRAM)
 window.loadPrivateChatList = async (chatIdToOpen = null) => {
     const listContainer = document.getElementById('private-chat-list');
     const user = auth.currentUser;
     if (!user) return;
 
-    listContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 13px;">A carregar conversas...</p>';
+    listContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 13px; padding: 10px;">A carregar conversas...</p>';
 
     try {
         const querySnapshot = await getDocs(collection(db, "private_chats"));
@@ -456,7 +475,7 @@ window.loadPrivateChatList = async (chatIdToOpen = null) => {
         });
 
         if (threads.length === 0) {
-            listContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 13px;">Ainda não tem nenhuma conversa ativa.</p>';
+            listContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 13px; padding: 10px;">Ainda não tem nenhuma conversa ativa.</p>';
             return;
         }
 
@@ -466,14 +485,14 @@ window.loadPrivateChatList = async (chatIdToOpen = null) => {
             const roleLabel = isOwner ? 'Interessado na sua semente' : 'Doador da semente';
 
             const item = document.createElement('div');
-            item.className = `chat-thread-item ${activePrivateChatId === thread.id ? 'active' : ''}`;
+            item.className = `tg-thread-item ${activePrivateChatId === thread.id ? 'active' : ''}`;
             item.id = `thread-item-${thread.id}`;
             item.onclick = () => window.openPrivateChatRoom(thread.id, thread.seedName, otherPersonName);
             
             item.innerHTML = `
-                <div style="font-weight: 700; color: var(--primary); font-size: 14px; margin-bottom: 3px;">${thread.seedName}</div>
-                <div style="font-size: 12px; color: var(--secondary); font-weight: 600;">${otherPersonName}</div>
-                <div style="font-size: 11px; color: var(--text-muted);">${roleLabel}</div>
+                <div style="font-weight: 700; color: var(--forest-dark); font-size: 14px; margin-bottom: 2px;">${thread.seedName}</div>
+                <div style="font-size: 13px; color: var(--forest-mid); font-weight: 600;">${otherPersonName}</div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">${roleLabel}</div>
             `;
             listContainer.appendChild(item);
         });
@@ -486,18 +505,18 @@ window.loadPrivateChatList = async (chatIdToOpen = null) => {
             }
         }
     } catch (error) {
-        listContainer.innerHTML = '<p style="color: red; font-size: 13px;">Erro ao carregar conversas.</p>';
+        listContainer.innerHTML = '<p style="color: red; font-size: 13px; padding: 10px;">Erro ao carregar conversas.</p>';
     }
 };
 
 window.openPrivateChatRoom = async (chatId, seedName, otherPersonName) => {
     activePrivateChatId = chatId;
     
-    document.querySelectorAll('.chat-thread-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tg-thread-item').forEach(el => el.classList.remove('active'));
     const activeEl = document.getElementById(`thread-item-${chatId}`);
     if (activeEl) activeEl.classList.add('active');
 
-    document.getElementById('private-chat-header').style.display = 'block';
+    document.getElementById('private-chat-header').style.display = 'flex';
     document.getElementById('private-chat-title').innerText = `Semente: ${seedName}`;
     document.getElementById('private-chat-subtitle').innerText = `A conversar com: ${otherPersonName}`;
     document.getElementById('private-chat-input-box').style.display = 'flex';
@@ -519,18 +538,14 @@ window.openPrivateChatRoom = async (chatId, seedName, otherPersonName) => {
         const user = auth.currentUser;
         msgs.forEach(msg => {
             const isMine = user && msg.senderId === user.uid;
-            const avatarHtml = msg.avatar 
-                ? `<img src="${msg.avatar}" class="chat-avatar">` 
-                : `<div class="chat-avatar" style="background:#eaf4ed; display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--secondary);">U</div>`;
+            const timeStr = formatTelegramTime(msg.timestamp);
 
             const div = document.createElement('div');
-            div.className = `chat-msg ${isMine ? 'mine' : ''}`;
+            div.className = `tg-msg-bubble ${isMine ? 'outgoing' : 'incoming'}`;
             div.innerHTML = `
-                ${avatarHtml}
-                <div class="chat-msg-content">
-                    <div class="chat-msg-author">${msg.senderName}</div>
-                    <div class="chat-msg-text">${msg.text}</div>
-                </div>
+                <div class="tg-msg-sender">${msg.senderName}</div>
+                <div class="tg-msg-text">${msg.text}</div>
+                <div class="tg-msg-time">${timeStr}</div>
             `;
             messagesContainer.appendChild(div);
         });
@@ -574,7 +589,7 @@ window.checkPrivateChatEnter = (e) => {
     }
 };
 
-// CHAT COMUNITÁRIO
+// CHAT COMUNITÁRIO (ESTILO TELEGRAM)
 window.changeChatCommunity = () => {
     currentCommunity = document.getElementById('chat-community-select').value;
     window.renderChat();
@@ -611,18 +626,14 @@ window.renderChat = async () => {
         const user = auth.currentUser;
         messages.forEach((msg) => {
             const isMine = user && msg.userId === user.uid;
-            const avatarHtml = msg.avatar 
-                ? `<img src="${msg.avatar}" class="chat-avatar">` 
-                : `<div class="chat-avatar" style="background:#eaf4ed; display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--secondary);">U</div>`;
+            const timeStr = formatTelegramTime(msg.timestamp);
 
             const div = document.createElement('div');
-            div.className = `chat-msg ${isMine ? 'mine' : ''}`;
+            div.className = `tg-msg-bubble ${isMine ? 'outgoing' : 'incoming'}`;
             div.innerHTML = `
-                ${avatarHtml}
-                <div class="chat-msg-content">
-                    <div class="chat-msg-author">${msg.author}</div>
-                    <div class="chat-msg-text">${msg.text}</div>
-                </div>
+                <div class="tg-msg-sender">${msg.author}</div>
+                <div class="tg-msg-text">${msg.text}</div>
+                <div class="tg-msg-time">${timeStr}</div>
             `;
             container.appendChild(div);
         });
@@ -662,7 +673,7 @@ window.checkChatEnter = (e) => {
     }
 };
 
-// MEU PERFIL E MINHAS SEMENTES
+// MEU PERFIL E MINHAS SEMENTES (COM IMAGENS REAIS)
 window.renderMyProfile = async () => {
     const container = document.getElementById('my-seeds-container');
     const user = auth.currentUser;
@@ -695,9 +706,9 @@ window.renderMyProfile = async () => {
 
                 box.innerHTML = `
                     <div>
-                        ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}">` : ''}
+                        ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}" alt="${seed.name}">` : '<div style="height:180px;background:#eef2ed;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#888;">Sem imagem</div>'}
                         <span class="badge-tipo ${badgeClass}">${badgeText}</span>
-                        <h4 style="color: var(--primary); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
+                        <h4 style="color: var(--forest-dark); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
                         <p style="font-size: 13px; margin-bottom: 4px;"><strong>Status:</strong> ${statusText}</p>
                     </div>
                     <div>
