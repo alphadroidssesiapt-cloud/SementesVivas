@@ -39,6 +39,9 @@
             <button class="tab-btn" id="tab-chat-view" onclick="window.showChat()">
                 <span class="material-icons">forum</span> Comunidade
             </button>
+            <button class="tab-btn" id="tab-encyclopedia-view" onclick="window.showEncyclopedia()">
+                <span class="material-icons">nature</span> Enciclopédia Nativa
+            </button>
             <button class="tab-btn" id="tab-learn-view" onclick="window.showLearn()">
                 <span class="material-icons">menu_book</span> Aprender
             </button>
@@ -57,7 +60,7 @@
                     <span class="material-icons logo-icon">eco</span>
                     <h2>Sementes Vivas</h2>
                 </div>
-                <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 14px;">Conectando cultivadores, partilhando vida e biodiversidade.</p>
+                <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 14px; text-align: center;">Conectando cultivadores, partilhando vida e biodiversidade.</p>
                 
                 <div class="input-group">
                     <label>E-mail</label>
@@ -75,31 +78,32 @@
             </div>
         </div>
 
-        <!-- PAINEL PRINCIPAL (INÍCIO) -->
+        <!-- PAINEL PRINCIPAL (INÍCIO VIVO) -->
         <div id="dashboard-view" class="view">
-            <div class="welcome-banner">
-                <h2>O que deseja fazer hoje?</h2>
+            <div class="welcome-banner vivo-banner">
+                <h2>Bem-vindo ao Coração da Biodiversidade</h2>
+                <p style="color: var(--text-muted); font-size: 14px; margin-top: 5px;">Cultive conexões e ajude a preservar a nossa riqueza natural.</p>
             </div>
             <div class="action-grid">
-                <div class="action-card" onclick="window.showAvailable()">
+                <div class="action-card card-vivo-1" onclick="window.showAvailable()">
                     <span class="material-icons">inventory_2</span>
                     <h3>Sementes Disponíveis</h3>
                     <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Explore doações e trocas da comunidade.</p>
                 </div>
-                <div class="action-card" onclick="window.showDonate()">
+                <div class="action-card card-vivo-2" onclick="window.showDonate()">
                     <span class="material-icons">add_a_photo</span>
                     <h3>Cadastrar Semente</h3>
                     <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Doe ou coloque sementes para troca.</p>
                 </div>
-                <div class="action-card" onclick="window.showPrivateChats()">
+                <div class="action-card card-vivo-3" onclick="window.showPrivateChats()">
                     <span class="material-icons">chat</span>
                     <h3>Meus Chats</h3>
                     <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Converse diretamente sobre reservas e trocas.</p>
                 </div>
-                <div class="action-card" onclick="window.showChat()">
-                    <span class="material-icons">forum</span>
-                    <h3>Chat da Comunidade</h3>
-                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Interaja com jardineiros da sua região.</p>
+                <div class="action-card card-vivo-4" onclick="window.showEncyclopedia()">
+                    <span class="material-icons">nature</span>
+                    <h3>Enciclopédia Nativa</h3>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Curiosidades sobre sementes do Brasil.</p>
                 </div>
             </div>
         </div>
@@ -196,6 +200,39 @@
                 <div class="chat-input-area">
                     <input type="text" id="chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkChatEnter(event)">
                     <button class="btn-primary" onclick="window.enviarMensagemChat()" style="width: auto; padding: 0 20px;">Enviar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ENCICLOPÉDIA DE SEMENTES NATIVAS BRASILEIRAS -->
+        <div id="encyclopedia-view" class="view">
+            <h2 style="color: var(--primary); margin-bottom: 5px;">Enciclopédia de Sementes Nativas do Brasil</h2>
+            <p style="color: var(--text-muted); margin-bottom: 25px;">Descubra curiosidades ecológicas e culturais sobre espécies emblemáticas da nossa flora.</p>
+            
+            <div class="encyclopedia-grid">
+                <div class="encyclopedia-card">
+                    <h3 style="color: var(--secondary); margin-bottom: 8px;">Ipê-Amarelo (Handroanthus albus)</h3>
+                    <p style="font-size: 13px; color: var(--text-main); line-height: 1.5;">Suas sementes são extremamente leves e aladas (possuem pequenas asas), o que permite que o vento as transporte por longas distâncias durante o período de seca na maior parte do Brasil.</p>
+                </div>
+                <div class="encyclopedia-card">
+                    <h3 style="color: var(--secondary); margin-bottom: 8px;">Castanheira-do-Pará (Bertholletia excelsa)</h3>
+                    <p style="font-size: 13px; color: var(--text-main); line-height: 1.5;">O fruto duro guarda de 15 a 25 sementes (as castanhas). A sua germinação depende quase exclusivamente da cutia, um pequeno roedor que consegue roer a casca rija e enterra as sementes para guardar comida, esquecendo-se de algumas.</p>
+                </div>
+                <div class="encyclopedia-card">
+                    <h3 style="color: var(--secondary); margin-bottom: 8px;">Araucária / Pinheiro-do-Paraná (Araucaria angustifolia)</h3>
+                    <p style="font-size: 13px; color: var(--text-main); line-height: 1.5;">O pinhão é a semente desta árvore milenar. É a principal fonte de alimento de aves como a gralha-azul, que desempenha um papel ecológico fundamental ao plantar sementes no solo forestal.</p>
+                </div>
+                <div class="encyclopedia-card">
+                    <h3 style="color: var(--secondary); margin-bottom: 8px;">Baru (Dipteryx alata)</h3>
+                    <p style="font-size: 13px; color: var(--text-main); line-height: 1.5;">Tipica do Cerrado brasileiro, a amêndoa do baru fica protegida por uma casca lenhosa extremamente dura. É rica em proteínas e gorduras saudáveis, sendo símbolo da biodiversidade e sustentabilidade do bioma.</p>
+                </div>
+                <div class="encyclopedia-card">
+                    <h3 style="color: var(--secondary); margin-bottom: 8px;">Jatobá (Hymenaea courbaril)</h3>
+                    <p style="font-size: 13px; color: var(--text-main); line-height: 1.5;">As sementes do jatobá ficam envolvidas por uma polpa farinácea doce dentro de uma vagem rija. Antigamente, grandes mamíferos extintos mastigavam o fruto inteiro para digerir a polpa e expelir as sementes intactas.</p>
+                </div>
+                <div class="encyclopedia-card">
+                    <h3 style="color: var(--secondary); margin-bottom: 8px;">Buriti (Mauritia flexuosa)</h3>
+                    <p style="font-size: 13px; color: var(--text-main); line-height: 1.5;">Palmeira símbolo de áreas úmidas e veredas. Suas sementes possuem casca escamosa e são cruciais para a subsistência de diversas espécies da fauna silvestre em épocas de escassez.</p>
                 </div>
             </div>
         </div>
