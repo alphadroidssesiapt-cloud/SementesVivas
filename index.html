@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    <!-- MOLDURA DO DISPOSITIVO (ENVOLVE TODO O CONTEÚDO QUANDO O MODO CELULAR ESTÁ ATIVO) -->
+    <!-- MOLDURA DINÂMICA DO DISPOSITIVO (ADAPTADA AUTOMATICAMENTE) -->
     <div id="device-frame" class="device-desktop">
 
         <!-- CABEÇALHO ESTILO FLORA -->
@@ -36,14 +36,9 @@
                 </nav>
 
                 <div class="nav-actions">
-                    <!-- CONTROLES DE TEMA E DISPOSITIVO -->
                     <button class="btn-theme-toggle" onclick="window.toggleTheme()" title="Alternar Modo Claro / Escuro">
                         <span id="theme-icon" class="material-icons" style="font-size: 18px;">dark_mode</span>
                     </button>
-                    <select id="device-selector" class="device-select-styled" onchange="window.changeDeviceMode(this.value)" title="Escolher Layout de Dispositivo">
-                        <option value="desktop">Modo Padrão (Responsivo)</option>
-                        <option value="mobile">Simulador de Celular</option>
-                    </select>
 
                     <button class="btn-lime-pill" onclick="window.showDonate()">
                         <span class="material-icons" style="font-size: 16px;">add_circle</span> Cadastrar
@@ -395,7 +390,7 @@
 
         </div>
 
-    </div> <!-- FIM DA MOLDURA DO DISPOSITIVO -->
+    </div> <!-- FIM DA MOLDURA -->
 
     <script type="module" src="script.js"></script>
 </body>
