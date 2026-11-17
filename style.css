@@ -154,15 +154,17 @@ header {
 .view { display: none; }
 .view.active { display: block; }
 
+/* Tela de login perfeitamente centralizada */
 .full-center {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    width: 100%;
+    width: 100vw;
     position: fixed;
     top: 0;
     left: 0;
+    padding: 20px;
     background-color: var(--bg-light);
     z-index: 999;
 }
@@ -175,12 +177,14 @@ header {
     box-shadow: 0 12px 30px rgba(27, 67, 50, 0.08);
     width: 100%;
     max-width: 420px;
+    margin: auto;
     border: 1px solid var(--border-color);
 }
 
 .logo-header {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 12px;
     color: var(--primary);
     margin-bottom: 8px;
@@ -432,6 +436,21 @@ header {
 }
 .btn-reserve:hover { background-color: #99581a; }
 
+.btn-cancel-reserve {
+    background-color: #fcf5e5;
+    color: var(--earth);
+    border: 1px solid var(--earth);
+    padding: 9px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+.btn-cancel-reserve:hover { background-color: var(--earth); color: white; }
+
 .btn-danger {
     background-color: #fff5f5;
     color: #c53030;
@@ -442,7 +461,7 @@ header {
     font-size: 13px;
     font-weight: 600;
     width: 100%;
-    margin-top: 12px;
+    margin-top: 10px;
     transition: 0.2s;
 }
 .btn-danger:hover { background-color: #c53030; color: white; }
