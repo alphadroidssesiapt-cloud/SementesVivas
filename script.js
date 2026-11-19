@@ -19,7 +19,7 @@ let currentCommunity = "Aparecida do Taboado";
 let userProfileCache = null;
 let activePrivateChatId = null;
 
-// DETECÇÃO AUTOMÁTICA DO DISPOSITIVO
+// CONTROLO DE COOKIES E TERMOS
 window.addEventListener('DOMContentLoaded', () => {
     const frame = document.getElementById('device-frame');
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
@@ -29,7 +29,30 @@ window.addEventListener('DOMContentLoaded', () => {
     } else {
         frame.className = 'device-desktop';
     }
+
+    // Verificar se o utilizador já aceitou os cookies
+    if (!localStorage.getItem('cookies_accepted')) {
+        const banner = document.getElementById('cookie-banner');
+        if (banner) banner.style.display = 'block';
+    }
 });
+
+window.acceptCookies = () => {
+    localStorage.setItem('cookies_accepted', 'true');
+    const banner = document.getElementById('cookie-banner');
+    if (banner) banner.style.display = 'none';
+};
+
+window.openTermsModal = (e) => {
+    if (e) e.preventDefault();
+    const modal = document.getElementById('terms-modal');
+    if (modal) modal.style.display = 'flex';
+};
+
+window.closeTermsModal = () => {
+    const modal = document.getElementById('terms-modal');
+    if (modal) modal.style.display = 'none';
+};
 
 const cityBiomeDatabase = {
     "Aparecida do Taboado": {
