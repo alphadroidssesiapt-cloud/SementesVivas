@@ -56,7 +56,7 @@ window.closeTermsModal = () => {
     if (modal) modal.style.display = 'none';
 };
 
-// CATÁLOGO EXPANDIDO DE ESPÉCIES POR BIOMA (ÁRVORES, FRUTOS E SEMENTES)
+// CATÁLOGO EXPANDIDO DE ESPÉCIES POR BIOMA
 const biomeSpeciesCatalog = {
     "Cerrado": [
         "Handroanthus albus", "Dipteryx alata", "Hymenaea courbaril", "Caryocar brasiliense",
@@ -67,7 +67,7 @@ const biomeSpeciesCatalog = {
     "Pantanal": [
         "Handroanthus heptaphyllus", "Copernicia alba", "Attalea phalerata", "Ficus insipida",
         "Mauritia flexuosa", "Tabebuia aurea", "Hymenaea courbaril", "Genipa americana",
-        "Inga vera", "Vitex cymosa", "Erythrina dominguezii", "triplaris americana"
+        "Inga vera", "Vitex cymosa", "Erythrina dominguezii", "Triplaris americana"
     ],
     "Mata Atlântica": [
         "Paubrasilia echinata", "Cariniana legalis", "Eugenia uniflora", "Eugenia brasiliensis",
@@ -215,6 +215,7 @@ window.switchView = (viewId) => {
         'chat-view': 'tab-chat-view',
         'encyclopedia-view': 'tab-encyclopedia-view',
         'learn-view': 'tab-learn-view',
+        'about-view': 'tab-about-view',
         'profile-view': 'tab-profile-view'
     };
     if (mapTab[viewId]) {
@@ -225,6 +226,7 @@ window.switchView = (viewId) => {
 
 window.showDashboard = () => window.switchView('dashboard-view');
 window.showLearn = () => window.switchView('learn-view');
+window.showAbout = () => window.switchView('about-view');
 window.showEncyclopedia = () => {
     window.switchView('encyclopedia-view');
     window.identifyBiomeByCity();
@@ -252,14 +254,13 @@ window.showPrivateChats = (chatIdToOpen = null) => {
     window.initPrivateChatListListener(chatIdToOpen);
 };
 
-// CARREGAMENTO SIMULTÂNEO (AO MESMO TEMPO) DE TODAS AS ESPÉCIES DO BIOMA VIA WIKIPÉDIA
+// CARREGAMENTO SIMULTÂNEO DE TODAS AS ESPÉCIES DO BIOMA VIA WIKIPÉDIA
 window.loadWikipediaSpeciesCards = async (speciesList, biomeName) => {
     const grid = document.getElementById('encyclopedia-grid');
     const titleEl = document.getElementById('species-section-title');
     titleEl.innerText = `Todas as Árvores, Frutos e Sementes do Bioma: ${biomeName} (${speciesList.length} espécies)`;
     grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1 / -1;">A carregar todas as espécies e fotos oficiais da Wikipédia ao mesmo tempo...</p>';
 
-    // Dispara todas as requisições em paralelo ao mesmo tempo
     const fetchPromises = speciesList.map(async (species) => {
         try {
             const res = await fetch(`https://pt.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(species)}`);
@@ -273,7 +274,7 @@ window.loadWikipediaSpeciesCards = async (speciesList, biomeName) => {
     const results = await Promise.all(fetchPromises);
     let htmlContent = '';
 
-    results.forEach((data, index) => {
+    results.forEach((data) => {
         if (data && data.title) {
             const title = data.title;
             const extract = data.extract ? data.extract.substring(0, 155) + '...' : 'Espécie nativa catalogada na região.';
@@ -295,6 +296,13 @@ window.loadWikipediaSpeciesCards = async (speciesList, biomeName) => {
     grid.innerHTML = htmlContent || '<p style="color: var(--text-muted);">Nenhuma espécie encontrada.</p>';
 };
 
+// FUNÇÃO PARA DESTACAR UM VIVEIRO ESPECÍFICO NO MAPA EMBUTIDO
+window.focusViveiroOnMap = (viveiroName, cityQuery) => {
+    const iframe = document.getElementById('google-maps-iframe');
+    const query = encodeURIComponent(`${viveiroName} ${cityQuery}`);
+    iframe.src = `https://maps.google.com/maps?q=${query}&t=m&z=15&ie=UTF8&iwloc=B&output=embed`;
+};
+
 window.identifyBiomeByCity = () => {
     const city = userProfileCache?.community || currentCommunity || "Aparecida do Taboado";
     const info = cityBiomeDatabase[city] || cityBiomeDatabase["Aparecida do Taboado"];
@@ -310,11 +318,18 @@ window.identifyBiomeByCity = () => {
 
     titleEl.innerText = `${city} (${info.state}) — Bioma: ${info.biome}`;
     descEl.innerText = info.desc;
-    viveirosContainer.innerHTML = `<strong>Viveiros na região:</strong> ${info.viveiros.join(' • ')}`;
+    
+    // Cria botões interativos para marcar cada viveiro no mapa
+    let viveirosHtml = `<div style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">Viveiros destacados na região (clique para localizar no mapa):</div>`;
+    info.viveiros.forEach(v => {
+        viveirosHtml += `<button class="viveiro-pin-btn" onclick="window.focusViveiroOnMap('${v}', '${city}, ${info.state}')"><span class="material-icons" style="font-size: 14px; color: #c53030;">location_on</span> ${v}</button>`;
+    });
+    viveirosContainer.innerHTML = viveirosHtml;
+
     gmapsLink.href = `https://www.google.com/maps/search/?api=1&query=viveiro+de+mudas+${info.mapQuery}`;
     portalLink.href = info.portalUrl;
     portalLabel.innerText = info.portalName;
-    iframe.src = `https://maps.google.com/maps?q=viveiro+${info.mapQuery}&t=k&z=12&ie=UTF8&iwloc=&output=embed`;
+    iframe.src = `https://maps.google.com/maps?q=viveiro+de+mudas+${info.mapQuery}&t=m&z=13&ie=UTF8&iwloc=B&output=embed`;
 
     resultBox.style.display = 'block';
 
@@ -339,8 +354,8 @@ window.detectBiomeWithMaps = () => {
 
             const iframe = document.getElementById('google-maps-iframe');
             const gmapsLink = document.getElementById('gmaps-external-link');
-            iframe.src = `https://maps.google.com/maps?q=viveiro+${lat},${lng}&t=k&z=13&ie=UTF8&iwloc=&output=embed`;
-            gmapsLink.href = `https://www.google.com/maps/search/?api=1&query=viveiro+${lat},${lng}`;
+            iframe.src = `https://maps.google.com/maps?q=viveiro+de+mudas+${lat},${lng}&t=m&z=13&ie=UTF8&iwloc=B&output=embed`;
+            gmapsLink.href = `https://www.google.com/maps/search/?api=1&query=viveiro+de+mudas+${lat},${lng}`;
 
             try {
                 const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
@@ -376,7 +391,13 @@ window.detectBiomeWithMaps = () => {
 
                 titleEl.innerText = `${cityName} (${stateName || 'Brasil'}) — Bioma: ${biomeName}`;
                 document.getElementById('biome-detected-desc').innerText = `Coordenadas GPS (${lat.toFixed(4)}, ${lng.toFixed(4)}).`;
-                document.getElementById('viveiros-list-container').innerHTML = `<strong>Viveiros próximos:</strong> ${viveirosList.join(' • ')}`;
+                
+                let viveirosHtml = `<div style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">Viveiros próximos (clique para destacar):</div>`;
+                viveirosList.forEach(v => {
+                    viveirosHtml += `<button class="viveiro-pin-btn" onclick="window.focusViveiroOnMap('${v}', '${cityName}')"><span class="material-icons" style="font-size: 14px; color: #c53030;">location_on</span> ${v}</button>`;
+                });
+                document.getElementById('viveiros-list-container').innerHTML = viveirosHtml;
+
                 document.getElementById('state-portal-link').href = portalUrl;
                 document.getElementById('state-portal-label').innerText = portalLabel;
 
