@@ -31,6 +31,7 @@
                     <button class="nav-link" id="tab-chat-view" onclick="window.showChat()">Comunidade</button>
                     <button class="nav-link" id="tab-encyclopedia-view" onclick="window.showEncyclopedia()">Bioma & Enciclopédia</button>
                     <button class="nav-link" id="tab-learn-view" onclick="window.showLearn()">Aprender</button>
+                    <button class="nav-link" id="tab-about-view" onclick="window.showAbout()">Sobre Nós</button>
                     <button class="nav-link" id="tab-profile-view" onclick="window.showProfile()">Perfil</button>
                 </nav>
 
@@ -147,8 +148,8 @@
                     </div>
                     <div class="action-card" onclick="window.showEncyclopedia()">
                         <div class="card-icon-circle"><span class="material-icons">public</span></div>
-                        <h3>Mapa do Bioma e Portal</h3>
-                        <p>Identifique seu bioma no Google Maps e acesse o site ambiental do estado.</p>
+                        <h3>Mapa do Bioma e Viveiros</h3>
+                        <p>Identifique seu bioma no Google Maps e localize viveiros de mudas.</p>
                     </div>
                 </div>
             </div>
@@ -277,7 +278,7 @@
             <div id="encyclopedia-view" class="view">
                 <div class="page-header-dark">
                     <h2>Identificação de Bioma, Viveiros e Espécies Nativas</h2>
-                    <p>Geolocalização para detecção de biomas, mapeamento de viveiros de mudas e listagem automática de árvores, frutos e sementes via Wikipédia.</p>
+                    <p>Geolocalização para detecção de biomas, pinos de viveiros no mapa e catálogo completo de árvores, frutos e sementes via Wikipédia.</p>
                 </div>
 
                 <div class="biome-locator-card">
@@ -285,7 +286,7 @@
                         <span class="enc-tag" style="margin-bottom: 8px;">GEOLOCALIZAÇÃO E VIVEIROS</span>
                         <h3 style="color: var(--forest-dark); font-size: 20px; margin-bottom: 8px;">Identificar Meu Bioma e Viveiros</h3>
                         <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
-                            Detete seu bioma e consulte os viveiros locais cadastrados na região.
+                            Detete seu bioma e clique nos viveiros abaixo para destacá-los diretamente no mapa ao lado.
                         </p>
                         <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
                             <button class="btn-lime-pill" onclick="window.detectBiomeWithMaps()">
@@ -299,10 +300,13 @@
                         <div id="biome-result-box" class="biome-result-box" style="display: none;">
                             <h4 id="biome-detected-title" style="color: var(--forest-dark); font-size: 16px; margin-bottom: 6px;">Bioma Identificado</h4>
                             <p id="biome-detected-desc" style="font-size: 13px; color: var(--text-main); line-height: 1.5; margin-bottom: 10px;"></p>
-                            <div id="viveiros-list-container" style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;"></div>
+                            
+                            <!-- BOTÕES INTERATIVOS PARA DESTACAR CADA VIVEIRO NO MAPA -->
+                            <div id="viveiros-list-container" style="margin-bottom: 12px;"></div>
+                            
                             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                                 <a id="gmaps-external-link" href="#" target="_blank" class="btn-outline-dark" style="width: auto; padding: 8px 16px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
-                                    <span class="material-icons" style="font-size: 16px;">map</span> Google Maps & Viveiros
+                                    <span class="material-icons" style="font-size: 16px;">map</span> Ver Todos no Google Maps
                                 </a>
                                 <a id="state-portal-link" href="#" target="_blank" class="btn-lime-pill" style="text-decoration: none;">
                                     <span class="material-icons" style="font-size: 16px;">open_in_new</span> <span id="state-portal-label">Portal do Estado</span>
@@ -313,15 +317,15 @@
 
                     <div class="biome-map-frame">
                         <iframe id="google-maps-iframe" 
-                            src="https://maps.google.com/maps?q=Aparecida+do+Taboado,MS&t=k&z=11&ie=UTF8&iwloc=&output=embed" 
-                            width="100%" height="260" style="border:0; border-radius: 12px;" allowfullscreen="" loading="lazy">
+                            src="https://maps.google.com/maps?q=viveiro+de+mudas+Aparecida+do+Taboado,MS&t=m&z=13&ie=UTF8&iwloc=B&output=embed" 
+                            width="100%" height="280" style="border:0; border-radius: 12px;" allowfullscreen="" loading="lazy">
                         </iframe>
                     </div>
                 </div>
                 
                 <div style="margin-top: 35px;">
                     <h3 id="species-section-title" style="color: var(--forest-dark); font-size: 20px; margin-bottom: 8px;">Árvores, Frutos e Sementes do Bioma</h3>
-                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Carregamento em tempo real de fotos e artigos oficiais da Wikipédia.</p>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Carregamento simultâneo de fotos e artigos oficiais da Wikipédia.</p>
                     <div id="encyclopedia-grid" class="encyclopedia-grid">
                         <p style="color: var(--text-muted);">A carregar espécies do bioma...</p>
                     </div>
@@ -338,6 +342,57 @@
                         <button class="btn-lime-pill" onclick="window.searchSeedInfo()" style="padding: 12px 28px;">Pesquisar</button>
                     </div>
                     <div id="learn-results" style="margin-top: 25px;"></div>
+                </div>
+            </div>
+
+            <!-- SOBRE NÓS (EQUIPE ALPHADROID'S) -->
+            <div id="about-view" class="view">
+                <div class="page-header-dark">
+                    <h2>Sobre Nós</h2>
+                    <p>Conheça a história, a equipe e a ciência por trás do projeto Sementes Vivas.</p>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-logo-container">
+                        <!-- Salve a logo do lobo com engrenagens como 'logo-alphadroids.png' na pasta do site -->
+                        <img src="logo-alphadroids.png" alt="Logo ALPHADROID'S" class="team-logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
+                        <div id="logo-fallback" class="team-logo-fallback" style="display: none;">
+                            <span class="material-icons" style="font-size: 48px; color: #00e5ff;">pets</span>
+                            <span class="material-icons" style="font-size: 32px; color: var(--lime); margin-left: -10px;">settings</span>
+                        </div>
+                        <span class="team-badge">EQUIPE ALPHADROID'S</span>
+                    </div>
+
+                    <div class="about-text-content">
+                        <h3>Tecnologia e Natureza em Harmonia</h3>
+                        <p>
+                            O projeto <strong>Sementes Vivas</strong> nasceu da união de ideias, criatividade e propósito da equipe <strong>ALPHADROID'S</strong>. Nosso grande objetivo sempre foi utilizar a tecnologia como uma ponte para aproximar as pessoas da natureza, incentivando a troca de sementes crioulas, o cultivo sustentável e o fortalecimento da biodiversidade local.
+                        </p>
+                        <p>
+                            Para transformar esse sonho em uma ferramenta verdadeiramente útil e confiável, unimos o pensamento inovador do nosso time a um rigoroso processo de <strong>pesquisas realizadas em conjunto com biólogos e especialistas ambientais</strong>. Cada funcionalidade — desde a identificação inteligente dos biomas até o mapeamento de viveiros e a enciclopédia de espécies nativas — foi pensada para respeitar os ciclos ecológicos de cada região.
+                        </p>
+                        <p>
+                            Acreditamos que cada semente plantada carrega o futuro de um ecossistema inteiro. Com engrenagens movidas pela curiosidade científica e pelo trabalho em equipe, seguimos cultivando conhecimento e vida junto com toda a comunidade!
+                        </p>
+
+                        <div class="about-pillars">
+                            <div class="pillar-item">
+                                <span class="material-icons">biotech</span>
+                                <h4>Base Científica</h4>
+                                <p>Desenvolvido com apoio e pesquisa junto a biólogos.</p>
+                            </div>
+                            <div class="pillar-item">
+                                <span class="material-icons">psychology</span>
+                                <h4>Pensamento Criativo</h4>
+                                <p>Soluções digitais pensadas pelo time ALPHADROID'S.</p>
+                            </div>
+                            <div class="pillar-item">
+                                <span class="material-icons">volunteer_activism</span>
+                                <h4>Impacto Verde</h4>
+                                <p>Fomento à partilha comunitária e reflorestamento.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
