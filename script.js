@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc, serverTimestamp, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAZUFBGcCz0o0ZeSvXkdbwJXBzFFBemgt0",
@@ -18,8 +18,11 @@ const db = getFirestore(app);
 let currentCommunity = "Aparecida do Taboado";
 let userProfileCache = null;
 let activePrivateChatId = null;
-let unsubscribeCommunityChat = null;
+let chatUnsubscribe = null;
+let privateChatUnsubscribe = null;
+let privateListUnsubscribe = null;
 
+// CONTROLO DE COOKIES E TERMOS
 window.addEventListener('DOMContentLoaded', () => {
     const frame = document.getElementById('device-frame');
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
@@ -198,10 +201,13 @@ window.showProfile = () => {
     window.switchView('profile-view'); 
     window.switchProfileSubTab('edit');
 };
-window.showChat = () => { window.switchView('chat-view'); window.renderChat(); };
+window.showChat = () => { 
+    window.switchView('chat-view'); 
+    window.initChatListener(); 
+};
 window.showPrivateChats = (chatIdToOpen = null) => {
     window.switchView('private-chats-view');
-    window.loadPrivateChatList(chatIdToOpen);
+    window.initPrivateChatListListener(chatIdToOpen);
 };
 
 window.identifyBiomeByCity = () => {
@@ -317,11 +323,11 @@ window.login = async () => {
     try {
         await signInWithEmailAndPassword(auth, email, pass);
     } catch (error) {
-        console.error("Erro Firebase Login:", error.code, error.message);
         let mensagemErro = `Erro (${error.code}): Verifique os dados.`;
-        if (error.code === 'auth/user-not-found') mensagemErro = "Utilizador não encontrado.";
+        if (error.code === 'auth/user-not-found') mensagemErro = "Utilizador não encontrado. Clique em 'Criar Nova Conta' primeiro.";
         else if (error.code === 'auth/wrong-password') mensagemErro = "Senha incorreta.";
-        else if (error.code === 'auth/invalid-credential') mensagemErro = "E-mail ou senha incorretos.";
+        else if (error.code === 'auth/invalid-email') mensagemErro = "Formato de e-mail inválido.";
+        else if (error.code === 'auth/invalid-credential') mensagemErro = "E-mail ou senha incorretos (ou conta ainda não criada).";
         
         errorMsg.innerText = mensagemErro;
         errorMsg.style.display = 'block';
@@ -350,25 +356,29 @@ window.register = async () => {
 
     try {
         const cred = await createUserWithEmailAndPassword(auth, email, pass);
-
         await setDoc(doc(db, "users", cred.user.uid), {
             displayName: email.split('@')[0],
             community: "Aparecida do Taboado",
             avatarBase64: "",
             email: email
         });
+        alert("Conta criada com sucesso!");
     } catch (error) {
-        console.error("Erro Firebase Registro:", error.code, error.message);
         let mensagemErro = `Erro ao criar conta (${error.code}).`;
         if (error.code === 'auth/weak-password') mensagemErro = "A senha deve ter pelo menos 6 caracteres.";
-        else if (error.code === 'auth/email-already-in-use') mensagemErro = "Este e-mail já está registado.";
+        else if (error.code === 'auth/email-already-in-use') mensagemErro = "Este e-mail já está registado. Clique em 'Entrar na Conta'.";
         
         errorMsg.innerText = mensagemErro;
         errorMsg.style.display = 'block';
     }
 };
 
-window.logout = async () => { await signOut(auth); };
+window.logout = async () => { 
+    if(chatUnsubscribe) chatUnsubscribe();
+    if(privateChatUnsubscribe) privateChatUnsubscribe();
+    if(privateListUnsubscribe) privateListUnsubscribe();
+    await signOut(auth); 
+};
 
 onAuthStateChanged(auth, async (user) => {
     const header = document.getElementById('main-header');
@@ -480,12 +490,22 @@ window.saveProfile = async () => {
 
 const seedPhotoInput = document.getElementById('donate-seed-photo');
 if (seedPhotoInput) {
-    seedPhotoInput.addEventListener('change', (e) => {
+    seedPhotoInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (!file) return;
         const lbl = document.getElementById('camera-label');
-        lbl.innerHTML = 'Foto adicionada com sucesso!';
-        lbl.className = 'camera-btn success';
+        lbl.innerHTML = 'A ler texto da imagem...';
+        try {
+            const result = await Tesseract.recognize(file, 'por');
+            if (result.data.text.trim()) {
+                document.getElementById('donate-seed-name').value = result.data.text.trim().split('\n')[0].substring(0, 30);
+            }
+            lbl.innerHTML = 'Foto processada com sucesso!';
+            lbl.className = 'camera-btn success';
+        } catch (e) {
+            lbl.innerHTML = 'Foto adicionada!';
+            lbl.className = 'camera-btn success';
+        }
     });
 }
 
@@ -642,15 +662,20 @@ const formatTelegramDateTime = (timestamp) => {
     return `${dia}/${mes}/${ano} às ${hora}:${min}`;
 };
 
-window.loadPrivateChatList = async (chatIdToOpen = null) => {
+// ==========================================
+// CHATS COM AUTO-ATUALIZAÇÃO EM TEMPO REAL
+// ==========================================
+
+window.initPrivateChatListListener = (chatIdToOpen = null) => {
     const listContainer = document.getElementById('private-chat-list');
     const user = auth.currentUser;
     if (!user) return;
 
-    listContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 13px; padding: 10px;">A carregar conversas...</p>';
+    if (privateListUnsubscribe) privateListUnsubscribe();
 
-    try {
-        const querySnapshot = await getDocs(collection(db, "private_chats"));
+    listContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 13px; padding: 10px;">A sincronizar conversas...</p>';
+
+    privateListUnsubscribe = onSnapshot(collection(db, "private_chats"), (querySnapshot) => {
         listContainer.innerHTML = '';
         let threads = [];
 
@@ -694,14 +719,15 @@ window.loadPrivateChatList = async (chatIdToOpen = null) => {
             if (targetThread) {
                 const otherName = targetThread.ownerId === user.uid ? targetThread.requesterName : targetThread.ownerName;
                 window.openPrivateChatRoom(targetThread.id, targetThread.seedName, otherName);
+                chatIdToOpen = null;
             }
         }
-    } catch (error) {
-        listContainer.innerHTML = '<p style="color: red; font-size: 13px; padding: 10px;">Erro ao carregar conversas.</p>';
-    }
+    }, (error) => {
+        listContainer.innerHTML = '<p style="color: red; font-size: 13px; padding: 10px;">Erro ao sincronizar conversas.</p>';
+    });
 };
 
-window.openPrivateChatRoom = async (chatId, seedName, otherPersonName) => {
+window.openPrivateChatRoom = (chatId, seedName, otherPersonName) => {
     activePrivateChatId = chatId;
     
     document.querySelectorAll('.tg-thread-item').forEach(el => el.classList.remove('active'));
@@ -714,10 +740,11 @@ window.openPrivateChatRoom = async (chatId, seedName, otherPersonName) => {
     document.getElementById('private-chat-input-box').style.display = 'flex';
 
     const messagesContainer = document.getElementById('private-chat-messages');
-    messagesContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center;">A carregar mensagens...</p>';
+    messagesContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center;">A sincronizar mensagens...</p>';
 
-    try {
-        const msgsSnap = await getDocs(collection(db, "private_chats", chatId, "messages"));
+    if (privateChatUnsubscribe) privateChatUnsubscribe();
+
+    privateChatUnsubscribe = onSnapshot(collection(db, "private_chats", chatId, "messages"), (msgsSnap) => {
         messagesContainer.innerHTML = '';
         let msgs = [];
 
@@ -742,9 +769,9 @@ window.openPrivateChatRoom = async (chatId, seedName, otherPersonName) => {
             messagesContainer.appendChild(div);
         });
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    } catch (error) {
-        messagesContainer.innerHTML = '<p style="color: red; text-align: center;">Erro ao carregar mensagens.</p>';
-    }
+    }, (error) => {
+        messagesContainer.innerHTML = '<p style="color: red; text-align: center;">Erro ao sincronizar mensagens.</p>';
+    });
 };
 
 window.sendPrivateMessage = async () => {
@@ -767,9 +794,6 @@ window.sendPrivateMessage = async () => {
             timestamp: serverTimestamp()
         });
         input.value = '';
-        const titleText = document.getElementById('private-chat-title').innerText.replace('Semente: ', '');
-        const subText = document.getElementById('private-chat-subtitle').innerText.replace('A conversar com: ', '');
-        window.openPrivateChatRoom(activePrivateChatId, titleText, subText);
     } catch (error) {
         alert('Erro ao enviar mensagem.');
     }
@@ -781,28 +805,30 @@ window.checkPrivateChatEnter = (e) => {
 
 window.changeChatCommunity = () => {
     currentCommunity = document.getElementById('chat-community-select').value;
-    window.renderChat();
+    window.initChatListener();
 };
 
-// CHAT COMUNITÁRIO COM AUTO-ATUALIZAÇÃO EM TEMPO REAL (onSnapshot)
-window.renderChat = () => {
+window.initChatListener = () => {
     const container = document.getElementById('chat-messages');
     const select = document.getElementById('chat-community-select');
     if (select) select.value = currentCommunity;
 
-    container.innerHTML = '<p style="color: var(--text-muted); text-align: center;">A carregar mensagens...</p>';
+    if (chatUnsubscribe) chatUnsubscribe();
 
-    if (unsubscribeCommunityChat) unsubscribeCommunityChat();
+    container.innerHTML = '<p style="color: var(--text-muted); text-align: center;">A sincronizar mensagens em tempo real...</p>';
 
-    const q = query(collection(db, "chat"), orderBy("timestamp", "asc"));
-
-    unsubscribeCommunityChat = onSnapshot(q, (querySnapshot) => {
+    chatUnsubscribe = onSnapshot(collection(db, "chat"), (querySnapshot) => {
         container.innerHTML = '';
+        
         let messages = [];
-
         querySnapshot.forEach(docSnap => {
             const data = docSnap.data();
             if (data.community === currentCommunity) messages.push(data);
+        });
+
+        messages.sort((a, b) => {
+            if (!a.timestamp || !b.timestamp) return 0;
+            return a.timestamp.toMillis() - b.timestamp.toMillis();
         });
 
         if (messages.length === 0) {
