@@ -6,6 +6,7 @@
     <title>Sementes Vivas</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -91,9 +92,10 @@
             <div class="modal-card">
                 <h3 style="color: var(--forest-dark); margin-bottom: 12px;">Termos de Condições e Política de Privacidade</h3>
                 <div class="modal-body-text">
-                    <p><strong>1. Aceitação dos Termos:</strong> Ao registar-se, concorda com as diretrizes de partilha e preservação ambiental.</p>
-                    <p><strong>2. Privacidade e Dados (LGPD):</strong> Os seus dados são utilizados estritamente para facilitar a troca de sementes e o contacto direto entre cultivadores.</p>
-                    <p><strong>3. Conduta:</strong> Os chats devem ser utilizados exclusivamente para fins de troca, doação e aprendizagem sobre sementes.</p>
+                    <p><strong>1. Aceitação dos Termos:</strong> Ao aceder e registar-se na plataforma Sementes Vivas, concorda com estes termos e com as diretrizes de partilha comunitária e preservação ambiental.</p>
+                    <p><strong>2. Privacidade e Dados (LGPD):</strong> Os seus dados de e-mail, nome e localização aproximada são utilizados estritamente para facilitar a troca de sementes e o contacto direto entre cultivadores da região.</p>
+                    <p><strong>3. Utilização de Cookies:</strong> Guardamos preferências locais para assegurar o funcionamento fluído da aplicação web.</p>
+                    <p><strong>4. Conduta na Comunidade:</strong> O chat comunitário e os chats privados devem ser utilizados exclusivamente para fins de troca, doação e aprendizagem.</p>
                 </div>
                 <button class="btn-lime-full" onclick="window.closeTermsModal()" style="margin-top: 20px;">Entendido</button>
             </div>
@@ -136,7 +138,7 @@
                     <div class="action-card" onclick="window.showDonate()">
                         <div class="card-icon-circle"><span class="material-icons">add_a_photo</span></div>
                         <h3>Cadastrar Semente</h3>
-                        <p>Publique novas sementes com foto e descrição.</p>
+                        <p>Publique novas sementes com leitura automática.</p>
                     </div>
                     <div class="action-card" onclick="window.showPrivateChats()">
                         <div class="card-icon-circle"><span class="material-icons">chat</span></div>
@@ -170,7 +172,7 @@
                     <h2 style="color: var(--forest-dark); margin-bottom: 20px;">Cadastrar Nova Semente</h2>
                     
                     <div class="input-group">
-                        <label>Fotografar Semente</label>
+                        <label>Fotografar Semente (A leitura automática preencherá o nome)</label>
                         <div class="camera-wrapper">
                             <div class="camera-btn" id="camera-label">
                                 <span class="material-icons">camera_alt</span> Clique para fotografar ou carregar imagem
