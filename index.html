@@ -276,35 +276,36 @@
             <!-- ENCICLOPÉDIA DE SEMENTES NATIVAS & BIOMA -->
             <div id="encyclopedia-view" class="view">
                 <div class="page-header-dark">
-                    <h2>Identificação de Bioma e Enciclopédia Nativa</h2>
-                    <p>Conecte sua localização via Google Maps para identificar o bioma e conhecer espécies nativas com artigos detalhados.</p>
+                    <h2>Identificação de Bioma, Viveiros e Espécies Nativas</h2>
+                    <p>Geolocalização para detecção de biomas, mapeamento de viveiros de mudas e listagem automática de árvores, frutos e sementes via Wikipédia.</p>
                 </div>
 
                 <div class="biome-locator-card">
                     <div class="biome-locator-info">
-                        <span class="enc-tag" style="margin-bottom: 8px;">GEOLOCALIZAÇÃO AMBIENTAL</span>
-                        <h3 style="color: var(--forest-dark); font-size: 20px; margin-bottom: 8px;">Identificar Meu Bioma e Portal Estadual</h3>
-                        <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
-                            Use o GPS ou selecione sua cidade para visualizar a região no Google Maps, descobrir o bioma local e acessar o órgão ambiental oficial do seu estado.
+                        <span class="enc-tag" style="margin-bottom: 8px;">GEOLOCALIZAÇÃO E VIVEIROS</span>
+                        <h3 style="color: var(--forest-dark); font-size: 20px; margin-bottom: 8px;">Identificar Meu Bioma e Viveiros</h3>
+                        <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
+                            Detete seu bioma e consulte os viveiros locais cadastrados na região.
                         </p>
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
                             <button class="btn-lime-pill" onclick="window.detectBiomeWithMaps()">
-                                <span class="material-icons" style="font-size: 17px;">my_location</span> Detectar Minha Localização (GPS)
+                                <span class="material-icons" style="font-size: 17px;">my_location</span> Detectar por GPS
                             </button>
                             <button class="btn-outline-dark" style="width: auto; padding: 9px 18px;" onclick="window.identifyBiomeByCity()">
-                                Usar Minha Cidade do Perfil
+                                Usar Cidade do Perfil
                             </button>
                         </div>
 
                         <div id="biome-result-box" class="biome-result-box" style="display: none;">
                             <h4 id="biome-detected-title" style="color: var(--forest-dark); font-size: 16px; margin-bottom: 6px;">Bioma Identificado</h4>
-                            <p id="biome-detected-desc" style="font-size: 13px; color: var(--text-main); line-height: 1.5; margin-bottom: 14px;"></p>
+                            <p id="biome-detected-desc" style="font-size: 13px; color: var(--text-main); line-height: 1.5; margin-bottom: 10px;"></p>
+                            <div id="viveiros-list-container" style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;"></div>
                             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                                 <a id="gmaps-external-link" href="#" target="_blank" class="btn-outline-dark" style="width: auto; padding: 8px 16px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
-                                    <span class="material-icons" style="font-size: 16px;">map</span> Abrir no Google Maps
+                                    <span class="material-icons" style="font-size: 16px;">map</span> Google Maps & Viveiros
                                 </a>
                                 <a id="state-portal-link" href="#" target="_blank" class="btn-lime-pill" style="text-decoration: none;">
-                                    <span class="material-icons" style="font-size: 16px;">open_in_new</span> <span id="state-portal-label">Acessar Portal do Estado</span>
+                                    <span class="material-icons" style="font-size: 16px;">open_in_new</span> <span id="state-portal-label">Portal do Estado</span>
                                 </a>
                             </div>
                         </div>
@@ -318,60 +319,11 @@
                     </div>
                 </div>
                 
-                <div class="encyclopedia-grid" style="margin-top: 30px;">
-                    <div class="encyclopedia-card">
-                        <img src="https://images.unsplash.com/photo-1558522195-e1204d0d0d18?auto=format&fit=crop&w=600&q=80" alt="Ipê-Amarelo">
-                        <span class="enc-tag">Cerrado e Mata Atlântica</span>
-                        <h3>Ipê-Amarelo (Handroanthus albus)</h3>
-                        <p>Suas sementes são extremamente leves e aladas (possuem pequenas asas), o que permite que o vento as transporte por longas distâncias durante o período de seca.</p>
-                    </div>
-                    <div class="encyclopedia-card">
-                        <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=600&q=80" alt="Castanheira-do-Pará">
-                        <span class="enc-tag">Amazônia</span>
-                        <h3>Castanheira-do-Pará (Bertholletia excelsa)</h3>
-                        <p>O fruto duro guarda de 15 a 25 sementes. Sua germinação depende quase exclusivamente da cutia, roedor que enterra as sementes para guardar alimento.</p>
-                    </div>
-                    <div class="encyclopedia-card">
-                        <img src="https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=600&q=80" alt="Araucária">
-                        <span class="enc-tag">Mata de Araucárias</span>
-                        <h3>Araucária (Araucaria angustifolia)</h3>
-                        <p>O pinhão é a semente desta árvore milenar e principal fonte de alimento da gralha-azul, ave fundamental para dispersar e enterrar as sementes no solo.</p>
-                    </div>
-                    <div class="encyclopedia-card">
-                        <img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=80" alt="Baru">
-                        <span class="enc-tag">Cerrado</span>
-                        <h3>Baru (Dipteryx alata)</h3>
-                        <p>Típica do Cerrado brasileiro, a amêndoa do baru fica protegida por uma casca lenhosa extremamente dura, sendo rica em proteínas e símbolo de extrativismo sustentável.</p>
-                    </div>
-                    <div class="encyclopedia-card">
-                        <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=600&q=80" alt="Jatobá">
-                        <span class="enc-tag">Cerrado e Pantanal</span>
-                        <h3>Jatobá (Hymenaea courbaril)</h3>
-                        <p>Suas sementes ficam envolvidas por uma polpa farinácea doce dentro de uma vagem rija, adaptada originalmente para dispersão por grandes mamíferos.</p>
-                    </div>
-                    <div class="encyclopedia-card">
-                        <img src="https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=600&q=80" alt="Buriti">
-                        <span class="enc-tag">Veredas</span>
-                        <h3>Buriti (Mauritia flexuosa)</h3>
-                        <p>Palmeira símbolo de áreas úmidas. Suas sementes possuem casca escamosa e sustentam diversas espécies da fauna silvestre em épocas de estiagem.</p>
-                    </div>
-                    <div class="encyclopedia-card">
-                        <img src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?auto=format&fit=crop&w=600&q=80" alt="Pequi">
-                        <span class="enc-tag">Cerrado</span>
-                        <h3>Pequi (Caryocar brasiliense)</h3>
-                        <p>Símbolo gastronômico e ecológico do Cerrado. Suas sementes duras são protegidas por um caroço espinhoso e a germinação pode levar mais de um ano para ocorrer naturalmente.</p>
-                    </div>
-                    <div class="encyclopedia-card">
-                        <img src="https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=600&q=80" alt="Guavira">
-                        <span class="enc-tag">Cerrado e Pantanal</span>
-                        <h3>Guavira (Campomanesia adamantium)</h3>
-                        <p>Fruto oficial de Mato Grosso do Sul. Seus arbustos produzem pequenas sementes altamente consumidas pela avifauna e pequenos mamíferos locais.</p>
-                    </div>
-                    <div class="encyclopedia-card">
-                        <img src="https://images.unsplash.com/photo-1516233758871-a006c07d394b?auto=format&fit=crop&w=600&q=80" alt="Aroeira-Pimenteira">
-                        <span class="enc-tag">Mata Atlântica e Cerrado</span>
-                        <h3>Aroeira-Pimenteira (Schinus terebinthifolia)</h3>
-                        <p>Árvore de grande importância medicinal e ecológica. Produz cachos de pequenas sementes avermelhadas conhecidas mundialmente como a pimenta rosa.</p>
+                <div style="margin-top: 35px;">
+                    <h3 id="species-section-title" style="color: var(--forest-dark); font-size: 20px; margin-bottom: 8px;">Árvores, Frutos e Sementes do Bioma</h3>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Carregamento em tempo real de fotos e artigos oficiais da Wikipédia.</p>
+                    <div id="encyclopedia-grid" class="encyclopedia-grid">
+                        <p style="color: var(--text-muted);">A carregar espécies do bioma...</p>
                     </div>
                 </div>
             </div>
