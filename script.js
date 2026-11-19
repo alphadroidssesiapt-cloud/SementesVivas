@@ -276,7 +276,6 @@ window.switchProfileSubTab = (subTab) => {
     }
 };
 
-// LOGIN E CADASTRO COM DIAGNÓSTICO DETALHADO
 window.login = async () => {
     const emailField = document.getElementById('auth-email');
     const passField = document.getElementById('auth-password');
