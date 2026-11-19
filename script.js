@@ -56,7 +56,28 @@ window.closeTermsModal = () => {
     if (modal) modal.style.display = 'none';
 };
 
-// BASE DE DADOS DE BIOMAS, VIVEIROS E ESPÉCIES (ÁRVORES, FRUTOS E SEMENTES)
+// CATÁLOGO EXPANDIDO DE ESPÉCIES POR BIOMA (ÁRVORES, FRUTOS E SEMENTES)
+const biomeSpeciesCatalog = {
+    "Cerrado": [
+        "Handroanthus albus", "Dipteryx alata", "Hymenaea courbaril", "Caryocar brasiliense",
+        "Campomanesia adamantium", "Schinus terebinthifolia", "Mauritia flexuosa", "Handroanthus impetiginosus",
+        "Inga edulis", "Annona crassiflora", "Eugenia dysenterica", "Hancornia speciosa",
+        "Anadenanthera colubrina", "Tabebuia aurea", "Genipa americana", "Acrocomia aculeata"
+    ],
+    "Pantanal": [
+        "Handroanthus heptaphyllus", "Copernicia alba", "Attalea phalerata", "Ficus insipida",
+        "Mauritia flexuosa", "Tabebuia aurea", "Hymenaea courbaril", "Genipa americana",
+        "Inga vera", "Vitex cymosa", "Erythrina dominguezii", "triplaris americana"
+    ],
+    "Mata Atlântica": [
+        "Paubrasilia echinata", "Cariniana legalis", "Eugenia uniflora", "Eugenia brasiliensis",
+        "Aspidosperma polyneuron", "Cedrela fissilis", "Ilex paraguariensis", "Psidium cattleyanum",
+        "Euterpe edulis", "Araucaria angustifolia", "Plinia cauliflora", "Schinus terebinthifolia",
+        "Handroanthus chrysotrichus", "Syagrus romanzoffiana", "Jacaranda micrantha", "Lecythidaceae"
+    ]
+};
+
+// BASE DE DADOS DE BIOMAS, VIVEIROS E ESPÉCIES
 const cityBiomeDatabase = {
     "Aparecida do Taboado": {
         state: "MS",
@@ -66,7 +87,7 @@ const cityBiomeDatabase = {
         portalName: "Portal Ambiental do MS (IMASUL)",
         mapQuery: "Aparecida+do+Taboado,MS",
         viveiros: ["Viveiro Municipal Verdejar", "Viveiro Sementes do Paraná", "Viveiro Nativo Taboado"],
-        species: ["Ipê-Amarelo", "Baru (árvore)", "Jatobá", "Pequi", "Guavira", "Aroeira-Pimenteira"]
+        species: [...new Set([...biomeSpeciesCatalog["Cerrado"], "Cariniana legalis", "Eugenia uniflora"])]
     },
     "Paranaíba": {
         state: "MS",
@@ -76,7 +97,7 @@ const cityBiomeDatabase = {
         portalName: "Portal Ambiental do MS (IMASUL)",
         mapQuery: "Paranaiba,MS",
         viveiros: ["Viveiro Floresta Paranaíba", "Viveiro EcoMudas"],
-        species: ["Ipê-Roxo", "Pequi", "Baru", "Ingá", "Jatobá"]
+        species: biomeSpeciesCatalog["Cerrado"]
     },
     "Três Lagoas": {
         state: "MS",
@@ -86,7 +107,7 @@ const cityBiomeDatabase = {
         portalName: "Portal Ambiental do MS (IMASUL)",
         mapQuery: "Tres+Lagoas,MS",
         viveiros: ["Viveiro Municipal Três Lagoas", "Mudas Rio Paraná"],
-        species: ["Ipê-Amarelo", "Castanheira-do-Pará", "Jatobá", "Buriti", "Aroeira-Pimenteira"]
+        species: biomeSpeciesCatalog["Cerrado"]
     },
     "Campo Grande": {
         state: "MS",
@@ -96,7 +117,7 @@ const cityBiomeDatabase = {
         portalName: "Portal Ambiental do MS (IMASUL)",
         mapQuery: "Campo+Grande,MS",
         viveiros: ["Horto Florestal Municipal", "Viveiro Campo Verde", "Viveiro Pantanal MS"],
-        species: ["Guavira", "Pequi", "Bocaiúva", "Ipê-Amarelo", "Baru"]
+        species: biomeSpeciesCatalog["Cerrado"]
     },
     "Dourados": {
         state: "MS",
@@ -106,7 +127,7 @@ const cityBiomeDatabase = {
         portalName: "Portal Ambiental do MS (IMASUL)",
         mapQuery: "Dourados,MS",
         viveiros: ["Viveiro Floresta Dourados", "Mudas Nativas Sul-Mato-Grossenses"],
-        species: ["Peroba-Rosa", "Erva-mate", "Cedro", "Araçá", "Ipê-Amarelo"]
+        species: [...new Set([...biomeSpeciesCatalog["Mata Atlântica"], ...biomeSpeciesCatalog["Cerrado"].slice(0, 8)])]
     },
     "Corumbá": {
         state: "MS",
@@ -116,7 +137,7 @@ const cityBiomeDatabase = {
         portalName: "Portal Ambiental do MS (IMASUL)",
         mapQuery: "Corumba,MS",
         viveiros: ["Viveiro Pantanal Sustentável", "Mudas Águas do Pantanal"],
-        species: ["Piúva", "Carandá", "Acuri", "Figueira-Branca", "Buriti"]
+        species: biomeSpeciesCatalog["Pantanal"]
     },
     "Bonito": {
         state: "MS",
@@ -126,7 +147,7 @@ const cityBiomeDatabase = {
         portalName: "Portal Ambiental do MS (IMASUL)",
         mapQuery: "Bonito,MS",
         viveiros: ["Viveiro Bodoquena Verde", "Mudas Águas Cristalinas"],
-        species: ["Aroeira", "Angico", "Jatobá", "Ipê-Roxo", "Pitanga"]
+        species: [...new Set([...biomeSpeciesCatalog["Cerrado"].slice(0, 10), ...biomeSpeciesCatalog["Mata Atlântica"].slice(0, 8)])]
     },
     "Santa Fé do Sul": {
         state: "SP",
@@ -136,7 +157,7 @@ const cityBiomeDatabase = {
         portalName: "Secretaria de Meio Ambiente de SP (SEMIL)",
         mapQuery: "Santa+Fe+do+Sul,SP",
         viveiros: ["Viveiro Municipal Santa Fé", "Mudas Paulista Verde"],
-        species: ["Jequitibá", "Pau-brasil", "Pitanga", "Grumixama", "Ipê-Amarelo"]
+        species: biomeSpeciesCatalog["Mata Atlântica"]
     },
     "Jales": {
         state: "SP",
@@ -146,7 +167,7 @@ const cityBiomeDatabase = {
         portalName: "Secretaria de Meio Ambiente de SP (SEMIL)",
         mapQuery: "Jales,SP",
         viveiros: ["Viveiro Jales Sustentável", "Mudas Noroeste SP"],
-        species: ["Ipê-Amarelo", "Pitanga", "Araçá", "Jatobá", "Aroeira"]
+        species: [...new Set([...biomeSpeciesCatalog["Mata Atlântica"].slice(0, 10), ...biomeSpeciesCatalog["Cerrado"].slice(0, 6)])]
     },
     "Fernandópolis": {
         state: "SP",
@@ -156,7 +177,7 @@ const cityBiomeDatabase = {
         portalName: "Secretaria de Meio Ambiente de SP (SEMIL)",
         mapQuery: "Fernandopolis,SP",
         viveiros: ["Viveiro Municipal Fernandópolis", "EcoMudas Fernandópolis"],
-        species: ["Ipê-Roxo", "Pau-brasil", "Jatobá", "Pitanga", "Baru"]
+        species: [...new Set([...biomeSpeciesCatalog["Mata Atlântica"].slice(0, 10), ...biomeSpeciesCatalog["Cerrado"].slice(0, 6)])]
     }
 };
 
@@ -231,39 +252,45 @@ window.showPrivateChats = (chatIdToOpen = null) => {
     window.initPrivateChatListListener(chatIdToOpen);
 };
 
-// FUNÇÃO PARA BUSCAR ESPÉCIES NATIVAS NA WIKIPEDIA E RENDERIZAR NA TELA
+// CARREGAMENTO SIMULTÂNEO (AO MESMO TEMPO) DE TODAS AS ESPÉCIES DO BIOMA VIA WIKIPÉDIA
 window.loadWikipediaSpeciesCards = async (speciesList, biomeName) => {
     const grid = document.getElementById('encyclopedia-grid');
     const titleEl = document.getElementById('species-section-title');
-    titleEl.innerText = `Árvores, Frutos e Sementes do Bioma: ${biomeName}`;
-    grid.innerHTML = '<p style="color: var(--text-muted);">A carregar espécies e fotos oficiais da Wikipédia...</p>';
+    titleEl.innerText = `Todas as Árvores, Frutos e Sementes do Bioma: ${biomeName} (${speciesList.length} espécies)`;
+    grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1 / -1;">A carregar todas as espécies e fotos oficiais da Wikipédia ao mesmo tempo...</p>';
 
-    let htmlContent = '';
-
-    for (const species of speciesList) {
+    // Dispara todas as requisições em paralelo ao mesmo tempo
+    const fetchPromises = speciesList.map(async (species) => {
         try {
             const res = await fetch(`https://pt.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(species)}`);
-            if (res.ok) {
-                const data = await res.json();
-                const title = data.title || species;
-                const extract = data.extract ? data.extract.substring(0, 160) + '...' : 'Espécie nativa catalogada na região.';
-                const imageUrl = data.thumbnail ? data.thumbnail.source : 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&q=80';
-                const wikiUrl = data.content_urls && data.content_urls.desktop ? data.content_urls.desktop.page : '#';
-
-                htmlContent += `
-                    <div class="encyclopedia-card">
-                        <img src="${imageUrl}" alt="${title}">
-                        <span class="enc-tag">${biomeName}</span>
-                        <h3>${title}</h3>
-                        <p>${extract}</p>
-                        <a href="${wikiUrl}" target="_blank" style="font-size: 12px; color: var(--lime); font-weight: 700; margin-top: 10px; text-decoration: underline; display: inline-block;">Ver artigo completo na Wikipédia</a>
-                    </div>
-                `;
-            }
+            if (!res.ok) return null;
+            return await res.json();
         } catch (e) {
-            console.error("Erro ao carregar item Wikipedia:", species);
+            return null;
         }
-    }
+    });
+
+    const results = await Promise.all(fetchPromises);
+    let htmlContent = '';
+
+    results.forEach((data, index) => {
+        if (data && data.title) {
+            const title = data.title;
+            const extract = data.extract ? data.extract.substring(0, 155) + '...' : 'Espécie nativa catalogada na região.';
+            const imageUrl = data.thumbnail ? data.thumbnail.source : 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&q=80';
+            const wikiUrl = data.content_urls && data.content_urls.desktop ? data.content_urls.desktop.page : '#';
+
+            htmlContent += `
+                <div class="encyclopedia-card">
+                    <img src="${imageUrl}" alt="${title}" loading="lazy">
+                    <span class="enc-tag">${biomeName}</span>
+                    <h3>${title}</h3>
+                    <p>${extract}</p>
+                    <a href="${wikiUrl}" target="_blank" style="font-size: 12px; color: var(--lime); font-weight: 700; margin-top: 10px; text-decoration: underline; display: inline-block;">Ver artigo completo na Wikipédia</a>
+                </div>
+            `;
+        }
+    });
 
     grid.innerHTML = htmlContent || '<p style="color: var(--text-muted);">Nenhuma espécie encontrada.</p>';
 };
@@ -326,10 +353,16 @@ window.detectBiomeWithMaps = () => {
                 let portalUrl = "https://www.gov.br/mma/pt-br";
                 let portalLabel = "Ministério do Meio Ambiente";
                 let viveirosList = ["Viveiro Municipal Regional", "Horto Florestal de Mudas"];
-                let speciesList = ["Ipê-Amarelo", "Baru", "Jatobá", "Pequi", "Guavira"];
+                let speciesList = biomeSpeciesCatalog["Cerrado"];
 
                 if (stateName.includes("Mato Grosso do Sul")) {
-                    biomeName = (lng < -56.0) ? "Pantanal Sul-Mato-Grossense" : "Cerrado (Transição Mata Atlântica)";
+                    if (lng < -56.0) {
+                        biomeName = "Pantanal Sul-Mato-Grossense";
+                        speciesList = biomeSpeciesCatalog["Pantanal"];
+                    } else {
+                        biomeName = "Cerrado (Transição Mata Atlântica)";
+                        speciesList = [...new Set([...biomeSpeciesCatalog["Cerrado"], "Cariniana legalis", "Eugenia uniflora"])];
+                    }
                     portalUrl = "https://www.imasul.ms.gov.br/";
                     portalLabel = "Portal Ambiental do MS (IMASUL)";
                     viveirosList = ["Viveiro Verdejar MS", "Mudas Nativas Pantanal/Cerrado"];
@@ -338,7 +371,7 @@ window.detectBiomeWithMaps = () => {
                     portalUrl = "https://semil.sp.gov.br/";
                     portalLabel = "Secretaria de Meio Ambiente de SP (SEMIL)";
                     viveirosList = ["Viveiro Ecológico Paulista", "Horto de Mudas SP"];
-                    speciesList = ["Jequitibá", "Pau-brasil", "Pitanga", "Grumixama", "Ipê-Amarelo"];
+                    speciesList = biomeSpeciesCatalog["Mata Atlântica"];
                 }
 
                 titleEl.innerText = `${cityName} (${stateName || 'Brasil'}) — Bioma: ${biomeName}`;
