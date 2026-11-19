@@ -301,7 +301,6 @@
                             <h4 id="biome-detected-title" style="color: var(--forest-dark); font-size: 16px; margin-bottom: 6px;">Bioma Identificado</h4>
                             <p id="biome-detected-desc" style="font-size: 13px; color: var(--text-main); line-height: 1.5; margin-bottom: 10px;"></p>
                             
-                            <!-- BOTÕES INTERATIVOS PARA DESTACAR CADA VIVEIRO NO MAPA -->
                             <div id="viveiros-list-container" style="margin-bottom: 12px;"></div>
                             
                             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -345,52 +344,62 @@
                 </div>
             </div>
 
-            <!-- SOBRE NÓS (EQUIPE ALPHADROID'S) -->
+            <!-- SOBRE NÓS (EQUIPE ALPHADROID'S COM FOTO EMBAIXO) -->
             <div id="about-view" class="view">
                 <div class="page-header-dark">
                     <h2>Sobre Nós</h2>
                     <p>Conheça a história, a equipe e a ciência por trás do projeto Sementes Vivas.</p>
                 </div>
 
-                <div class="about-card">
-                    <div class="about-logo-container">
-                        <!-- Salve a logo do lobo com engrenagens como 'logo-alphadroids.png' na pasta do site -->
-                        <img src="alphas.jpg" alt="Logo ALPHADROID'S" class="team-logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
-                        <div id="logo-fallback" class="team-logo-fallback" style="display: none;">
-                            <span class="material-icons" style="font-size: 48px; color: #00e5ff;">pets</span>
-                            <span class="material-icons" style="font-size: 32px; color: var(--lime); margin-left: -10px;">settings</span>
+                <div class="about-card-vertical">
+                    <!-- Topo: Logo e Texto -->
+                    <div class="about-header-flex">
+                        <div class="about-logo-container">
+                            <img src="alphas.jpg" alt="Logo ALPHADROID'S" class="team-logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
+                            <div id="logo-fallback" class="team-logo-fallback" style="display: none;">
+                                <span class="material-icons" style="font-size: 48px; color: #00e5ff;">pets</span>
+                                <span class="material-icons" style="font-size: 32px; color: var(--lime); margin-left: -10px;">settings</span>
+                            </div>
+                            <span class="team-badge">EQUIPE ALPHADROID'S</span>
                         </div>
-                        <span class="team-badge">EQUIPE ALPHADROID'S</span>
+
+                        <div class="about-text-content">
+                            <h3>Tecnologia e Natureza em Harmonia</h3>
+                            <p>
+                                O projeto <strong>Sementes Vivas</strong> nasceu da união de ideias, criatividade e propósito da equipe <strong>ALPHADROID'S</strong>[cite: 2]. Nosso grande objetivo sempre foi utilizar a tecnologia como uma ponte para aproximar as pessoas da natureza, incentivando a troca de sementes crioulas, o cultivo sustentável e o fortalecimento da biodiversidade local.
+                            </p>
+                            <p>
+                                Para transformar esse sonho em uma ferramenta verdadeiramente útil e confiável, unimos o pensamento inovador do nosso time a um rigoroso processo de <strong>pesquisas realizadas em conjunto com biólogos e especialistas ambientais</strong>. Cada funcionalidade — desde a identificação inteligente dos biomas até o mapeamento de viveiros e a enciclopédia de espécies nativas — foi pensada para respeitar os ciclos ecológicos de cada região.
+                            </p>
+                        </div>
                     </div>
 
-                    <div class="about-text-content">
-                        <h3>Tecnologia e Natureza em Harmonia</h3>
-                        <p>
-                            O projeto <strong>Sementes Vivas</strong> nasceu da união de ideias, criatividade e propósito da equipe <strong>ALPHADROID'S</strong>. Nosso grande objetivo sempre foi utilizar a tecnologia como uma ponte para aproximar as pessoas da natureza, incentivando a troca de sementes crioulas, o cultivo sustentável e o fortalecimento da biodiversidade local.
-                        </p>
-                        <p>
-                            Para transformar esse sonho em uma ferramenta verdadeiramente útil e confiável, unimos o pensamento inovador do nosso time a um rigoroso processo de <strong>pesquisas realizadas em conjunto com biólogos e especialistas ambientais</strong>. Cada funcionalidade — desde a identificação inteligente dos biomas até o mapeamento de viveiros e a enciclopédia de espécies nativas — foi pensada para respeitar os ciclos ecológicos de cada região.
-                        </p>
-                        <p>
-                            Acreditamos que cada semente plantada carrega o futuro de um ecossistema inteiro. Com engrenagens movidas pela curiosidade científica e pelo trabalho em equipe, seguimos cultivando conhecimento e vida junto com toda a comunidade!
-                        </p>
+                    <!-- Pilares do Projeto -->
+                    <div class="about-pillars">
+                        <div class="pillar-item">
+                            <span class="material-icons">biotech</span>
+                            <h4>Base Científica</h4>
+                            <p>Desenvolvido com apoio e pesquisa junto a biólogos.</p>
+                        </div>
+                        <div class="pillar-item">
+                            <span class="material-icons">psychology</span>
+                            <h4>Pensamento Criativo</h4>
+                            <p>Soluções digitais pensadas pelo time ALPHADROID'S.</p>
+                        </div>
+                        <div class="pillar-item">
+                            <span class="material-icons">volunteer_activism</span>
+                            <h4>Impacto Verde</h4>
+                            <p>Fomento à partilha comunitária e reflorestamento.</p>
+                        </div>
+                    </div>
 
-                        <div class="about-pillars">
-                            <div class="pillar-item">
-                                <span class="material-icons">biotech</span>
-                                <h4>Base Científica</h4>
-                                <p>Desenvolvido com apoio e pesquisa junto a biólogos.</p>
-                            </div>
-                            <div class="pillar-item">
-                                <span class="material-icons">psychology</span>
-                                <h4>Pensamento Criativo</h4>
-                                <p>Soluções digitais pensadas pelo time ALPHADROID'S.</p>
-                            </div>
-                            <div class="pillar-item">
-                                <span class="material-icons">volunteer_activism</span>
-                                <h4>Impacto Verde</h4>
-                                <p>Fomento à partilha comunitária e reflorestamento.</p>
-                            </div>
+                    <!-- FOTO DA EQUIPE EMBAIXO DO TEXTO -->
+                    <div class="team-photo-container">
+                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 12px; text-align: center;">Nossa Equipe</h4>
+                        <!-- Guarde a foto da turma na mesma pasta com o nome exato: equipe.jpg -->
+                        <img src="flltc oi.jpg" alt="Equipe ALPHADROID'S" class="team-group-photo" onerror="this.style.display='none'; document.getElementById('team-photo-fallback').style.display='block';">
+                        <div id="team-photo-fallback" style="display: none; padding: 40px; text-align: center; background: var(--bg-light); border-radius: 12px; color: var(--text-muted); font-size: 14px;">
+                            Coloque a foto da equipe na mesma pasta do site com o nome <strong>equipe.jpg</strong>.
                         </div>
                     </div>
                 </div>
