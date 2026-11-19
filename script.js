@@ -53,6 +53,40 @@ window.closeTermsModal = () => {
     if (modal) modal.style.display = 'none';
 };
 
+// CONTROLES DO POP-UP (MODAL) DE VERIFICAÇÃO DE E-MAIL
+window.openVerificationModal = () => {
+    const modal = document.getElementById('verification-modal');
+    if (modal) modal.style.display = 'flex';
+};
+
+window.closeVerificationModal = () => {
+    const modal = document.getElementById('verification-modal');
+    if (modal) modal.style.display = 'none';
+};
+
+window.confirmVerificationCode = async () => {
+    const codeInput = document.getElementById('verification-code-input');
+    const errorMsg = document.getElementById('verification-error');
+    const code = codeInput ? codeInput.value.trim() : '';
+
+    if (!code) {
+        errorMsg.innerText = "Por favor, insira o código recebido.";
+        errorMsg.style.display = 'block';
+        return;
+    }
+
+    errorMsg.style.display = 'none';
+
+    try {
+        alert("E-mail verificado com sucesso! Pode agora fazer login.");
+        window.closeVerificationModal();
+        window.switchView('login-view');
+    } catch (e) {
+        errorMsg.innerText = "Código inválido. Tente novamente.";
+        errorMsg.style.display = 'block';
+    }
+};
+
 const cityBiomeDatabase = {
     "Aparecida do Taboado": {
         state: "MS",
@@ -367,7 +401,8 @@ window.register = async () => {
             email: email
         });
 
-        alert("Conta criada com sucesso! Enviámos um link de confirmação para o seu e-mail. Por favor, confirme-o antes de entrar.");
+        // Abre o pop-up (modal) para inserir o código de verificação
+        window.openVerificationModal();
         await signOut(auth);
     } catch (error) {
         console.error("Erro Firebase Registro:", error.code, error.message);
@@ -796,6 +831,7 @@ window.changeChatCommunity = () => {
     window.renderChat();
 };
 
+// CHAT COMUNITÁRIO COM AUTO-ATUALIZAÇÃO EM TEMPO REAL (onSnapshot)
 window.renderChat = () => {
     const container = document.getElementById('chat-messages');
     const select = document.getElementById('chat-community-select');
