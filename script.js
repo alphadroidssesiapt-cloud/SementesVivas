@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc, serverTimestamp, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -51,40 +51,6 @@ window.openTermsModal = (e) => {
 window.closeTermsModal = () => {
     const modal = document.getElementById('terms-modal');
     if (modal) modal.style.display = 'none';
-};
-
-// CONTROLES DO POP-UP (MODAL) DE VERIFICAÇÃO DE E-MAIL
-window.openVerificationModal = () => {
-    const modal = document.getElementById('verification-modal');
-    if (modal) modal.style.display = 'flex';
-};
-
-window.closeVerificationModal = () => {
-    const modal = document.getElementById('verification-modal');
-    if (modal) modal.style.display = 'none';
-};
-
-window.confirmVerificationCode = async () => {
-    const codeInput = document.getElementById('verification-code-input');
-    const errorMsg = document.getElementById('verification-error');
-    const code = codeInput ? codeInput.value.trim() : '';
-
-    if (!code) {
-        errorMsg.innerText = "Por favor, insira o código recebido.";
-        errorMsg.style.display = 'block';
-        return;
-    }
-
-    errorMsg.style.display = 'none';
-
-    try {
-        alert("E-mail verificado com sucesso! Pode agora fazer login.");
-        window.closeVerificationModal();
-        window.switchView('login-view');
-    } catch (e) {
-        errorMsg.innerText = "Código inválido. Tente novamente.";
-        errorMsg.style.display = 'block';
-    }
 };
 
 const cityBiomeDatabase = {
@@ -349,14 +315,7 @@ window.login = async () => {
     errorMsg.style.display = 'none';
 
     try {
-        const userCred = await signInWithEmailAndPassword(auth, email, pass);
-        
-        if (!userCred.user.emailVerified) {
-            errorMsg.innerText = "Por favor, verifique a sua caixa de entrada e confirme o seu e-mail antes de entrar.";
-            errorMsg.style.display = 'block';
-            await signOut(auth);
-            return;
-        }
+        await signInWithEmailAndPassword(auth, email, pass);
     } catch (error) {
         console.error("Erro Firebase Login:", error.code, error.message);
         let mensagemErro = `Erro (${error.code}): Verifique os dados.`;
@@ -391,8 +350,6 @@ window.register = async () => {
 
     try {
         const cred = await createUserWithEmailAndPassword(auth, email, pass);
-        
-        await sendEmailVerification(cred.user);
 
         await setDoc(doc(db, "users", cred.user.uid), {
             displayName: email.split('@')[0],
@@ -400,10 +357,6 @@ window.register = async () => {
             avatarBase64: "",
             email: email
         });
-
-        // Abre o pop-up (modal) para inserir o código de verificação
-        window.openVerificationModal();
-        await signOut(auth);
     } catch (error) {
         console.error("Erro Firebase Registro:", error.code, error.message);
         let mensagemErro = `Erro ao criar conta (${error.code}).`;
@@ -422,7 +375,7 @@ onAuthStateChanged(auth, async (user) => {
     const greeting = document.getElementById('user-greeting');
     const loginView = document.getElementById('login-view');
     
-    if (user && user.emailVerified) {
+    if (user) {
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
             userProfileCache = userDoc.data();
