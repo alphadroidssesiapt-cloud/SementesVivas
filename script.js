@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, deleteDoc, updateDoc, serverTimestamp, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAZUFBGcCz0o0ZeSvXkdbwJXBzFFBemgt0",
@@ -18,8 +18,8 @@ const db = getFirestore(app);
 let currentCommunity = "Aparecida do Taboado";
 let userProfileCache = null;
 let activePrivateChatId = null;
+let unsubscribeCommunityChat = null;
 
-// CONTROLO DE COOKIES E TERMOS
 window.addEventListener('DOMContentLoaded', () => {
     const frame = document.getElementById('device-frame');
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
@@ -30,7 +30,6 @@ window.addEventListener('DOMContentLoaded', () => {
         frame.className = 'device-desktop';
     }
 
-    // Verificar se o utilizador já aceitou os cookies
     if (!localStorage.getItem('cookies_accepted')) {
         const banner = document.getElementById('cookie-banner');
         if (banner) banner.style.display = 'block';
@@ -316,16 +315,20 @@ window.login = async () => {
     errorMsg.style.display = 'none';
 
     try {
-        await signInWithEmailAndPassword(auth, email, pass);
+        const userCred = await signInWithEmailAndPassword(auth, email, pass);
+        
+        if (!userCred.user.emailVerified) {
+            errorMsg.innerText = "Por favor, verifique a sua caixa de entrada e confirme o seu e-mail antes de entrar.";
+            errorMsg.style.display = 'block';
+            await signOut(auth);
+            return;
+        }
     } catch (error) {
         console.error("Erro Firebase Login:", error.code, error.message);
         let mensagemErro = `Erro (${error.code}): Verifique os dados.`;
-        if (error.code === 'auth/user-not-found') mensagemErro = "Utilizador não encontrado. Clique em 'Criar Nova Conta' primeiro.";
+        if (error.code === 'auth/user-not-found') mensagemErro = "Utilizador não encontrado.";
         else if (error.code === 'auth/wrong-password') mensagemErro = "Senha incorreta.";
-        else if (error.code === 'auth/invalid-email') mensagemErro = "Formato de e-mail inválido.";
-        else if (error.code === 'auth/invalid-credential') mensagemErro = "E-mail ou senha incorretos (ou conta ainda não criada).";
-        else if (error.code === 'auth/operation-not-allowed') mensagemErro = "O login por E-mail/Senha não está ativado no painel do Firebase.";
-        else if (error.code === 'auth/unauthorized-domain') mensagemErro = "Este domínio não está autorizado no Firebase Authentication.";
+        else if (error.code === 'auth/invalid-credential') mensagemErro = "E-mail ou senha incorretos.";
         
         errorMsg.innerText = mensagemErro;
         errorMsg.style.display = 'block';
@@ -354,20 +357,23 @@ window.register = async () => {
 
     try {
         const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        
+        await sendEmailVerification(cred.user);
+
         await setDoc(doc(db, "users", cred.user.uid), {
             displayName: email.split('@')[0],
             community: "Aparecida do Taboado",
             avatarBase64: "",
             email: email
         });
-        alert("Conta criada com sucesso!");
+
+        alert("Conta criada com sucesso! Enviámos um link de confirmação para o seu e-mail. Por favor, confirme-o antes de entrar.");
+        await signOut(auth);
     } catch (error) {
         console.error("Erro Firebase Registro:", error.code, error.message);
         let mensagemErro = `Erro ao criar conta (${error.code}).`;
         if (error.code === 'auth/weak-password') mensagemErro = "A senha deve ter pelo menos 6 caracteres.";
-        else if (error.code === 'auth/email-already-in-use') mensagemErro = "Este e-mail já está registado. Clique em 'Entrar na Conta'.";
-        else if (error.code === 'auth/operation-not-allowed') mensagemErro = "O cadastro por E-mail/Senha não está ativado no painel do Firebase.";
-        else if (error.code === 'auth/invalid-email') mensagemErro = "Formato de e-mail inválido.";
+        else if (error.code === 'auth/email-already-in-use') mensagemErro = "Este e-mail já está registado.";
         
         errorMsg.innerText = mensagemErro;
         errorMsg.style.display = 'block';
@@ -381,7 +387,7 @@ onAuthStateChanged(auth, async (user) => {
     const greeting = document.getElementById('user-greeting');
     const loginView = document.getElementById('login-view');
     
-    if (user) {
+    if (user && user.emailVerified) {
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
             userProfileCache = userDoc.data();
@@ -486,22 +492,12 @@ window.saveProfile = async () => {
 
 const seedPhotoInput = document.getElementById('donate-seed-photo');
 if (seedPhotoInput) {
-    seedPhotoInput.addEventListener('change', async (e) => {
+    seedPhotoInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
         const lbl = document.getElementById('camera-label');
-        lbl.innerHTML = 'A ler texto da imagem...';
-        try {
-            const result = await Tesseract.recognize(file, 'por');
-            if (result.data.text.trim()) {
-                document.getElementById('donate-seed-name').value = result.data.text.trim().split('\n')[0].substring(0, 30);
-            }
-            lbl.innerHTML = 'Foto processada com sucesso!';
-            lbl.className = 'camera-btn success';
-        } catch (e) {
-            lbl.innerHTML = 'Foto adicionada!';
-            lbl.className = 'camera-btn success';
-        }
+        lbl.innerHTML = 'Foto adicionada com sucesso!';
+        lbl.className = 'camera-btn success';
     });
 }
 
@@ -800,25 +796,24 @@ window.changeChatCommunity = () => {
     window.renderChat();
 };
 
-window.renderChat = async () => {
+window.renderChat = () => {
     const container = document.getElementById('chat-messages');
     const select = document.getElementById('chat-community-select');
     if (select) select.value = currentCommunity;
 
     container.innerHTML = '<p style="color: var(--text-muted); text-align: center;">A carregar mensagens...</p>';
-    try {
-        const querySnapshot = await getDocs(collection(db, "chat"));
+
+    if (unsubscribeCommunityChat) unsubscribeCommunityChat();
+
+    const q = query(collection(db, "chat"), orderBy("timestamp", "asc"));
+
+    unsubscribeCommunityChat = onSnapshot(q, (querySnapshot) => {
         container.innerHTML = '';
-        
         let messages = [];
+
         querySnapshot.forEach(docSnap => {
             const data = docSnap.data();
             if (data.community === currentCommunity) messages.push(data);
-        });
-
-        messages.sort((a, b) => {
-            if (!a.timestamp || !b.timestamp) return 0;
-            return a.timestamp.toMillis() - b.timestamp.toMillis();
         });
 
         if (messages.length === 0) {
@@ -841,9 +836,9 @@ window.renderChat = async () => {
             container.appendChild(div);
         });
         container.scrollTop = container.scrollHeight;
-    } catch (error) {
-        container.innerHTML = '<p style="color:red; text-align:center;">Erro ao carregar o chat.</p>';
-    }
+    }, (error) => {
+        container.innerHTML = '<p style="color:red; text-align:center;">Erro ao sincronizar o chat.</p>';
+    });
 };
 
 window.enviarMensagemChat = async () => {
@@ -864,7 +859,6 @@ window.enviarMensagemChat = async () => {
             timestamp: serverTimestamp()
         });
         input.value = '';
-        window.renderChat();
     } catch (error) {
         alert('Erro ao enviar mensagem.');
     }
