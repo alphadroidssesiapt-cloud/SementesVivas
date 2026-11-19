@@ -68,7 +68,36 @@
                 <button class="btn-lime-full" onclick="window.login()">Entrar na Conta</button>
                 <button class="btn-outline-dark" onclick="window.register()" style="margin-top: 10px;">Criar Nova Conta</button>
                 
+                <div style="margin-top: 18px; text-align: center;">
+                    <a href="#" onclick="window.openTermsModal(event)" style="font-size: 12px; color: var(--lime); text-decoration: underline;">Termos de Condições e Política de Privacidade</a>
+                </div>
+
                 <p id="auth-error" style="color: #c53030; font-size: 13px; margin-top: 15px; display: none; text-align: center;"></p>
+            </div>
+        </div>
+
+        <!-- AVISO DE COOKIES (BANNER FLUTUANTE) -->
+        <div id="cookie-banner" class="cookie-banner" style="display: none;">
+            <div class="cookie-content">
+                <span class="material-icons" style="color: var(--lime); font-size: 24px;">cookie</span>
+                <p style="font-size: 13px; color: var(--text-main);">
+                    Utilizamos cookies e tecnologias semelhantes para melhorar a sua experiência na rede, garantir a segurança do login e analisar o uso da biodiversidade local. Ao continuar, concorda com a nossa política.
+                </p>
+                <button class="btn-lime-pill" onclick="window.acceptCookies()" style="padding: 8px 16px; font-size: 12px;">Aceitar e Fechar</button>
+            </div>
+        </div>
+
+        <!-- MODAL DE TERMOS DE CONDIÇÕES -->
+        <div id="terms-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-card">
+                <h3 style="color: var(--forest-dark); margin-bottom: 12px;">Termos de Condições e Política de Privacidade</h3>
+                <div class="modal-body-text">
+                    <p><strong>1. Aceitação dos Termos:</strong> Ao aceder e registar-se na plataforma Sementes Vivas, concorda com estes termos e com as diretrizes de partilha comunitária e preservação ambiental.</p>
+                    <p><strong>2. Privacidade e Dados (LGPD):</strong> Os seus dados de e-mail, nome e localização aproximada são utilizados estritamente para facilitar a troca de sementes e o contacto direto entre cultivadores da região. Não partilhamos informações com terceiros.</p>
+                    <p><strong>3. Utilização de Cookies:</strong> Guardamos preferências locais (como o modo escuro, sessão de utilizador e consentimento de cookies) para assegurar o funcionamento fluído da aplicação web.</p>
+                    <p><strong>4. Conduta na Comunidade:</strong> O chat comunitário e os chats privados devem ser utilizados exclusivamente para fins de troca, doação e aprendizagem sobre sementes e biomas. Comportamentos inadequados poderão resultar na suspensão da conta.</p>
+                </div>
+                <button class="btn-lime-full" onclick="window.closeTermsModal()" style="margin-top: 20px;">Entendido</button>
             </div>
         </div>
 
@@ -244,7 +273,7 @@
                 </div>
             </div>
 
-            <!-- ENCICLOPÉDIA DE SEMENTES NATIVAS & BIOMA (COM IMAGENS ESPECÍFICAS) -->
+            <!-- ENCICLOPÉDIA DE SEMENTES NATIVAS & BIOMA -->
             <div id="encyclopedia-view" class="view">
                 <div class="page-header-dark">
                     <h2>Identificação de Bioma e Enciclopédia Nativa</h2>
@@ -290,63 +319,54 @@
                 </div>
                 
                 <div class="encyclopedia-grid" style="margin-top: 30px;">
-                    <!-- IPÊ AMARELO -->
                     <div class="encyclopedia-card">
                         <img src="https://images.unsplash.com/photo-1558522195-e1204d0d0d18?auto=format&fit=crop&w=600&q=80" alt="Ipê-Amarelo">
                         <span class="enc-tag">Cerrado e Mata Atlântica</span>
                         <h3>Ipê-Amarelo (Handroanthus albus)</h3>
                         <p>Suas sementes são extremamente leves e aladas (possuem pequenas asas), o que permite que o vento as transporte por longas distâncias durante o período de seca.</p>
                     </div>
-                    <!-- CASTANHEIRA -->
                     <div class="encyclopedia-card">
                         <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=600&q=80" alt="Castanheira-do-Pará">
                         <span class="enc-tag">Amazônia</span>
                         <h3>Castanheira-do-Pará (Bertholletia excelsa)</h3>
                         <p>O fruto duro guarda de 15 a 25 sementes. Sua germinação depende quase exclusivamente da cutia, roedor que enterra as sementes para guardar alimento.</p>
                     </div>
-                    <!-- ARAUCÁRIA -->
                     <div class="encyclopedia-card">
                         <img src="https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=600&q=80" alt="Araucária">
                         <span class="enc-tag">Mata de Araucárias</span>
                         <h3>Araucária (Araucaria angustifolia)</h3>
                         <p>O pinhão é a semente desta árvore milenar e principal fonte de alimento da gralha-azul, ave fundamental para dispersar e enterrar as sementes no solo.</p>
                     </div>
-                    <!-- BARU -->
                     <div class="encyclopedia-card">
                         <img src="https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=80" alt="Baru">
                         <span class="enc-tag">Cerrado</span>
                         <h3>Baru (Dipteryx alata)</h3>
                         <p>Típica do Cerrado brasileiro, a amêndoa do baru fica protegida por uma casca lenhosa extremamente dura, sendo rica em proteínas e símbolo de extrativismo sustentável.</p>
                     </div>
-                    <!-- JATOBÁ -->
                     <div class="encyclopedia-card">
                         <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=600&q=80" alt="Jatobá">
                         <span class="enc-tag">Cerrado e Pantanal</span>
                         <h3>Jatobá (Hymenaea courbaril)</h3>
                         <p>Suas sementes ficam envolvidas por uma polpa farinácea doce dentro de uma vagem rija, adaptada originalmente para dispersão por grandes mamíferos.</p>
                     </div>
-                    <!-- BURITI -->
                     <div class="encyclopedia-card">
                         <img src="https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=600&q=80" alt="Buriti">
                         <span class="enc-tag">Veredas</span>
                         <h3>Buriti (Mauritia flexuosa)</h3>
                         <p>Palmeira símbolo de áreas úmidas. Suas sementes possuem casca escamosa e sustentam diversas espécies da fauna silvestre em épocas de estiagem.</p>
                     </div>
-                    <!-- PEQUI -->
                     <div class="encyclopedia-card">
                         <img src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?auto=format&fit=crop&w=600&q=80" alt="Pequi">
                         <span class="enc-tag">Cerrado</span>
                         <h3>Pequi (Caryocar brasiliense)</h3>
                         <p>Símbolo gastronômico e ecológico do Cerrado. Suas sementes duras são protegidas por um caroço espinhoso e a germinação pode levar mais de um ano para ocorrer naturalmente.</p>
                     </div>
-                    <!-- GUAVIRA -->
                     <div class="encyclopedia-card">
                         <img src="https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=600&q=80" alt="Guavira">
                         <span class="enc-tag">Cerrado e Pantanal</span>
                         <h3>Guavira (Campomanesia adamantium)</h3>
                         <p>Fruto oficial de Mato Grosso do Sul. Seus arbustos produzem pequenas sementes altamente consumidas pela avifauna e pequenos mamíferos locais.</p>
                     </div>
-                    <!-- AROEIRA -->
                     <div class="encyclopedia-card">
                         <img src="https://images.unsplash.com/photo-1516233758871-a006c07d394b?auto=format&fit=crop&w=600&q=80" alt="Aroeira-Pimenteira">
                         <span class="enc-tag">Mata Atlântica e Cerrado</span>
