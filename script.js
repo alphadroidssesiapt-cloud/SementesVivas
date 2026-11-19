@@ -56,86 +56,107 @@ window.closeTermsModal = () => {
     if (modal) modal.style.display = 'none';
 };
 
+// BASE DE DADOS DE BIOMAS, VIVEIROS E ESPÉCIES (ÁRVORES, FRUTOS E SEMENTES)
 const cityBiomeDatabase = {
     "Aparecida do Taboado": {
         state: "MS",
         biome: "Cerrado (Transição Mata Atlântica)",
-        desc: "Região marcada por solos arenosos e vegetação típica de Cerrado, ideal para espécies como Ipê-Amarelo, Baru, Jatobá e Jatobá-do-Cerrado.",
+        desc: "Região de solos arenosos com viveiros municipais e particulares ativos para reflorestamento e cultivo regional.",
         portalUrl: "https://www.imasul.ms.gov.br/",
         portalName: "Portal Ambiental do MS (IMASUL)",
-        mapQuery: "Aparecida+do+Taboado,MS"
+        mapQuery: "Aparecida+do+Taboado,MS",
+        viveiros: ["Viveiro Municipal Verdejar", "Viveiro Sementes do Paraná", "Viveiro Nativo Taboado"],
+        species: ["Ipê-Amarelo", "Baru (árvore)", "Jatobá", "Pequi", "Guavira", "Aroeira-Pimenteira"]
     },
     "Paranaíba": {
         state: "MS",
         biome: "Cerrado",
-        desc: "Predominância de Cerrado típico e matas ciliares do rio Paranaíba. Sementes recomendadas: Pequi, Ipê-Roxo, Baru e Ingá.",
+        desc: "Predominância de Cerrado típico e matas ciliares do rio Paranaíba.",
         portalUrl: "https://www.imasul.ms.gov.br/",
         portalName: "Portal Ambiental do MS (IMASUL)",
-        mapQuery: "Paranaiba,MS"
+        mapQuery: "Paranaiba,MS",
+        viveiros: ["Viveiro Floresta Paranaíba", "Viveiro EcoMudas"],
+        species: ["Ipê-Roxo", "Pequi", "Baru", "Ingá", "Jatobá"]
     },
     "Três Lagoas": {
         state: "MS",
         biome: "Cerrado",
-        desc: "Bacia do rio Paraná com grande diversidade de espécies melíferas e nativas do Cerrado sul-mato-grossense.",
+        desc: "Bacia do rio Paraná com grande diversidade florestal.",
         portalUrl: "https://www.imasul.ms.gov.br/",
         portalName: "Portal Ambiental do MS (IMASUL)",
-        mapQuery: "Tres+Lagoas,MS"
+        mapQuery: "Tres+Lagoas,MS",
+        viveiros: ["Viveiro Municipal Três Lagoas", "Mudas Rio Paraná"],
+        species: ["Ipê-Amarelo", "Castanheira-do-Pará", "Jatobá", "Buriti", "Aroeira-Pimenteira"]
     },
     "Campo Grande": {
         state: "MS",
         biome: "Cerrado",
-        desc: "Coração do Cerrado em Mato Grosso do Sul, com rica presença de Guavira, Bocaiúva, Ipês e Figueiras.",
+        desc: "Capital do Cerrado com horto florestal e viveiros de referência.",
         portalUrl: "https://www.imasul.ms.gov.br/",
         portalName: "Portal Ambiental do MS (IMASUL)",
-        mapQuery: "Campo+Grande,MS"
+        mapQuery: "Campo+Grande,MS",
+        viveiros: ["Horto Florestal Municipal", "Viveiro Campo Verde", "Viveiro Pantanal MS"],
+        species: ["Guavira", "Pequi", "Bocaiúva", "Ipê-Amarelo", "Baru"]
     },
     "Dourados": {
         state: "MS",
         biome: "Mata Atlântica e Cerrado",
-        desc: "Zona de transição ecológica com solos férteis ideais para Peroba-Rosa, Erva-Mate nativa, Cedro e Araçá.",
+        desc: "Zona de transição ecológica com solos férteis e viveiros de árvores nobres.",
         portalUrl: "https://www.imasul.ms.gov.br/",
         portalName: "Portal Ambiental do MS (IMASUL)",
-        mapQuery: "Dourados,MS"
+        mapQuery: "Dourados,MS",
+        viveiros: ["Viveiro Floresta Dourados", "Mudas Nativas Sul-Mato-Grossenses"],
+        species: ["Peroba-Rosa", "Erva-mate", "Cedro", "Araçá", "Ipê-Amarelo"]
     },
     "Corumbá": {
         state: "MS",
         biome: "Pantanal",
-        desc: "Maior planície alagável do mundo. Espécies adaptadas ao ciclo das águas como Piúva, Carandá, Acuri e Figueira-Branca.",
+        desc: "Planície alagável com espécies adaptadas ao ciclo das águas.",
         portalUrl: "https://www.imasul.ms.gov.br/",
         portalName: "Portal Ambiental do MS (IMASUL)",
-        mapQuery: "Corumba,MS"
+        mapQuery: "Corumba,MS",
+        viveiros: ["Viveiro Pantanal Sustentável", "Mudas Águas do Pantanal"],
+        species: ["Piúva", "Carandá", "Acuri", "Figueira-Branca", "Buriti"]
     },
     "Bonito": {
         state: "MS",
         biome: "Cerrado e Mata Atlântica (Serra da Bodoquena)",
-        desc: "Região calcária de águas cristalinas com florestas estacionais preservadas, rica em Aroeira, Angico e Jatobá.",
+        desc: "Florestas estacionais preservadas e viveiros de preservação hídrica.",
         portalUrl: "https://www.imasul.ms.gov.br/",
         portalName: "Portal Ambiental do MS (IMASUL)",
-        mapQuery: "Bonito,MS"
+        mapQuery: "Bonito,MS",
+        viveiros: ["Viveiro Bodoquena Verde", "Mudas Águas Cristalinas"],
+        species: ["Aroeira", "Angico", "Jatobá", "Ipê-Roxo", "Pitanga"]
     },
     "Santa Fé do Sul": {
         state: "SP",
         biome: "Mata Atlântica (Floresta Estacional Semidecidual)",
-        desc: "Noroeste paulista na divisa com MS, propício para Jequitibá, Pau-Brasil, Pitanga, Grumixama e Ipês.",
+        desc: "Noroeste paulista na divisa com MS com viveiros municipais de mudas frutíferas e nativas.",
         portalUrl: "https://semil.sp.gov.br/",
         portalName: "Secretaria de Meio Ambiente de SP (SEMIL)",
-        mapQuery: "Santa+Fe+do+Sul,SP"
+        mapQuery: "Santa+Fe+do+Sul,SP",
+        viveiros: ["Viveiro Municipal Santa Fé", "Mudas Paulista Verde"],
+        species: ["Jequitibá", "Pau-brasil", "Pitanga", "Grumixama", "Ipê-Amarelo"]
     },
     "Jales": {
         state: "SP",
         biome: "Mata Atlântica e Cerrado",
-        desc: "Região paulista com remanescentes de mata nativa e pomares biodiversos de frutas do cerrado e mata atlântica.",
+        desc: "Remanescentes de mata nativa e viveiros de reflorestamento.",
         portalUrl: "https://semil.sp.gov.br/",
         portalName: "Secretaria de Meio Ambiente de SP (SEMIL)",
-        mapQuery: "Jales,SP"
+        mapQuery: "Jales,SP",
+        viveiros: ["Viveiro Jales Sustentável", "Mudas Noroeste SP"],
+        species: ["Ipê-Amarelo", "Pitanga", "Araçá", "Jatobá", "Aroeira"]
     },
     "Fernandópolis": {
         state: "SP",
         biome: "Mata Atlântica e Cerrado",
-        desc: "Ecótono entre o Cerrado e a Floresta Estacional de São Paulo, ideal para reflorestamento com espécies nativas regionais.",
+        desc: "Ecótono entre Cerrado e Floresta Estacional com viveiros especializados.",
         portalUrl: "https://semil.sp.gov.br/",
         portalName: "Secretaria de Meio Ambiente de SP (SEMIL)",
-        mapQuery: "Fernandopolis,SP"
+        mapQuery: "Fernandopolis,SP",
+        viveiros: ["Viveiro Municipal Fernandópolis", "EcoMudas Fernandópolis"],
+        species: ["Ipê-Roxo", "Pau-brasil", "Jatobá", "Pitanga", "Baru"]
     }
 };
 
@@ -210,6 +231,43 @@ window.showPrivateChats = (chatIdToOpen = null) => {
     window.initPrivateChatListListener(chatIdToOpen);
 };
 
+// FUNÇÃO PARA BUSCAR ESPÉCIES NATIVAS NA WIKIPEDIA E RENDERIZAR NA TELA
+window.loadWikipediaSpeciesCards = async (speciesList, biomeName) => {
+    const grid = document.getElementById('encyclopedia-grid');
+    const titleEl = document.getElementById('species-section-title');
+    titleEl.innerText = `Árvores, Frutos e Sementes do Bioma: ${biomeName}`;
+    grid.innerHTML = '<p style="color: var(--text-muted);">A carregar espécies e fotos oficiais da Wikipédia...</p>';
+
+    let htmlContent = '';
+
+    for (const species of speciesList) {
+        try {
+            const res = await fetch(`https://pt.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(species)}`);
+            if (res.ok) {
+                const data = await res.json();
+                const title = data.title || species;
+                const extract = data.extract ? data.extract.substring(0, 160) + '...' : 'Espécie nativa catalogada na região.';
+                const imageUrl = data.thumbnail ? data.thumbnail.source : 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&q=80';
+                const wikiUrl = data.content_urls && data.content_urls.desktop ? data.content_urls.desktop.page : '#';
+
+                htmlContent += `
+                    <div class="encyclopedia-card">
+                        <img src="${imageUrl}" alt="${title}">
+                        <span class="enc-tag">${biomeName}</span>
+                        <h3>${title}</h3>
+                        <p>${extract}</p>
+                        <a href="${wikiUrl}" target="_blank" style="font-size: 12px; color: var(--lime); font-weight: 700; margin-top: 10px; text-decoration: underline; display: inline-block;">Ver artigo completo na Wikipédia</a>
+                    </div>
+                `;
+            }
+        } catch (e) {
+            console.error("Erro ao carregar item Wikipedia:", species);
+        }
+    }
+
+    grid.innerHTML = htmlContent || '<p style="color: var(--text-muted);">Nenhuma espécie encontrada.</p>';
+};
+
 window.identifyBiomeByCity = () => {
     const city = userProfileCache?.community || currentCommunity || "Aparecida do Taboado";
     const info = cityBiomeDatabase[city] || cityBiomeDatabase["Aparecida do Taboado"];
@@ -217,6 +275,7 @@ window.identifyBiomeByCity = () => {
     const resultBox = document.getElementById('biome-result-box');
     const titleEl = document.getElementById('biome-detected-title');
     const descEl = document.getElementById('biome-detected-desc');
+    const viveirosContainer = document.getElementById('viveiros-list-container');
     const gmapsLink = document.getElementById('gmaps-external-link');
     const portalLink = document.getElementById('state-portal-link');
     const portalLabel = document.getElementById('state-portal-label');
@@ -224,12 +283,15 @@ window.identifyBiomeByCity = () => {
 
     titleEl.innerText = `${city} (${info.state}) — Bioma: ${info.biome}`;
     descEl.innerText = info.desc;
-    gmapsLink.href = `https://www.google.com/maps/search/?api=1&query=${info.mapQuery}`;
+    viveirosContainer.innerHTML = `<strong>Viveiros na região:</strong> ${info.viveiros.join(' • ')}`;
+    gmapsLink.href = `https://www.google.com/maps/search/?api=1&query=viveiro+de+mudas+${info.mapQuery}`;
     portalLink.href = info.portalUrl;
     portalLabel.innerText = info.portalName;
-    iframe.src = `https://maps.google.com/maps?q=${info.mapQuery}&t=k&z=11&ie=UTF8&iwloc=&output=embed`;
+    iframe.src = `https://maps.google.com/maps?q=viveiro+${info.mapQuery}&t=k&z=12&ie=UTF8&iwloc=&output=embed`;
 
     resultBox.style.display = 'block';
+
+    window.loadWikipediaSpeciesCards(info.species, info.biome);
 };
 
 window.detectBiomeWithMaps = () => {
@@ -250,8 +312,8 @@ window.detectBiomeWithMaps = () => {
 
             const iframe = document.getElementById('google-maps-iframe');
             const gmapsLink = document.getElementById('gmaps-external-link');
-            iframe.src = `https://maps.google.com/maps?q=${lat},${lng}&t=k&z=13&ie=UTF8&iwloc=&output=embed`;
-            gmapsLink.href = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+            iframe.src = `https://maps.google.com/maps?q=viveiro+${lat},${lng}&t=k&z=13&ie=UTF8&iwloc=&output=embed`;
+            gmapsLink.href = `https://www.google.com/maps/search/?api=1&query=viveiro+${lat},${lng}`;
 
             try {
                 const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
@@ -263,21 +325,29 @@ window.detectBiomeWithMaps = () => {
                 let biomeName = "Cerrado Brasileiro";
                 let portalUrl = "https://www.gov.br/mma/pt-br";
                 let portalLabel = "Ministério do Meio Ambiente";
+                let viveirosList = ["Viveiro Municipal Regional", "Horto Florestal de Mudas"];
+                let speciesList = ["Ipê-Amarelo", "Baru", "Jatobá", "Pequi", "Guavira"];
 
                 if (stateName.includes("Mato Grosso do Sul")) {
                     biomeName = (lng < -56.0) ? "Pantanal Sul-Mato-Grossense" : "Cerrado (Transição Mata Atlântica)";
                     portalUrl = "https://www.imasul.ms.gov.br/";
                     portalLabel = "Portal Ambiental do MS (IMASUL)";
+                    viveirosList = ["Viveiro Verdejar MS", "Mudas Nativas Pantanal/Cerrado"];
                 } else if (stateName.includes("São Paulo")) {
                     biomeName = "Mata Atlântica / Cerrado Paulista";
                     portalUrl = "https://semil.sp.gov.br/";
                     portalLabel = "Secretaria de Meio Ambiente de SP (SEMIL)";
+                    viveirosList = ["Viveiro Ecológico Paulista", "Horto de Mudas SP"];
+                    speciesList = ["Jequitibá", "Pau-brasil", "Pitanga", "Grumixama", "Ipê-Amarelo"];
                 }
 
                 titleEl.innerText = `${cityName} (${stateName || 'Brasil'}) — Bioma: ${biomeName}`;
-                document.getElementById('biome-detected-desc').innerText = `Coordenadas identificadas (${lat.toFixed(4)}, ${lng.toFixed(4)}).`;
+                document.getElementById('biome-detected-desc').innerText = `Coordenadas GPS (${lat.toFixed(4)}, ${lng.toFixed(4)}).`;
+                document.getElementById('viveiros-list-container').innerHTML = `<strong>Viveiros próximos:</strong> ${viveirosList.join(' • ')}`;
                 document.getElementById('state-portal-link').href = portalUrl;
                 document.getElementById('state-portal-label').innerText = portalLabel;
+
+                window.loadWikipediaSpeciesCards(speciesList, biomeName);
             } catch (e) {
                 window.identifyBiomeByCity();
             }
@@ -662,10 +732,7 @@ const formatTelegramDateTime = (timestamp) => {
     return `${dia}/${mes}/${ano} às ${hora}:${min}`;
 };
 
-// ==========================================
 // CHATS COM AUTO-ATUALIZAÇÃO EM TEMPO REAL
-// ==========================================
-
 window.initPrivateChatListListener = (chatIdToOpen = null) => {
     const listContainer = document.getElementById('private-chat-list');
     const user = auth.currentUser;
