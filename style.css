@@ -662,10 +662,10 @@ header {
     border-radius: 10px;
 }
 
-/* ENCICLOPÉDIA NATIVA COM IMAGENS */
+/* ENCICLOPÉDIA NATIVA COM WIKI */
 .encyclopedia-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
 }
 
@@ -686,6 +686,7 @@ header {
     object-fit: cover;
     border-radius: 10px;
     margin-bottom: 12px;
+    background: var(--bg-light);
 }
 
 .enc-tag {
@@ -708,7 +709,8 @@ header {
 .encyclopedia-card p {
     font-size: 13px;
     color: var(--text-muted);
-    line-height: 1.6;
+    line-height: 1.5;
+    flex: 1;
 }
 
 /* CHATS */
