@@ -22,7 +22,7 @@ let chatUnsubscribe = null;
 let privateChatUnsubscribe = null;
 let privateListUnsubscribe = null;
 
-// DICIONÁRIO DE IDIOMAS (PORTUGUÊS, INGLÊS E ESPANHOL) SEM TOCAR NAS IMAGENS
+// DICIONÁRIO DE IDIOMAS (PORTUGUÊS, INGLÊS E ESPANHOL)
 const translations = {
     pt: {
         brandTitle: "Sementes Vivas",
@@ -145,19 +145,19 @@ const translations = {
         btnLogin: "Sign In",
         btnRegisterAccount: "Create New Account",
         termsLink: "Terms of Conditions & Privacy Policy",
-        cookieText: "We use cookies to improve your experience on the network and ensure login security. By continuing, you agree to our policy.",
+        cookieText: "We use cookies to improve your experience on the network and ensure login security.",
         cookieBtn: "Accept & Close",
         termsTitle: "Terms of Conditions & Privacy Policy",
-        termsP1: "1. Acceptance of Terms: By accessing and registering on the Living Seeds platform, you agree to these terms and community guidelines.",
-        termsP2: "2. Privacy and Data: Your data is used strictly to facilitate seed exchange and direct contact among regional growers.",
+        termsP1: "1. Acceptance of Terms: By accessing and registering, you agree to these terms.",
+        termsP2: "2. Privacy and Data: Your data is used strictly to facilitate seed exchange.",
         termsP3: "3. Cookie Usage: We store local preferences to ensure smooth web operation.",
-        termsP4: "4. Community Conduct: Community and private chats must be used exclusively for exchange, donation, and learning.",
+        termsP4: "4. Community Conduct: Chats must be used exclusively for exchange and learning.",
         termsClose: "Understood",
         heroBadge: "Welcome to the community",
         heroTitlePart1: "Seed sharing and",
         heroTitlePart2: "life preservation",
         heroTitlePart3: "in every crop.",
-        heroSubtitle: "Trade heirloom species, donate native seedlings, and strengthen local biodiversity with growers in your region.",
+        heroSubtitle: "Trade heirloom species, donate native seedlings, and strengthen local biodiversity.",
         heroBtnExplore: "Explore Available Seeds",
         heroBtnBiome: "Identify My Biome",
         quickAccessTitle: "Quick Access",
@@ -191,7 +191,7 @@ const translations = {
         communityChatSub: "General region conversations",
         loadingMessages: "Loading messages...",
         encyclopediaHeaderTitle: "Biome, Nurseries & Native Species Identification",
-        encyclopediaHeaderSub: "Geolocation for biome detection, map nursery pins, and complete catalog via Wikipedia.",
+        encyclopediaHeaderSub: "Geolocation for biome detection and catalog via Wikipedia.",
         geoTag: "GEOLOCATION & NURSERIES",
         geoCardTitle: "Identify My Biome & Nurseries",
         geoCardDesc: "Detect your biome and click the nurseries below to highlight them on the map.",
@@ -209,8 +209,8 @@ const translations = {
         aboutHeaderSub: "Meet the history, team, and science behind the Living Seeds project.",
         teamBadge: "ALPHADROID'S TEAM",
         aboutTitle: "Technology and Nature in Harmony",
-        aboutP1: "The Living Seeds project was born from the union of ideas, creativity, and purpose of the ALPHADROID'S team. Our main goal has always been to use technology as a bridge to bring people closer to nature, encouraging heirloom seed exchange and local biodiversity.",
-        aboutP2: "To turn this dream into a useful tool, we combined our team's innovative thinking with rigorous research conducted alongside biologists and environmental specialists. Every feature was designed to respect ecological cycles.",
+        aboutP1: "The Living Seeds project was born from the union of ideas, creativity, and purpose of the ALPHADROID'S team. Our main goal has always been to use technology as a bridge to bring people closer to nature.",
+        aboutP2: "To turn this dream into a useful tool, we combined our team's innovative thinking with rigorous research conducted alongside biologists and environmental specialists.",
         pillar1Title: "Scientific Foundation",
         pillar1Desc: "Developed with support and research alongside biologists.",
         pillar2Title: "Creative Thinking",
@@ -218,7 +218,7 @@ const translations = {
         pillar3Title: "Green Impact",
         pillar3Desc: "Fostering community sharing and reforestation.",
         teamPhotoTitle: "Our Team",
-        teamPhotoFallback: "Make sure the file flltc oi.jpg is in the same folder as the site.",
+        teamPhotoFallback: "Make sure the file flltc oi.jpg is in the same folder.",
         subTabEdit: "Edit Data & Avatar",
         subTabSeeds: "My Seeds",
         profileEditTitle: "Customize Profile",
@@ -247,13 +247,13 @@ const translations = {
         btnLogin: "Iniciar Sesión",
         btnRegisterAccount: "Crear Nueva Cuenta",
         termsLink: "Términos de Condiciones y Política de Privacidad",
-        cookieText: "Utilizamos cookies para mejorar su experiencia en la red y garantizar la seguridad del inicio de sesión.",
+        cookieText: "Utilizamos cookies para mejorar su experiencia en la red.",
         cookieBtn: "Aceptar y Cerrar",
         termsTitle: "Términos de Condiciones y Política de Privacidad",
-        termsP1: "1. Aceptación de los Términos: Al acceder y registrarse en Semillas Vivas, acepta estos términos.",
-        termsP2: "2. Privacidad y Datos: Sus datos se utilizan estrictamente para facilitar el intercambio de semillas.",
+        termsP1: "1. Aceptación de los Términos: Al acceder y registrarse, acepta estos términos.",
+        termsP2: "2. Privacidad y Datos: Sus datos se utilizan estrictamente para facilitar el intercambio.",
         termsP3: "3. Uso de Cookies: Guardamos preferencias locales para asegurar el funcionamiento web.",
-        termsP4: "4. Conducta Comunitaria: Los chats deben usarse exclusivamente para intercambio, donación y aprendizaje.",
+        termsP4: "4. Conducta Comunitaria: Los chats deben usarse exclusivamente para intercambio y aprendizaje.",
         termsClose: "Entendido",
         heroBadge: "Bienvenido a la comunidad",
         heroTitlePart1: "Intercambio de semillas y",
@@ -338,16 +338,19 @@ window.changeLanguage = (lang) => {
     
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
-        if (t[key]) el.innerHTML = t[key];
+        if (t[key]) {
+            el.innerHTML = t[key];
+        }
     });
 
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
         const key = el.getAttribute('data-i18n-placeholder');
-        if (t[key]) el.placeholder = t[key];
+        if (t[key]) {
+            el.placeholder = t[key];
+        }
     });
 };
 
-// CONTROLO DE COOKIES E TERMOS
 window.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('site_lang') || 'pt';
     const langSelect = document.getElementById('language-selector');
@@ -386,7 +389,6 @@ window.closeTermsModal = () => {
     if (modal) modal.style.display = 'none';
 };
 
-// CATÁLOGO EXPANDIDO DE ESPÉCIES POR BIOMA
 const biomeSpeciesCatalog = {
     "Cerrado": [
         "Handroanthus albus", "Dipteryx alata", "Hymenaea courbaril", "Caryocar brasiliense",
@@ -407,7 +409,6 @@ const biomeSpeciesCatalog = {
     ]
 };
 
-// BASE DE DADOS DE BIOMAS, VIVEIROS E ESPÉCIES
 const cityBiomeDatabase = {
     "Aparecida do Taboado": {
         state: "MS",
@@ -584,7 +585,6 @@ window.showPrivateChats = (chatIdToOpen = null) => {
     window.initPrivateChatListListener(chatIdToOpen);
 };
 
-// CARREGAMENTO SIMULTÂNEO DE TODAS AS ESPÉCIES DO BIOMA VIA WIKIPÉDIA
 window.loadWikipediaSpeciesCards = async (speciesList, biomeName) => {
     const grid = document.getElementById('encyclopedia-grid');
     const titleEl = document.getElementById('species-section-title');
