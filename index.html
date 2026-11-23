@@ -36,6 +36,9 @@
                 </nav>
 
                 <div class="nav-actions">
+                    <!-- SELETOR DE IDIOMAS (PORTUGUÊS, INGLÊS E ESPANHOL) -->
+                    <div id="google_translate_element" style="display: inline-block; transform: scale(0.9);"></div>
+
                     <button class="btn-theme-toggle" onclick="window.toggleTheme()" title="Alternar Modo Claro / Escuro">
                         <span id="theme-icon" class="material-icons" style="font-size: 18px;">dark_mode</span>
                     </button>
@@ -398,7 +401,7 @@
                         <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 12px; text-align: center;">Nossa Equipe[cite: 3]</h4>
                         <img src="flltc oi.jpg" alt="Equipe ALPHADROID'S" class="team-group-photo-framed" onerror="this.style.display='none'; document.getElementById('team-photo-fallback').style.display='block';">
                         <div id="team-photo-fallback" style="display: none; padding: 30px; text-align: center; background: var(--bg-light); border-radius: 12px; color: var(--text-muted); font-size: 14px;">
-                            Coloque a foto da equipe na mesma pasta do site com o nome <strong>flltc oi.jpg</strong>[cite: 3].
+                            Certifique-se de que o ficheiro <strong>flltc oi.jpg</strong> está na mesma pasta do site[cite: 3].
                         </div>
                     </div>
                 </div>
@@ -457,6 +460,19 @@
         </div>
 
     </div>
+
+    <!-- SCRIPT DE TRADUÇÃO GOOGLE (INGLÊS, ESPANHOL E PORTUGUÊS) -->
+    <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'pt',
+        includedLanguages: 'en,es,pt',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script type="module" src="script.js"></script>
 </body>
