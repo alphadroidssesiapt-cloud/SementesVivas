@@ -22,51 +22,6 @@ let chatUnsubscribe = null;
 let privateChatUnsubscribe = null;
 let privateListUnsubscribe = null;
 
-const translations = {
-    pt: {
-        brandTitle: "Sementes Vivas",
-        brandSub: "REDE DE BIODIVERSIDADE",
-        navHome: "Início",
-        navExplore: "Explorar",
-        navChats: "Meus Chats",
-        navCommunity: "Comunidade",
-        navEncyclopedia: "Bioma & Enciclopédia",
-        navLearn: "Aprender",
-        navAbout: "Sobre Nós",
-        navProfile: "Perfil",
-        btnRegister: "Cadastrar",
-        btnLogout: "Sair"
-    },
-    en: {
-        brandTitle: "Living Seeds",
-        brandSub: "BIODIVERSITY NETWORK",
-        navHome: "Home",
-        navExplore: "Explore",
-        navChats: "My Chats",
-        navCommunity: "Community",
-        navEncyclopedia: "Biome & Encyclopedia",
-        navLearn: "Learn",
-        navAbout: "About Us",
-        navProfile: "Profile",
-        btnRegister: "Register",
-        btnLogout: "Logout"
-    },
-    es: {
-        brandTitle: "Semillas Vivas",
-        brandSub: "RED DE BIODIVERSIDAD",
-        navHome: "Inicio",
-        navExplore: "Explorar",
-        navChats: "Mis Chats",
-        navCommunity: "Comunidad",
-        navEncyclopedia: "Bioma y Enciclopedia",
-        navLearn: "Aprender",
-        navAbout: "Sobre Nosotros",
-        navProfile: "Perfil",
-        btnRegister: "Registrar",
-        btnLogout: "Salir"
-    }
-};
-
 window.changeLanguage = (lang) => {
     localStorage.setItem('site_lang', lang);
 };
@@ -108,32 +63,49 @@ window.closeTermsModal = () => {
     if (modal) modal.style.display = 'none';
 };
 
-// CATÁLOGO DE ESPÉCIES E DESCRITIVOS POR BIOMA (SELETOR MANUAL)
+// CATÁLOGO COMPLETO DOS 6 BIOMAS DO BRASIL
 const biomeDataCatalog = {
     "Cerrado": {
         desc: "O segundo maior bioma do Brasil, conhecido como a savana brasileira. Apresenta rica biodiversidade com árvores de troncos tortuosos e raízes profundas.",
         species: [
             "Handroanthus albus", "Dipteryx alata", "Hymenaea courbaril", "Caryocar brasiliense",
             "Campomanesia adamantium", "Schinus terebinthifolia", "Mauritia flexuosa", "Handroanthus impetiginosus",
-            "Inga edulis", "Annona crassiflora", "Eugenia dysenterica", "Hancornia speciosa",
-            "Anadenanthera colubrina", "Tabebuia aurea", "Genipa americana", "Acrocomia aculeata"
+            "Inga edulis", "Annona crassiflora", "Eugenia dysenterica", "Hancornia speciosa"
         ]
     },
     "Pantanal": {
         desc: "A maior planície alagável contínua do planeta, com rica fauna e flora adaptada aos ciclos intensos de cheias e secas.",
         species: [
             "Handroanthus heptaphyllus", "Copernicia alba", "Attalea phalerata", "Ficus insipida",
-            "Mauritia flexuosa", "Tabebuia aurea", "Hymenaea courbaril", "Genipa americana",
-            "Inga vera", "Vitex cymosa", "Erythrina dominguezii", "Triplaris americana"
+            "Mauritia flexuosa", "Tabebuia aurea", "Genipa americana", "Vitex cymosa"
         ]
     },
     "Mata Atlântica": {
         desc: "Bioma de florestas tropicais com altíssima biodiversidade e endemismo, estendendo-se originalmente por grande parte da costa brasileira.",
         species: [
             "Paubrasilia echinata", "Cariniana legalis", "Eugenia uniflora", "Eugenia brasiliensis",
-            "Aspidosperma polyneuron", "Cedrela fissilis", "Ilex paraguariensis", "Psidium cattleyanum",
-            "Euterpe edulis", "Araucaria angustifolia", "Plinia cauliflora", "Schinus terebinthifolia",
-            "Handroanthus chrysotrichus", "Syagrus romanzoffiana", "Jacaranda micrantha", "Lecythidaceae"
+            "Aspidosperma polyneuron", "Cedrela fissilis", "Ilex paraguariensis", "Euterpe edulis"
+        ]
+    },
+    "Amazônia": {
+        desc: "A maior floresta tropical do mundo e a maior bacia hidrográfica da Terra, com imensa riqueza em biodiversidade e árvores gigantescas.",
+        species: [
+            "Bertholletia excelsa", "Hevea brasiliensis", "Swietenia macrophylla", "Ceiba pentandra",
+            "Mauritia flexuosa", "Theobroma cacao", "Euterpe oleracea", "Carapa guianensis"
+        ]
+    },
+    "Caatinga": {
+        desc: "Bioma exclusivamente brasileiro caracterizado pelo clima semiárido, vegetação xerófila adaptada à seca e rica fauna endêmica.",
+        species: [
+            "Spondias tuberosa", "Schinopsis brasiliensis", "Mimosa tenuiflora", "Cereus jamacaru",
+            "Pilosocereus gounellei", "Ziziphus joazeiro", "Amburana cearensis", "Combretum leprosum"
+        ]
+    },
+    "Pampa": {
+        desc: "Caracterizado por vastas planícies de campos nativos e vegetação rasteira, localizado na região sul do país.",
+        species: [
+            "Erythrina crista-galli", "Butia yatay", "Schinus molle", "Acca sellowiana",
+            "Sebastiania commersoniana", "Blepharocalyx salicifolius"
         ]
     }
 };
