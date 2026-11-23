@@ -19,34 +19,38 @@
                 <div class="nav-brand" onclick="window.showDashboard()">
                     <span class="material-icons brand-icon">spa</span>
                     <div class="brand-text">
-                        <span class="brand-title">Sementes Vivas</span>
-                        <span class="brand-sub">REDE DE BIODIVERSIDADE</span>
+                        <span class="brand-title" data-i18n="brandTitle">Sementes Vivas</span>
+                        <span class="brand-sub" data-i18n="brandSub">REDE DE BIODIVERSIDADE</span>
                     </div>
                 </div>
 
                 <nav class="nav-links">
-                    <button class="nav-link active" id="tab-dashboard-view" onclick="window.showDashboard()">Início</button>
-                    <button class="nav-link" id="tab-available-view" onclick="window.showAvailable()">Explorar</button>
-                    <button class="nav-link" id="tab-private-chats-view" onclick="window.showPrivateChats()">Meus Chats</button>
-                    <button class="nav-link" id="tab-chat-view" onclick="window.showChat()">Comunidade</button>
-                    <button class="nav-link" id="tab-encyclopedia-view" onclick="window.showEncyclopedia()">Bioma & Enciclopédia</button>
-                    <button class="nav-link" id="tab-learn-view" onclick="window.showLearn()">Aprender</button>
-                    <button class="nav-link" id="tab-about-view" onclick="window.showAbout()">Sobre Nós</button>
-                    <button class="nav-link" id="tab-profile-view" onclick="window.showProfile()">Perfil</button>
+                    <button class="nav-link active" id="tab-dashboard-view" onclick="window.showDashboard()" data-i18n="navHome">Início</button>
+                    <button class="nav-link" id="tab-available-view" onclick="window.showAvailable()" data-i18n="navExplore">Explorar</button>
+                    <button class="nav-link" id="tab-private-chats-view" onclick="window.showPrivateChats()" data-i18n="navChats">Meus Chats</button>
+                    <button class="nav-link" id="tab-chat-view" onclick="window.showChat()" data-i18n="navCommunity">Comunidade</button>
+                    <button class="nav-link" id="tab-encyclopedia-view" onclick="window.showEncyclopedia()" data-i18n="navEncyclopedia">Bioma & Enciclopédia</button>
+                    <button class="nav-link" id="tab-learn-view" onclick="window.showLearn()" data-i18n="navLearn">Aprender</button>
+                    <button class="nav-link" id="tab-about-view" onclick="window.showAbout()" data-i18n="navAbout">Sobre Nós</button>
+                    <button class="nav-link" id="tab-profile-view" onclick="window.showProfile()" data-i18n="navProfile">Perfil</button>
                 </nav>
 
                 <div class="nav-actions">
-                    <!-- SELETOR DE IDIOMAS (PORTUGUÊS, INGLÊS E ESPANHOL) -->
-                    <div id="google_translate_element" style="display: inline-block; transform: scale(0.9);"></div>
+                    <!-- SELETOR MANUAL DE IDIOMAS (SEM GOOGLE TRANSLATE) -->
+                    <select id="language-selector" class="select-styled" style="width: auto; padding: 6px 10px; font-size: 12px; font-weight: 700;" onchange="window.changeLanguage(this.value)">
+                        <option value="pt">🇧🇷 PT</option>
+                        <option value="en">🇺🇸 EN</option>
+                        <option value="es">🇪🇸 ES</option>
+                    </select>
 
                     <button class="btn-theme-toggle" onclick="window.toggleTheme()" title="Alternar Modo Claro / Escuro">
                         <span id="theme-icon" class="material-icons" style="font-size: 18px;">dark_mode</span>
                     </button>
 
                     <button class="btn-lime-pill" onclick="window.showDonate()">
-                        <span class="material-icons" style="font-size: 16px;">add_circle</span> Cadastrar
+                        <span class="material-icons" style="font-size: 16px;">add_circle</span> <span data-i18n="btnRegister">Cadastrar</span>
                     </button>
-                    <button onclick="window.logout()" class="btn-logout-dark" title="Sair da conta">Sair</button>
+                    <button onclick="window.logout()" class="btn-logout-dark" title="Sair da conta" data-i18n="btnLogout">Sair</button>
                 </div>
             </div>
         </header>
@@ -58,22 +62,22 @@
                     <span class="material-icons logo-icon">eco</span>
                     <h2>Sementes Vivas</h2>
                 </div>
-                <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 14px; text-align: center;">Conectando cultivadores, partilhando vida e biodiversidade.</p>
+                <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 14px; text-align: center;" data-i18n="loginSub">Conectando cultivadores, partilhando vida e biodiversidade.</p>
                 
                 <div class="input-group">
-                    <label>E-mail</label>
+                    <label data-i18n="labelEmail">E-mail</label>
                     <input type="email" id="auth-email" placeholder="seu@email.com">
                 </div>
                 <div class="input-group">
-                    <label>Senha</label>
+                    <label data-i18n="labelPass">Senha</label>
                     <input type="password" id="auth-password" placeholder="••••••••" onkeypress="window.checkLoginEnter(event)">
                 </div>
                 
-                <button class="btn-lime-full" onclick="window.login()">Entrar na Conta</button>
-                <button class="btn-outline-dark" onclick="window.register()" style="margin-top: 10px;">Criar Nova Conta</button>
+                <button class="btn-lime-full" onclick="window.login()" data-i18n="btnLogin">Entrar na Conta</button>
+                <button class="btn-outline-dark" onclick="window.register()" style="margin-top: 10px;" data-i18n="btnRegisterAccount">Criar Nova Conta</button>
                 
                 <div style="margin-top: 18px; text-align: center;">
-                    <a href="#" onclick="window.openTermsModal(event)" style="font-size: 12px; color: var(--lime); text-decoration: underline;">Termos de Condições e Política de Privacidade</a>
+                    <a href="#" onclick="window.openTermsModal(event)" style="font-size: 12px; color: var(--lime); text-decoration: underline;" data-i18n="termsLink">Termos de Condições e Política de Privacidade</a>
                 </div>
 
                 <p id="auth-error" style="color: #c53030; font-size: 13px; margin-top: 15px; display: none; text-align: center;"></p>
@@ -84,24 +88,24 @@
         <div id="cookie-banner" class="cookie-banner" style="display: none;">
             <div class="cookie-content">
                 <span class="material-icons" style="color: var(--lime); font-size: 24px;">cookie</span>
-                <p style="font-size: 13px; color: var(--text-main);">
+                <p style="font-size: 13px; color: var(--text-main);" data-i18n="cookieText">
                     Utilizamos cookies para melhorar a sua experiência na rede e garantir a segurança do login. Ao continuar, concorda com a nossa política.
                 </p>
-                <button class="btn-lime-pill" onclick="window.acceptCookies()" style="padding: 8px 16px; font-size: 12px;">Aceitar e Fechar</button>
+                <button class="btn-lime-pill" onclick="window.acceptCookies()" style="padding: 8px 16px; font-size: 12px;" data-i18n="cookieBtn">Aceitar e Fechar</button>
             </div>
         </div>
 
         <!-- MODAL DE TERMOS -->
         <div id="terms-modal" class="modal-overlay" style="display: none;">
             <div class="modal-card">
-                <h3 style="color: var(--forest-dark); margin-bottom: 12px;">Termos de Condições e Política de Privacidade</h3>
+                <h3 style="color: var(--forest-dark); margin-bottom: 12px;" data-i18n="termsTitle">Termos de Condições e Política de Privacidade</h3>
                 <div class="modal-body-text">
-                    <p><strong>1. Aceitação dos Termos:</strong> Ao aceder e registar-se na plataforma Sementes Vivas, concorda com estes termos e com as diretrizes de partilha comunitária e preservação ambiental.</p>
-                    <p><strong>2. Privacidade e Dados (LGPD):</strong> Os seus dados de e-mail, nome e localização aproximada são utilizados estritamente para facilitar a troca de sementes e o contacto direto entre cultivadores da região.</p>
-                    <p><strong>3. Utilização de Cookies:</strong> Guardamos preferências locais para assegurar o funcionamento fluído da aplicação web.</p>
-                    <p><strong>4. Conduta na Comunidade:</strong> O chat comunitário e os chats privados devem ser utilizados exclusivamente para fins de troca, doação e aprendizagem.</p>
+                    <p data-i18n="termsP1"><strong>1. Aceitação dos Termos:</strong> Ao aceder e registar-se na plataforma Sementes Vivas, concorda com estes termos e com as diretrizes de partilha comunitária e preservação ambiental.</p>
+                    <p data-i18n="termsP2"><strong>2. Privacidade e Dados (LGPD):</strong> Os seus dados de e-mail, nome e localização aproximada são utilizados estritamente para facilitar a troca de sementes e o contacto direto entre cultivadores da região.</p>
+                    <p data-i18n="termsP3"><strong>3. Utilização de Cookies:</strong> Guardamos preferências locais para assegurar o funcionamento fluído da aplicação web.</p>
+                    <p data-i18n="termsP4"><strong>4. Conduta na Comunidade:</strong> O chat comunitário e os chats privados devem ser utilizados exclusivamente para fins de troca, doação e aprendizagem.</p>
                 </div>
-                <button class="btn-lime-full" onclick="window.closeTermsModal()" style="margin-top: 20px;">Entendido</button>
+                <button class="btn-lime-full" onclick="window.closeTermsModal()" style="margin-top: 20px;" data-i18n="termsClose">Entendido</button>
             </div>
         </div>
 
@@ -110,19 +114,19 @@
             <section class="hero-section">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
-                    <span id="user-greeting" class="hero-badge">Bem-vindo à comunidade</span>
+                    <span id="user-greeting" class="hero-badge" data-i18n="heroBadge">Bem-vindo à comunidade</span>
                     <h1 class="hero-title">
-                        Partilha de sementes e <span class="text-lime">preservação da vida</span> em cada cultivo.
+                        <span data-i18n="heroTitlePart1">Partilha de sementes e</span> <span class="text-lime" data-i18n="heroTitlePart2">preservação da vida</span> <span data-i18n="heroTitlePart3">em cada cultivo.</span>
                     </h1>
-                    <p class="hero-subtitle">
+                    <p class="hero-subtitle" data-i18n="heroSubtitle">
                         Troque espécies crioulas, doe mudas nativas e fortaleça a biodiversidade local junto com cultivadores da sua região.
                     </p>
                     <div class="hero-buttons">
                         <button class="btn-lime-hero" onclick="window.showAvailable()">
-                            <span class="material-icons" style="font-size: 18px;">inventory_2</span> Explorar Sementes Disponíveis
+                            <span class="material-icons" style="font-size: 18px;">inventory_2</span> <span data-i18n="heroBtnExplore">Explorar Sementes Disponíveis</span>
                         </button>
                         <button class="btn-glass-hero" onclick="window.showEncyclopedia()">
-                            Identificar Meu Bioma <span class="material-icons" style="font-size: 18px;">public</span>
+                            <span data-i18n="heroBtnBiome">Identificar Meu Bioma</span> <span class="material-icons" style="font-size: 18px;">public</span>
                         </button>
                     </div>
                 </div>
@@ -130,29 +134,29 @@
 
             <div class="app-content">
                 <div class="section-heading">
-                    <h2>Acesso Rápido</h2>
-                    <p>Selecione uma área para começar a interagir com a rede</p>
+                    <h2 data-i18n="quickAccessTitle">Acesso Rápido</h2>
+                    <p data-i18n="quickAccessSub">Selecione uma área para começar a interagir com a rede</p>
                 </div>
                 <div class="action-grid">
                     <div class="action-card" onclick="window.showAvailable()">
                         <div class="card-icon-circle"><span class="material-icons">inventory_2</span></div>
-                        <h3>Sementes Disponíveis</h3>
-                        <p>Explore doações e trocas ativas na comunidade.</p>
+                        <h3 data-i18n="cardSeedsTitle">Sementes Disponíveis</h3>
+                        <p data-i18n="cardSeedsDesc">Explore doações e trocas ativas na comunidade.</p>
                     </div>
                     <div class="action-card" onclick="window.showDonate()">
                         <div class="card-icon-circle"><span class="material-icons">add_a_photo</span></div>
-                        <h3>Cadastrar Semente</h3>
-                        <p>Publique novas sementes com leitura automática.</p>
+                        <h3 data-i18n="cardDonateTitle">Cadastrar Semente</h3>
+                        <p data-i18n="cardDonateDesc">Publique novas sementes com leitura automática.</p>
                     </div>
                     <div class="action-card" onclick="window.showPrivateChats()">
                         <div class="card-icon-circle"><span class="material-icons">chat</span></div>
-                        <h3>Meus Chats</h3>
-                        <p>Negocie reservas e combine entregas diretamente.</p>
+                        <h3 data-i18n="cardChatsTitle">Meus Chats</h3>
+                        <p data-i18n="cardChatsDesc">Negocie reservas e combine entregas diretamente.</p>
                     </div>
                     <div class="action-card" onclick="window.showEncyclopedia()">
                         <div class="card-icon-circle"><span class="material-icons">public</span></div>
-                        <h3>Mapa do Bioma e Viveiros</h3>
-                        <p>Identifique seu bioma no Google Maps e localize viveiros de mudas.</p>
+                        <h3 data-i18n="cardBiomeTitle">Mapa do Bioma e Viveiros</h3>
+                        <p data-i18n="cardBiomeDesc">Identifique seu bioma no Google Maps e localize viveiros de mudas.</p>
                     </div>
                 </div>
             </div>
@@ -164,8 +168,8 @@
             <!-- SEMENTES DISPONÍVEIS -->
             <div id="available-view" class="view">
                 <div class="page-header-dark">
-                    <h2>Sementes da Comunidade</h2>
-                    <p>Reserve uma semente para abrir uma conversa direta com o doador.</p>
+                    <h2 data-i18n="seedsHeaderTitle">Sementes da Comunidade</h2>
+                    <p data-i18n="seedsHeaderSub">Reserve uma semente para abrir uma conversa direta com o doador.</p>
                 </div>
                 <div id="seeds-grid-container" class="seeds-grid"></div>
             </div>
@@ -173,50 +177,50 @@
             <!-- CADASTRAR SEMENTE -->
             <div id="donate-view" class="view">
                 <div class="content-card">
-                    <h2 style="color: var(--forest-dark); margin-bottom: 20px;">Cadastrar Nova Semente</h2>
+                    <h2 style="color: var(--forest-dark); margin-bottom: 20px;" data-i18n="donateCardTitle">Cadastrar Nova Semente</h2>
                     
                     <div class="input-group">
-                        <label>Fotografar Semente (A leitura automática preencherá o nome)</label>
+                        <label data-i18n="donatePhotoLabel">Fotografar Semente (A leitura automática preencherá o nome)</label>
                         <div class="camera-wrapper">
                             <div class="camera-btn" id="camera-label">
-                                <span class="material-icons">camera_alt</span> Clique para fotografar ou carregar imagem
+                                <span class="material-icons">camera_alt</span> <span data-i18n="donateCameraBtn">Clique para fotografar ou carregar imagem</span>
                             </div>
                             <input type="file" id="donate-seed-photo" accept="image/*" capture="environment">
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label>Nome da Semente</label>
+                        <label data-i18n="donateNameLabel">Nome da Semente</label>
                         <input type="text" id="donate-seed-name" placeholder="Ex: Tomate Coração de Boi">
                     </div>
 
                     <div class="input-group">
-                        <label>Finalidade do Anúncio</label>
+                        <label data-i18n="donateTypeLabel">Finalidade do Anúncio</label>
                         <select id="donate-seed-type" class="select-styled">
-                            <option value="Doação">Doação (Gratuito)</option>
-                            <option value="Troca">Troca (Quero trocar por outra)</option>
+                            <option value="Doação" data-i18n="optDonation">Doação (Gratuito)</option>
+                            <option value="Troca" data-i18n="optTrade">Troca (Quero trocar por outra)</option>
                         </select>
                     </div>
                     
-                    <button id="btn-donate" class="btn-lime-full" onclick="window.processDonation()">Publicar Semente</button>
-                    <p id="upload-loading" style="display: none; color: var(--forest-mid); margin-top: 15px; text-align: center; font-weight: 600;">A processar e guardar semente... aguarde.</p>
+                    <button id="btn-donate" class="btn-lime-full" onclick="window.processDonation()" data-i18n="btnPublish">Publicar Semente</button>
+                    <p id="upload-loading" style="display: none; color: var(--forest-mid); margin-top: 15px; text-align: center; font-weight: 600;" data-i18n="uploadingText">A processar e guardar semente... aguarde.</p>
                 </div>
             </div>
 
             <!-- MEUS CHATS PRIVADOS -->
             <div id="private-chats-view" class="view">
                 <div class="page-header-dark">
-                    <h2>Meus Chats de Sementes</h2>
-                    <p>Combine a entrega ou troca diretamente com os interessados.</p>
+                    <h2 data-i18n="myChatsHeaderTitle">Meus Chats de Sementes</h2>
+                    <p data-i18n="myChatsHeaderSub">Combine a entrega ou troca diretamente com os interessados.</p>
                 </div>
                 
                 <div class="telegram-chat-layout">
                     <div class="tg-sidebar">
                         <div class="tg-sidebar-header">
-                            <h4>Conversas Ativas</h4>
+                            <h4 data-i18n="activeThreadsTitle">Conversas Ativas</h4>
                         </div>
                         <div id="private-chat-list">
-                            <p style="color: var(--text-muted); font-size: 13px; padding: 10px;">A carregar conversas...</p>
+                            <p style="color: var(--text-muted); font-size: 13px; padding: 10px;" data-i18n="loadingChats">A carregar conversas...</p>
                         </div>
                     </div>
 
@@ -229,11 +233,11 @@
                         </div>
                         
                         <div id="private-chat-messages" class="tg-messages-box">
-                            <div class="tg-empty-chat">Selecione uma conversa ao lado ou reserve uma semente para iniciar.</div>
+                            <div class="tg-empty-chat" data-i18n="emptyChatText">Selecione uma conversa ao lado ou reserve uma semente para iniciar.</div>
                         </div>
                         
                         <div id="private-chat-input-box" class="tg-input-area" style="display: none;">
-                            <input type="text" id="private-chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkPrivateChatEnter(event)">
+                            <input type="text" id="private-chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkPrivateChatEnter(event)" data-i18n-placeholder="chatPlaceholder">
                             <button class="tg-send-btn" onclick="window.sendPrivateMessage()">
                                 <span class="material-icons">send</span>
                             </button>
@@ -247,8 +251,8 @@
                 <div class="telegram-community-container">
                     <div class="tg-community-header">
                         <div>
-                            <h2 style="color: var(--forest-dark); font-size: 18px;">Chat Comunitário</h2>
-                            <p style="font-size: 12px; color: var(--text-muted);">Conversas gerais da região</p>
+                            <h2 style="color: var(--forest-dark); font-size: 18px;" data-i18n="communityChatTitle">Chat Comunitário</h2>
+                            <p style="font-size: 12px; color: var(--text-muted);" data-i18n="communityChatSub">Conversas gerais da região</p>
                         </div>
                         <select id="chat-community-select" class="select-styled" style="max-width: 240px; padding: 8px 12px;" onchange="window.changeChatCommunity()">
                             <option value="Aparecida do Taboado">Aparecida do Taboado - MS</option>
@@ -265,11 +269,11 @@
                     </div>
                     
                     <div id="chat-messages" class="tg-messages-box" style="height: 420px;">
-                        <p style="color: var(--text-muted); text-align: center; margin-top: 20px;">A carregar mensagens...</p>
+                        <p style="color: var(--text-muted); text-align: center; margin-top: 20px;" data-i18n="loadingMessages">A carregar mensagens...</p>
                     </div>
                     
                     <div class="tg-input-area">
-                        <input type="text" id="chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkChatEnter(event)">
+                        <input type="text" id="chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkChatEnter(event)" data-i18n-placeholder="chatPlaceholder">
                         <button class="tg-send-btn" onclick="window.enviarMensagemChat()">
                             <span class="material-icons">send</span>
                         </button>
@@ -280,22 +284,22 @@
             <!-- ENCICLOPÉDIA DE SEMENTES NATIVAS & BIOMA -->
             <div id="encyclopedia-view" class="view">
                 <div class="page-header-dark">
-                    <h2>Identificação de Bioma, Viveiros e Espécies Nativas</h2>
-                    <p>Geolocalização para detecção de biomas, pinos de viveiros no mapa e catálogo completo de árvores, frutos e sementes via Wikipédia.</p>
+                    <h2 data-i18n="encyclopediaHeaderTitle">Identificação de Bioma, Viveiros e Espécies Nativas</h2>
+                    <p data-i18n="encyclopediaHeaderSub">Geolocalização para detecção de biomas, pinos de viveiros no mapa e catálogo completo de árvores, frutos e sementes via Wikipédia.</p>
                 </div>
 
                 <div class="biome-locator-card">
                     <div class="biome-locator-info">
-                        <span class="enc-tag" style="margin-bottom: 8px;">GEOLOCALIZAÇÃO E VIVEIROS</span>
-                        <h3 style="color: var(--forest-dark); font-size: 20px; margin-bottom: 8px;">Identificar Meu Bioma e Viveiros</h3>
-                        <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
+                        <span class="enc-tag" style="margin-bottom: 8px;" data-i18n="geoTag">GEOLOCALIZAÇÃO E VIVEIROS</span>
+                        <h3 style="color: var(--forest-dark); font-size: 20px; margin-bottom: 8px;" data-i18n="geoCardTitle">Identificar Meu Bioma e Viveiros</h3>
+                        <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;" data-i18n="geoCardDesc">
                             Detete seu bioma e clique nos viveiros abaixo para destacá-los diretamente no mapa ao lado.
                         </p>
                         <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
                             <button class="btn-lime-pill" onclick="window.detectBiomeWithMaps()">
-                                <span class="material-icons" style="font-size: 17px;">my_location</span> Detectar por GPS
+                                <span class="material-icons" style="font-size: 17px;">my_location</span> <span data-i18n="btnGps">Detectar por GPS</span>
                             </button>
-                            <button class="btn-outline-dark" style="width: auto; padding: 9px 18px;" onclick="window.identifyBiomeByCity()">
+                            <button class="btn-outline-dark" style="width: auto; padding: 9px 18px;" onclick="window.identifyBiomeByCity()" data-i18n="btnCity">
                                 Usar Cidade do Perfil
                             </button>
                         </div>
@@ -308,7 +312,7 @@
                             
                             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                                 <a id="gmaps-external-link" href="#" target="_blank" class="btn-outline-dark" style="width: auto; padding: 8px 16px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
-                                    <span class="material-icons" style="font-size: 16px;">map</span> Ver Todos no Google Maps
+                                    <span class="material-icons" style="font-size: 16px;">map</span> <span data-i18n="btnGmaps">Ver Todos no Google Maps</span>
                                 </a>
                                 <a id="state-portal-link" href="#" target="_blank" class="btn-lime-pill" style="text-decoration: none;">
                                     <span class="material-icons" style="font-size: 16px;">open_in_new</span> <span id="state-portal-label">Portal do Estado</span>
@@ -326,10 +330,10 @@
                 </div>
                 
                 <div style="margin-top: 35px;">
-                    <h3 id="species-section-title" style="color: var(--forest-dark); font-size: 20px; margin-bottom: 8px;">Árvores, Frutos e Sementes do Bioma</h3>
-                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Carregamento simultâneo de fotos e artigos oficiais da Wikipédia.</p>
+                    <h3 id="species-section-title" style="color: var(--forest-dark); font-size: 20px; margin-bottom: 8px;" data-i18n="speciesSectionTitle">Árvores, Frutos e Sementes do Bioma</h3>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;" data-i18n="speciesSectionSub">Carregamento simultâneo de fotos e artigos oficiais da Wikipédia.</p>
                     <div id="encyclopedia-grid" class="encyclopedia-grid">
-                        <p style="color: var(--text-muted);">A carregar espécies do bioma...</p>
+                        <p style="color: var(--text-muted);" data-i18n="loadingSpecies">A carregar espécies do bioma...</p>
                     </div>
                 </div>
             </div>
@@ -337,11 +341,11 @@
             <!-- APRENDER A PLANTAR -->
             <div id="learn-view" class="view">
                 <div class="content-card" style="max-width: 800px;">
-                    <h2 style="color: var(--forest-dark); margin-bottom: 10px;">Guia de Cultivo Inteligente</h2>
-                    <p style="color: var(--text-muted); margin-bottom: 20px;">Pesquise qualquer planta ou semente na base botânica para ver detalhes.</p>
+                    <h2 style="color: var(--forest-dark); margin-bottom: 10px;" data-i18n="learnHeaderTitle">Guia de Cultivo Inteligente</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;" data-i18n="learnHeaderSub">Pesquise qualquer planta ou semente na base botânica para ver detalhes.</p>
                     <div style="display: flex; gap: 10px;">
-                        <input type="text" id="search-seed-input" placeholder="Ex: Girassol, Alface, Tomate..." style="margin: 0; flex: 1;" onkeypress="window.checkSearchEnter(event)">
-                        <button class="btn-lime-pill" onclick="window.searchSeedInfo()" style="padding: 12px 28px;">Pesquisar</button>
+                        <input type="text" id="search-seed-input" placeholder="Ex: Girassol, Alface, Tomate..." style="margin: 0; flex: 1;" onkeypress="window.checkSearchEnter(event)" data-i18n-placeholder="searchPlaceholder">
+                        <button class="btn-lime-pill" onclick="window.searchSeedInfo()" style="padding: 12px 28px;" data-i18n="btnSearch">Pesquisar</button>
                     </div>
                     <div id="learn-results" style="margin-top: 25px;"></div>
                 </div>
@@ -350,8 +354,8 @@
             <!-- SOBRE NÓS (EQUIPE ALPHADROID'S) -->
             <div id="about-view" class="view">
                 <div class="page-header-dark">
-                    <h2>Sobre Nós</h2>
-                    <p>Conheça a história, a equipe e a ciência por trás do projeto Sementes Vivas.</p>
+                    <h2 data-i18n="aboutHeaderTitle">Sobre Nós</h2>
+                    <p data-i18n="aboutHeaderSub">Conheça a história, a equipe e a ciência por trás do projeto Sementes Vivas.</p>
                 </div>
 
                 <div class="about-card-vertical">
@@ -363,15 +367,15 @@
                                 <span class="material-icons" style="font-size: 48px; color: #00e5ff;">pets</span>
                                 <span class="material-icons" style="font-size: 32px; color: var(--lime); margin-left: -10px;">settings</span>
                             </div>
-                            <span class="team-badge">EQUIPE ALPHADROID'S</span>
+                            <span class="team-badge" data-i18n="teamBadge">EQUIPE ALPHADROID'S</span>
                         </div>
 
                         <div class="about-text-content">
-                            <h3>Tecnologia e Natureza em Harmonia</h3>
-                            <p>
+                            <h3 data-i18n="aboutTitle">Tecnologia e Natureza em Harmonia</h3>
+                            <p data-i18n="aboutP1">
                                 O projeto <strong>Sementes Vivas</strong> nasceu da união de ideias, criatividade e propósito da equipe <strong>ALPHADROID'S</strong>[cite: 2]. Nosso grande objetivo sempre foi utilizar a tecnologia como uma ponte para aproximar as pessoas da natureza, incentivando a troca de sementes crioulas, o cultivo sustentável e o fortalecimento da biodiversidade local.
                             </p>
-                            <p>
+                            <p data-i18n="aboutP2">
                                 Para transformar esse sonho em uma ferramenta verdadeiramente útil e confiável, unimos o pensamento inovador do nosso time a um rigoroso processo de <strong>pesquisas realizadas em conjunto com biólogos e especialistas ambientais</strong>. Cada funcionalidade — desde a identificação inteligente dos biomas até o mapeamento de viveiros e a enciclopédia de espécies nativas — foi pensada para respeitar os ciclos ecológicos de cada região.
                             </p>
                         </div>
@@ -381,26 +385,26 @@
                     <div class="about-pillars">
                         <div class="pillar-item">
                             <span class="material-icons">biotech</span>
-                            <h4>Base Científica</h4>
-                            <p>Desenvolvido com apoio e pesquisa junto a biólogos.</p>
+                            <h4 data-i18n="pillar1Title">Base Científica</h4>
+                            <p data-i18n="pillar1Desc">Desenvolvido com apoio e pesquisa junto a biólogos.</p>
                         </div>
                         <div class="pillar-item">
                             <span class="material-icons">psychology</span>
-                            <h4>Pensamento Criativo</h4>
-                            <p>Soluções digitais pensadas pelo time ALPHADROID'S.</p>
+                            <h4 data-i18n="pillar2Title">Pensamento Criativo</h4>
+                            <p data-i18n="pillar2Desc">Soluções digitais pensadas pelo time ALPHADROID'S.</p>
                         </div>
                         <div class="pillar-item">
                             <span class="material-icons">volunteer_activism</span>
-                            <h4>Impacto Verde</h4>
-                            <p>Fomento à partilha comunitária e reflorestamento.</p>
+                            <h4 data-i18n="pillar3Title">Impacto Verde</h4>
+                            <p data-i18n="pillar3Desc">Fomento à partilha comunitária e reflorestamento.</p>
                         </div>
                     </div>
 
                     <!-- FOTO DA EQUIPE MENOR E EMOLDURADA EMBAIXO DO TEXTO -->
                     <div class="team-photo-container">
-                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 12px; text-align: center;">Nossa Equipe[cite: 3]</h4>
+                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 12px; text-align: center;" data-i18n="teamPhotoTitle">Nossa Equipe[cite: 3]</h4>
                         <img src="flltc oi.jpg" alt="Equipe ALPHADROID'S" class="team-group-photo-framed" onerror="this.style.display='none'; document.getElementById('team-photo-fallback').style.display='block';">
-                        <div id="team-photo-fallback" style="display: none; padding: 30px; text-align: center; background: var(--bg-light); border-radius: 12px; color: var(--text-muted); font-size: 14px;">
+                        <div id="team-photo-fallback" style="display: none; padding: 30px; text-align: center; background: var(--bg-light); border-radius: 12px; color: var(--text-muted); font-size: 14px;" data-i18n="teamPhotoFallback">
                             Certifique-se de que o ficheiro <strong>flltc oi.jpg</strong> está na mesma pasta do site[cite: 3].
                         </div>
                     </div>
@@ -410,12 +414,12 @@
             <!-- MEU PERFIL -->
             <div id="profile-view" class="view">
                 <div class="sub-tabs-bar">
-                    <button class="sub-tab-btn active" id="subtab-edit" onclick="window.switchProfileSubTab('edit')">Editar Dados e Avatar</button>
-                    <button class="sub-tab-btn" id="subtab-seeds" onclick="window.switchProfileSubTab('seeds')">Minhas Sementes</button>
+                    <button class="sub-tab-btn active" id="subtab-edit" onclick="window.switchProfileSubTab('edit')" data-i18n="subTabEdit">Editar Dados e Avatar</button>
+                    <button class="sub-tab-btn" id="subtab-seeds" onclick="window.switchProfileSubTab('seeds')" data-i18n="subTabSeeds">Minhas Sementes</button>
                 </div>
 
                 <div id="profile-sub-edit" class="content-card">
-                    <h2 style="color: var(--forest-dark); margin-bottom: 15px;">Personalizar Perfil</h2>
+                    <h2 style="color: var(--forest-dark); margin-bottom: 15px;" data-i18n="profileEditTitle">Personalizar Perfil</h2>
                     
                     <div style="text-align: center; margin-bottom: 20px;">
                         <img id="profile-avatar-preview" src="" alt="Avatar" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--lime); display: none; margin: 0 auto 10px auto;">
@@ -423,17 +427,17 @@
                     </div>
 
                     <div class="input-group">
-                        <label>Alterar Foto de Perfil</label>
+                        <label data-i18n="labelAvatar">Alterar Foto de Perfil</label>
                         <input type="file" id="profile-photo-input" accept="image/*">
                     </div>
 
                     <div class="input-group">
-                        <label>Nome / Apelido no Chat</label>
+                        <label data-i18n="labelNickname">Nome / Apelido no Chat</label>
                         <input type="text" id="profile-name" placeholder="Como deseja aparecer...">
                     </div>
 
                     <div class="input-group">
-                        <label>Sua Comunidade / Cidade Principal</label>
+                        <label data-i18n="labelCommunity">Sua Comunidade / Cidade Principal</label>
                         <select id="profile-community" class="select-styled">
                             <option value="Aparecida do Taboado">Aparecida do Taboado - MS</option>
                             <option value="Paranaíba">Paranaíba - MS</option>
@@ -448,11 +452,11 @@
                         </select>
                     </div>
 
-                    <button class="btn-lime-full" onclick="window.saveProfile()">Guardar Alterações de Perfil</button>
+                    <button class="btn-lime-full" onclick="window.saveProfile()" data-i18n="btnSaveProfile">Guardar Alterações de Perfil</button>
                 </div>
 
                 <div id="profile-sub-seeds" style="display: none;">
-                    <h3 style="color: var(--forest-dark); margin-bottom: 15px;">Minhas Sementes Cadastradas</h3>
+                    <h3 style="color: var(--forest-dark); margin-bottom: 15px;" data-i18n="mySeedsTitle">Minhas Sementes Cadastradas</h3>
                     <div id="my-seeds-container" class="seeds-grid"></div>
                 </div>
             </div>
@@ -460,19 +464,6 @@
         </div>
 
     </div>
-
-    <!-- SCRIPT DE TRADUÇÃO GOOGLE (INGLÊS, ESPANHOL E PORTUGUÊS) -->
-    <script type="text/javascript">
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({
-        pageLanguage: 'pt',
-        includedLanguages: 'en,es,pt',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-        autoDisplay: false
-      }, 'google_translate_element');
-    }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script type="module" src="script.js"></script>
 </body>
