@@ -36,7 +36,6 @@
                 </nav>
 
                 <div class="nav-actions">
-                    <!-- SELETOR MANUAL DE IDIOMAS -->
                     <select id="language-selector" class="select-styled" style="width: auto; padding: 6px 10px; font-size: 12px; font-weight: 700;" onchange="window.changeLanguage(this.value)">
                         <option value="pt">🇧🇷 PT</option>
                         <option value="en">🇺🇸 EN</option>
@@ -156,7 +155,7 @@
                     <div class="action-card" onclick="window.showEncyclopedia()">
                         <div class="card-icon-circle"><span class="material-icons">public</span></div>
                         <h3>Enciclopédia de Biomas</h3>
-                        <p>Escolha o bioma que deseja explorar e conheça espécies nativas.</p>
+                        <p>Explore todos os 6 biomas do Brasil e conheça espécies nativas.</p>
                     </div>
                 </div>
             </div>
@@ -286,20 +285,23 @@
                 </div>
             </div>
 
-            <!-- ENCICLOPÉDIA DE SEMENTES NATIVAS & BIOMA (SELETOR MANUAL) -->
+            <!-- ENCICLOPÉDIA DE TODOS OS 6 BIOMAS DO BRASIL -->
             <div id="encyclopedia-view" class="view">
                 <div class="page-header-dark">
-                    <h2>Enciclopédia de Biomas e Espécies Nativas</h2>
-                    <p>Selecione abaixo o bioma que deseja explorar para carregar árvores, frutos e sementes oficiais da Wikipédia.</p>
+                    <h2>Enciclopédia dos Biomas do Brasil</h2>
+                    <p>Selecione abaixo qualquer um dos 6 biomas brasileiros para carregar árvores, frutos e sementes oficiais da Wikipédia.</p>
                 </div>
 
                 <div class="biome-locator-card" style="display: flex; flex-direction: column; gap: 15px; padding: 25px;">
                     <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
                         <label style="font-weight: 700; color: var(--forest-dark);">Escolha o Bioma:</label>
-                        <select id="manual-biome-select" class="select-styled" style="max-width: 300px;" onchange="window.changeSelectedBiome(this.value)">
-                            <option value="Cerrado">Cerrado Brasileiro</option>
-                            <option value="Pantanal">Pantanal Sul-Mato-Grossense</option>
+                        <select id="manual-biome-select" class="select-styled" style="max-width: 320px;" onchange="window.changeSelectedBiome(this.value)">
+                            <option value="Cerrado">Cerrado</option>
+                            <option value="Pantanal">Pantanal</option>
                             <option value="Mata Atlântica">Mata Atlântica</option>
+                            <option value="Amazônia">Amazônia</option>
+                            <option value="Caatinga">Caatinga</option>
+                            <option value="Pampa">Pampa</option>
                         </select>
                     </div>
                     <p id="biome-manual-desc" style="font-size: 14px; color: var(--text-muted); line-height: 1.5; margin: 0;"></p>
@@ -349,10 +351,10 @@
                         <div class="about-text-content">
                             <h3>Tecnologia e Natureza em Harmonia</h3>
                             <p>
-                                O projeto <strong>Sementes Vivas</strong> nasceu da união de ideias, criatividade e propósito da equipe <strong>ALPHADROID'S</strong>[cite: 2]. Nosso grande objetivo sempre foi utilizar a tecnologia como uma ponte para aproximar as pessoas da natureza, incentivando a troca de sementes crioulas, o cultivo sustentável e o fortalecimento da biodiversidade local.
+                                O projeto <strong>Sementes Vivas</strong> nasceu da união de ideias, criatividade e propósito da equipe <strong>ALPHADROID'S</strong>. Nosso grande objetivo sempre foi utilizar a tecnologia como uma ponte para aproximar as pessoas da natureza, incentivando a troca de sementes crioulas e o fortalecimento da biodiversidade brasileira.
                             </p>
                             <p>
-                                Para transformar esse sonho em uma ferramenta verdadeiramente útil e confiável, unimos o pensamento inovador do nosso time a um rigoroso processo de <strong>pesquisas realizadas em conjunto com biólogos e especialistas ambientais</strong>. Cada funcionalidade foi pensada para respeitar os ciclos ecológicos de cada região.
+                                Para transformar esse sonho em uma ferramenta útil, unimos o pensamento inovador do nosso time a um rigoroso processo de pesquisas em conjunto com biólogos. Cada funcionalidade foi pensada para respeitar os biomas do país.
                             </p>
                         </div>
                     </div>
@@ -378,10 +380,10 @@
 
                     <!-- FOTO DA EQUIPE MENOR E EMOLDURADA EMBAIXO DO TEXTO -->
                     <div class="team-photo-container">
-                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 12px; text-align: center;">Nossa Equipe[cite: 3]</h4>
+                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 12px; text-align: center;">Nossa Equipe</h4>
                         <img src="flltc oi.jpg" alt="Equipe ALPHADROID'S" class="team-group-photo-framed" onerror="this.style.display='none'; document.getElementById('team-photo-fallback').style.display='block';">
                         <div id="team-photo-fallback" style="display: none; padding: 30px; text-align: center; background: var(--bg-light); border-radius: 12px; color: var(--text-muted); font-size: 14px;">
-                            Certifique-se de que o ficheiro <strong>flltc oi.jpg</strong> está na mesma pasta do site[cite: 3].
+                            Certifique-se de que o ficheiro <strong>flltc oi.jpg</strong> está na mesma pasta do site.
                         </div>
                     </div>
                 </div>
