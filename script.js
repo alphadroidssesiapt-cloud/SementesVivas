@@ -22,7 +22,6 @@ let chatUnsubscribe = null;
 let privateChatUnsubscribe = null;
 let privateListUnsubscribe = null;
 
-// DICIONÁRIO DE IDIOMAS (PORTUGUÊS, INGLÊS E ESPANHOL)
 const translations = {
     pt: {
         brandTitle: "Sementes Vivas",
@@ -36,95 +35,7 @@ const translations = {
         navAbout: "Sobre Nós",
         navProfile: "Perfil",
         btnRegister: "Cadastrar",
-        btnLogout: "Sair",
-        loginSub: "Conectando cultivadores, partilhando vida e biodiversidade.",
-        labelEmail: "E-mail",
-        labelPass: "Senha",
-        btnLogin: "Entrar na Conta",
-        btnRegisterAccount: "Criar Nova Conta",
-        termsLink: "Termos de Condições e Política de Privacidade",
-        cookieText: "Utilizamos cookies para melhorar a sua experiência na rede e garantir a segurança do login. Ao continuar, concorda com a nossa política.",
-        cookieBtn: "Aceitar e Fechar",
-        termsTitle: "Termos de Condições e Política de Privacidade",
-        termsP1: "1. Aceitação dos Termos: Ao aceder e registar-se na plataforma Sementes Vivas, concorda com estes termos e com as diretrizes de partilha comunitária e preservação ambiental.",
-        termsP2: "2. Privacidade e Dados (LGPD): Os seus dados de e-mail, nome e localização aproximada são utilizados estritamente para facilitar a troca de sementes e o contacto direto entre cultivadores da região.",
-        termsP3: "3. Utilização de Cookies: Guardamos preferências locais para assegurar o funcionamento fluído da aplicação web.",
-        termsP4: "4. Conduta na Comunidade: O chat comunitário e os chats privados devem ser utilizados exclusivamente para fins de troca, doação e aprendizagem.",
-        termsClose: "Entendido",
-        heroBadge: "Bem-vindo à comunidade",
-        heroTitlePart1: "Partilha de sementes e",
-        heroTitlePart2: "preservação da vida",
-        heroTitlePart3: "em cada cultivo.",
-        heroSubtitle: "Troque espécies crioulas, doe mudas nativas e fortaleça a biodiversidade local junto com cultivadores da sua região.",
-        heroBtnExplore: "Explorar Sementes Disponíveis",
-        heroBtnBiome: "Identificar Meu Bioma",
-        quickAccessTitle: "Acesso Rápido",
-        quickAccessSub: "Selecione uma área para começar a interagir com a rede",
-        cardSeedsTitle: "Sementes Disponíveis",
-        cardSeedsDesc: "Explore doações e trocas ativas na comunidade.",
-        cardDonateTitle: "Cadastrar Semente",
-        cardDonateDesc: "Publique novas sementes com leitura automática.",
-        cardChatsTitle: "Meus Chats",
-        cardChatsDesc: "Negocie reservas e combine entregas diretamente.",
-        cardBiomeTitle: "Mapa do Bioma e Viveiros",
-        cardBiomeDesc: "Identifique seu bioma no Google Maps e localize viveiros de mudas.",
-        seedsHeaderTitle: "Sementes da Comunidade",
-        seedsHeaderSub: "Reserve uma semente para abrir uma conversa direta com o doador.",
-        donateCardTitle: "Cadastrar Nova Semente",
-        donatePhotoLabel: "Fotografar Semente (A leitura automática preencherá o nome)",
-        donateCameraBtn: "Clique para fotografar ou carregar imagem",
-        donateNameLabel: "Nome da Semente",
-        donateTypeLabel: "Finalidade do Anúncio",
-        optDonation: "Doação (Gratuito)",
-        optTrade: "Troca (Quero trocar por outra)",
-        btnPublish: "Publicar Semente",
-        uploadingText: "A processar e guardar semente... aguarde.",
-        myChatsHeaderTitle: "Meus Chats de Sementes",
-        myChatsHeaderSub: "Combine a entrega ou troca diretamente com os interessados.",
-        activeThreadsTitle: "Conversas Ativas",
-        loadingChats: "A carregar conversas...",
-        emptyChatText: "Selecione uma conversa ao lado ou reserve uma semente para iniciar.",
-        chatPlaceholder: "Escreva a sua mensagem...",
-        communityChatTitle: "Chat Comunitário",
-        communityChatSub: "Conversas gerais da região",
-        loadingMessages: "A carregar mensagens...",
-        encyclopediaHeaderTitle: "Identificação de Bioma, Viveiros e Espécies Nativas",
-        encyclopediaHeaderSub: "Geolocalização para detecção de biomas, pinos de viveiros no mapa e catálogo completo de árvores, frutos e sementes via Wikipédia.",
-        geoTag: "GEOLOCALIZAÇÃO E VIVEIROS",
-        geoCardTitle: "Identificar Meu Bioma e Viveiros",
-        geoCardDesc: "Detete seu bioma e clique nos viveiros abaixo para destacá-los diretamente no mapa ao lado.",
-        btnGps: "Detectar por GPS",
-        btnCity: "Usar Cidade do Perfil",
-        btnGmaps: "Ver Todos no Google Maps",
-        speciesSectionTitle: "Árvores, Frutos e Sementes do Bioma",
-        speciesSectionSub: "Carregamento simultâneo de fotos e artigos oficiais da Wikipédia.",
-        loadingSpecies: "A carregar espécies do bioma...",
-        learnHeaderTitle: "Guia de Cultivo Inteligente",
-        learnHeaderSub: "Pesquise qualquer planta ou semente na base botânica para ver detalhes.",
-        searchPlaceholder: "Ex: Girassol, Alface, Tomate...",
-        btnSearch: "Pesquisar",
-        aboutHeaderTitle: "Sobre Nós",
-        aboutHeaderSub: "Conheça a história, a equipe e a ciência por trás do projeto Sementes Vivas.",
-        teamBadge: "EQUIPE ALPHADROID'S",
-        aboutTitle: "Tecnologia e Natureza em Harmonia",
-        aboutP1: "O projeto Sementes Vivas nasceu da união de ideias, criatividade e propósito da equipe ALPHADROID'S. Nosso grande objetivo sempre foi utilizar a tecnologia como uma ponte para aproximar as pessoas da natureza, incentivando a troca de sementes crioulas, o cultivo sustentável e o fortalecimento da biodiversidade local.",
-        aboutP2: "Para transformar esse sonho em uma ferramenta verdadeiramente útil e confiável, unimos o pensamento inovador do nosso time a um rigoroso processo de pesquisas realizadas em conjunto com biólogos e especialistas ambientais. Cada funcionalidade — desde a identificação inteligente dos biomas até o mapeamento de viveiros e a enciclopédia de espécies nativas — foi pensada para respeitar os ciclos ecológicos de cada região.",
-        pillar1Title: "Base Científica",
-        pillar1Desc: "Desenvolvido com apoio e pesquisa junto a biólogos.",
-        pillar2Title: "Pensamento Criativo",
-        pillar2Desc: "Soluções digitais pensadas pelo time ALPHADROID'S.",
-        pillar3Title: "Impacto Verde",
-        pillar3Desc: "Fomento à partilha comunitária e reflorestamento.",
-        teamPhotoTitle: "Nossa Equipe",
-        teamPhotoFallback: "Certifique-se de que o ficheiro flltc oi.jpg está na mesma pasta do site.",
-        subTabEdit: "Editar Dados e Avatar",
-        subTabSeeds: "Minhas Sementes",
-        profileEditTitle: "Personalizar Perfil",
-        labelAvatar: "Alterar Foto de Perfil",
-        labelNickname: "Nome / Apelido no Chat",
-        labelCommunity: "Sua Comunidade / Cidade Principal",
-        btnSaveProfile: "Guardar Alterações de Perfil",
-        mySeedsTitle: "Minhas Sementes Cadastradas"
+        btnLogout: "Sair"
     },
     en: {
         brandTitle: "Living Seeds",
@@ -138,95 +49,7 @@ const translations = {
         navAbout: "About Us",
         navProfile: "Profile",
         btnRegister: "Register",
-        btnLogout: "Logout",
-        loginSub: "Connecting growers, sharing life and biodiversity.",
-        labelEmail: "Email",
-        labelPass: "Password",
-        btnLogin: "Sign In",
-        btnRegisterAccount: "Create New Account",
-        termsLink: "Terms of Conditions & Privacy Policy",
-        cookieText: "We use cookies to improve your experience on the network and ensure login security.",
-        cookieBtn: "Accept & Close",
-        termsTitle: "Terms of Conditions & Privacy Policy",
-        termsP1: "1. Acceptance of Terms: By accessing and registering, you agree to these terms.",
-        termsP2: "2. Privacy and Data: Your data is used strictly to facilitate seed exchange.",
-        termsP3: "3. Cookie Usage: We store local preferences to ensure smooth web operation.",
-        termsP4: "4. Community Conduct: Chats must be used exclusively for exchange and learning.",
-        termsClose: "Understood",
-        heroBadge: "Welcome to the community",
-        heroTitlePart1: "Seed sharing and",
-        heroTitlePart2: "life preservation",
-        heroTitlePart3: "in every crop.",
-        heroSubtitle: "Trade heirloom species, donate native seedlings, and strengthen local biodiversity.",
-        heroBtnExplore: "Explore Available Seeds",
-        heroBtnBiome: "Identify My Biome",
-        quickAccessTitle: "Quick Access",
-        quickAccessSub: "Select an area to start interacting with the network",
-        cardSeedsTitle: "Available Seeds",
-        cardSeedsDesc: "Explore active donations and trades in the community.",
-        cardDonateTitle: "Register Seed",
-        cardDonateDesc: "Publish new seeds with automatic recognition.",
-        cardChatsTitle: "My Chats",
-        cardChatsDesc: "Negotiate reservations and coordinate deliveries directly.",
-        cardBiomeTitle: "Biome Map & Nurseries",
-        cardBiomeDesc: "Identify your biome on Google Maps and locate seedling nurseries.",
-        seedsHeaderTitle: "Community Seeds",
-        seedsHeaderSub: "Reserve a seed to open a direct chat with the donor.",
-        donateCardTitle: "Register New Seed",
-        donatePhotoLabel: "Photograph Seed (Automatic reading will fill the name)",
-        donateCameraBtn: "Click to photograph or upload image",
-        donateNameLabel: "Seed Name",
-        donateTypeLabel: "Listing Purpose",
-        optDonation: "Donation (Free)",
-        optTrade: "Trade (Want to trade for another)",
-        btnPublish: "Publish Seed",
-        uploadingText: "Processing and saving seed... please wait.",
-        myChatsHeaderTitle: "My Seed Chats",
-        myChatsHeaderSub: "Coordinate delivery or trade directly with interested parties.",
-        activeThreadsTitle: "Active Conversations",
-        loadingChats: "Loading conversations...",
-        emptyChatText: "Select a conversation on the left or reserve a seed to start.",
-        chatPlaceholder: "Type your message...",
-        communityChatTitle: "Community Chat",
-        communityChatSub: "General region conversations",
-        loadingMessages: "Loading messages...",
-        encyclopediaHeaderTitle: "Biome, Nurseries & Native Species Identification",
-        encyclopediaHeaderSub: "Geolocation for biome detection and catalog via Wikipedia.",
-        geoTag: "GEOLOCATION & NURSERIES",
-        geoCardTitle: "Identify My Biome & Nurseries",
-        geoCardDesc: "Detect your biome and click the nurseries below to highlight them on the map.",
-        btnGps: "Detect via GPS",
-        btnCity: "Use Profile City",
-        btnGmaps: "View All on Google Maps",
-        speciesSectionTitle: "Trees, Fruits & Seeds of the Biome",
-        speciesSectionSub: "Simultaneous loading of official Wikipedia photos and articles.",
-        loadingSpecies: "Loading biome species...",
-        learnHeaderTitle: "Smart Cultivation Guide",
-        learnHeaderSub: "Search any plant or seed in the botanical database for details.",
-        searchPlaceholder: "Ex: Sunflower, Lettuce, Tomato...",
-        btnSearch: "Search",
-        aboutHeaderTitle: "About Us",
-        aboutHeaderSub: "Meet the history, team, and science behind the Living Seeds project.",
-        teamBadge: "ALPHADROID'S TEAM",
-        aboutTitle: "Technology and Nature in Harmony",
-        aboutP1: "The Living Seeds project was born from the union of ideas, creativity, and purpose of the ALPHADROID'S team. Our main goal has always been to use technology as a bridge to bring people closer to nature.",
-        aboutP2: "To turn this dream into a useful tool, we combined our team's innovative thinking with rigorous research conducted alongside biologists and environmental specialists.",
-        pillar1Title: "Scientific Foundation",
-        pillar1Desc: "Developed with support and research alongside biologists.",
-        pillar2Title: "Creative Thinking",
-        pillar2Desc: "Digital solutions designed by the ALPHADROID'S team.",
-        pillar3Title: "Green Impact",
-        pillar3Desc: "Fostering community sharing and reforestation.",
-        teamPhotoTitle: "Our Team",
-        teamPhotoFallback: "Make sure the file flltc oi.jpg is in the same folder.",
-        subTabEdit: "Edit Data & Avatar",
-        subTabSeeds: "My Seeds",
-        profileEditTitle: "Customize Profile",
-        labelAvatar: "Change Profile Picture",
-        labelNickname: "Name / Chat Nickname",
-        labelCommunity: "Your Community / Main City",
-        btnSaveProfile: "Save Profile Changes",
-        mySeedsTitle: "My Registered Seeds"
+        btnLogout: "Logout"
     },
     es: {
         brandTitle: "Semillas Vivas",
@@ -240,122 +63,18 @@ const translations = {
         navAbout: "Sobre Nosotros",
         navProfile: "Perfil",
         btnRegister: "Registrar",
-        btnLogout: "Salir",
-        loginSub: "Conectando cultivadores, compartiendo vida y biodiversidad.",
-        labelEmail: "Correo electrónico",
-        labelPass: "Contraseña",
-        btnLogin: "Iniciar Sesión",
-        btnRegisterAccount: "Crear Nueva Cuenta",
-        termsLink: "Términos de Condiciones y Política de Privacidad",
-        cookieText: "Utilizamos cookies para mejorar su experiencia en la red.",
-        cookieBtn: "Aceptar y Cerrar",
-        termsTitle: "Términos de Condiciones y Política de Privacidad",
-        termsP1: "1. Aceptación de los Términos: Al acceder y registrarse, acepta estos términos.",
-        termsP2: "2. Privacidad y Datos: Sus datos se utilizan estrictamente para facilitar el intercambio.",
-        termsP3: "3. Uso de Cookies: Guardamos preferencias locales para asegurar el funcionamiento web.",
-        termsP4: "4. Conducta Comunitaria: Los chats deben usarse exclusivamente para intercambio y aprendizaje.",
-        termsClose: "Entendido",
-        heroBadge: "Bienvenido a la comunidad",
-        heroTitlePart1: "Intercambio de semillas y",
-        heroTitlePart2: "preservación de la vida",
-        heroTitlePart3: "en cada cultivo.",
-        heroSubtitle: "Intercambie especies criollas, done plántulas nativas y fortalezca la biodiversidad local.",
-        heroBtnExplore: "Explorar Semillas Disponibles",
-        heroBtnBiome: "Identificar Mi Bioma",
-        quickAccessTitle: "Acceso Rápido",
-        quickAccessSub: "Seleccione un área para comenzar a interactuar con la red",
-        cardSeedsTitle: "Semillas Disponibles",
-        cardSeedsDesc: "Explore donaciones e intercambios activos en la comunidad.",
-        cardDonateTitle: "Registrar Semilla",
-        cardDonateDesc: "Publique nuevas semillas con lectura automática.",
-        cardChatsTitle: "Mis Chats",
-        cardChatsDesc: "Negocie reservas y coordine entregas directamente.",
-        cardBiomeTitle: "Mapa de Bioma y Viveros",
-        cardBiomeDesc: "Identifique su bioma en Google Maps y localice viveros.",
-        seedsHeaderTitle: "Semillas de la Comunidad",
-        seedsHeaderSub: "Reserve una semilla para abrir un chat directo con el donante.",
-        donateCardTitle: "Registrar Nueva Semilla",
-        donatePhotoLabel: "Fotografiar Semilla (La lectura automática completará el nombre)",
-        donateCameraBtn: "Haga clic para fotografiar o cargar imagen",
-        donateNameLabel: "Nombre de la Semilla",
-        donateTypeLabel: "Propósito del Anuncio",
-        optDonation: "Donación (Gratis)",
-        optTrade: "Intercambio (Quiero cambiar por otra)",
-        btnPublish: "Publicar Semilla",
-        uploadingText: "Procesando y guardando semilla... espere.",
-        myChatsHeaderTitle: "Mis Chats de Semillas",
-        myChatsHeaderSub: "Coordine la entrega o intercambio directamente con los interesados.",
-        activeThreadsTitle: "Conversaciones Activas",
-        loadingChats: "Cargando conversaciones...",
-        emptyChatText: "Seleccione una conversación a la izquierda o reserve una semilla.",
-        chatPlaceholder: "Escriba su mensaje...",
-        communityChatTitle: "Chat Comunitario",
-        communityChatSub: "Conversaciones generales de la región",
-        loadingMessages: "Cargando mensajes...",
-        encyclopediaHeaderTitle: "Identificación de Bioma, Viveros y Especies Nativas",
-        encyclopediaHeaderSub: "Geolocalización para detección de biomas y catálogo vía Wikipedia.",
-        geoTag: "GEOLOCALIZACIÓN Y VIVEROS",
-        geoCardTitle: "Identificar Mi Bioma y Viveros",
-        geoCardDesc: "Detecte su bioma y haga clic en los viveros para destacarlos en el mapa.",
-        btnGps: "Detectar por GPS",
-        btnCity: "Usar Ciudad del Perfil",
-        btnGmaps: "Ver Todos en Google Maps",
-        speciesSectionTitle: "Árboles, Frutos y Semillas del Bioma",
-        speciesSectionSub: "Carga simultánea de fotos y artículos oficiales de Wikipedia.",
-        loadingSpecies: "Cargando especies del bioma...",
-        learnHeaderTitle: "Guía de Cultivo Inteligente",
-        learnHeaderSub: "Busque cualquier planta o semilla en la base de datos botánica.",
-        searchPlaceholder: "Ej: Girasol, Lechuga, Tomate...",
-        btnSearch: "Buscar",
-        aboutHeaderTitle: "Sobre Nosotros",
-        aboutHeaderSub: "Conozca la historia, el equipo y la ciencia detrás del proyecto Semillas Vivas.",
-        teamBadge: "EQUIPO ALPHADROID'S",
-        aboutTitle: "Tecnología y Naturaleza en Armonía",
-        aboutP1: "El proyecto Semillas Vivas nació de la unión de ideas, creatividad y propósito del equipo ALPHADROID'S. Nuestro gran objetivo siempre ha sido usar la tecnología como un puente para acercar a las personas a la naturaleza.",
-        aboutP2: "Para transformar este sueño en una herramienta útil, unimos el pensamiento innovador de nuestro equipo a rigurosas investigaciones realizadas junto a biólogos y especialistas ambientales.",
-        pillar1Title: "Base Científica",
-        pillar1Desc: "Desarrollado con apoyo e investigación junto a biólogos.",
-        pillar2Title: "Pensamiento Creativo",
-        pillar2Desc: "Soluciones digitales diseñadas por el equipo ALPHADROID'S.",
-        pillar3Title: "Impacto Verde",
-        pillar3Desc: "Fomento de la compartición comunitaria y reforestación.",
-        teamPhotoTitle: "Nuestro Equipo",
-        teamPhotoFallback: "Asegúrese de que el archivo flltc oi.jpg esté en la misma carpeta.",
-        subTabEdit: "Editar Datos y Avatar",
-        subTabSeeds: "Mis Semillas",
-        profileEditTitle: "Personalizar Perfil",
-        labelAvatar: "Cambiar Foto de Perfil",
-        labelNickname: "Nombre / Apodo en el Chat",
-        labelCommunity: "Su Comunidad / Ciudad Principal",
-        btnSaveProfile: "Guardar Cambios de Perfil",
-        mySeedsTitle: "Mis Semillas Registradas"
+        btnLogout: "Salir"
     }
 };
 
 window.changeLanguage = (lang) => {
     localStorage.setItem('site_lang', lang);
-    const t = translations[lang] || translations.pt;
-    
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (t[key]) {
-            el.innerHTML = t[key];
-        }
-    });
-
-    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-        const key = el.getAttribute('data-i18n-placeholder');
-        if (t[key]) {
-            el.placeholder = t[key];
-        }
-    });
 };
 
 window.addEventListener('DOMContentLoaded', () => {
     const savedLang = localStorage.getItem('site_lang') || 'pt';
     const langSelect = document.getElementById('language-selector');
     if (langSelect) langSelect.value = savedLang;
-    window.changeLanguage(savedLang);
 
     const frame = document.getElementById('device-frame');
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
@@ -389,126 +108,33 @@ window.closeTermsModal = () => {
     if (modal) modal.style.display = 'none';
 };
 
-const biomeSpeciesCatalog = {
-    "Cerrado": [
-        "Handroanthus albus", "Dipteryx alata", "Hymenaea courbaril", "Caryocar brasiliense",
-        "Campomanesia adamantium", "Schinus terebinthifolia", "Mauritia flexuosa", "Handroanthus impetiginosus",
-        "Inga edulis", "Annona crassiflora", "Eugenia dysenterica", "Hancornia speciosa",
-        "Anadenanthera colubrina", "Tabebuia aurea", "Genipa americana", "Acrocomia aculeata"
-    ],
-    "Pantanal": [
-        "Handroanthus heptaphyllus", "Copernicia alba", "Attalea phalerata", "Ficus insipida",
-        "Mauritia flexuosa", "Tabebuia aurea", "Hymenaea courbaril", "Genipa americana",
-        "Inga vera", "Vitex cymosa", "Erythrina dominguezii", "Triplaris americana"
-    ],
-    "Mata Atlântica": [
-        "Paubrasilia echinata", "Cariniana legalis", "Eugenia uniflora", "Eugenia brasiliensis",
-        "Aspidosperma polyneuron", "Cedrela fissilis", "Ilex paraguariensis", "Psidium cattleyanum",
-        "Euterpe edulis", "Araucaria angustifolia", "Plinia cauliflora", "Schinus terebinthifolia",
-        "Handroanthus chrysotrichus", "Syagrus romanzoffiana", "Jacaranda micrantha", "Lecythidaceae"
-    ]
-};
-
-const cityBiomeDatabase = {
-    "Aparecida do Taboado": {
-        state: "MS",
-        biome: "Cerrado (Transição Mata Atlântica)",
-        desc: "Região de solos arenosos com viveiros municipais e particulares ativos para reflorestamento e cultivo regional.",
-        portalUrl: "https://www.imasul.ms.gov.br/",
-        portalName: "Portal Ambiental do MS (IMASUL)",
-        mapQuery: "Aparecida+do+Taboado,MS",
-        viveiros: ["Viveiro Municipal Verdejar", "Viveiro Sementes do Paraná", "Viveiro Nativo Taboado"],
-        species: [...new Set([...biomeSpeciesCatalog["Cerrado"], "Cariniana legalis", "Eugenia uniflora"])]
+// CATÁLOGO DE ESPÉCIES E DESCRITIVOS POR BIOMA (SELETOR MANUAL)
+const biomeDataCatalog = {
+    "Cerrado": {
+        desc: "O segundo maior bioma do Brasil, conhecido como a savana brasileira. Apresenta rica biodiversidade com árvores de troncos tortuosos e raízes profundas.",
+        species: [
+            "Handroanthus albus", "Dipteryx alata", "Hymenaea courbaril", "Caryocar brasiliense",
+            "Campomanesia adamantium", "Schinus terebinthifolia", "Mauritia flexuosa", "Handroanthus impetiginosus",
+            "Inga edulis", "Annona crassiflora", "Eugenia dysenterica", "Hancornia speciosa",
+            "Anadenanthera colubrina", "Tabebuia aurea", "Genipa americana", "Acrocomia aculeata"
+        ]
     },
-    "Paranaíba": {
-        state: "MS",
-        biome: "Cerrado",
-        desc: "Predominância de Cerrado típico e matas ciliares do rio Paranaíba.",
-        portalUrl: "https://www.imasul.ms.gov.br/",
-        portalName: "Portal Ambiental do MS (IMASUL)",
-        mapQuery: "Paranaiba,MS",
-        viveiros: ["Viveiro Floresta Paranaíba", "Viveiro EcoMudas"],
-        species: biomeSpeciesCatalog["Cerrado"]
+    "Pantanal": {
+        desc: "A maior planície alagável contínua do planeta, com rica fauna e flora adaptada aos ciclos intensos de cheias e secas.",
+        species: [
+            "Handroanthus heptaphyllus", "Copernicia alba", "Attalea phalerata", "Ficus insipida",
+            "Mauritia flexuosa", "Tabebuia aurea", "Hymenaea courbaril", "Genipa americana",
+            "Inga vera", "Vitex cymosa", "Erythrina dominguezii", "Triplaris americana"
+        ]
     },
-    "Três Lagoas": {
-        state: "MS",
-        biome: "Cerrado",
-        desc: "Bacia do rio Paraná com grande diversidade florestal.",
-        portalUrl: "https://www.imasul.ms.gov.br/",
-        portalName: "Portal Ambiental do MS (IMASUL)",
-        mapQuery: "Tres+Lagoas,MS",
-        viveiros: ["Viveiro Municipal Três Lagoas", "Mudas Rio Paraná"],
-        species: biomeSpeciesCatalog["Cerrado"]
-    },
-    "Campo Grande": {
-        state: "MS",
-        biome: "Cerrado",
-        desc: "Capital do Cerrado com horto florestal e viveiros de referência.",
-        portalUrl: "https://www.imasul.ms.gov.br/",
-        portalName: "Portal Ambiental do MS (IMASUL)",
-        mapQuery: "Campo+Grande,MS",
-        viveiros: ["Horto Florestal Municipal", "Viveiro Campo Verde", "Viveiro Pantanal MS"],
-        species: biomeSpeciesCatalog["Cerrado"]
-    },
-    "Dourados": {
-        state: "MS",
-        biome: "Mata Atlântica e Cerrado",
-        desc: "Zona de transição ecológica com solos férteis e viveiros de árvores nobres.",
-        portalUrl: "https://www.imasul.ms.gov.br/",
-        portalName: "Portal Ambiental do MS (IMASUL)",
-        mapQuery: "Dourados,MS",
-        viveiros: ["Viveiro Floresta Dourados", "Mudas Nativas Sul-Mato-Grossenses"],
-        species: [...new Set([...biomeSpeciesCatalog["Mata Atlântica"], ...biomeSpeciesCatalog["Cerrado"].slice(0, 8)])]
-    },
-    "Corumbá": {
-        state: "MS",
-        biome: "Pantanal",
-        desc: "Planície alagável com espécies adaptadas ao ciclo das águas.",
-        portalUrl: "https://www.imasul.ms.gov.br/",
-        portalName: "Portal Ambiental do MS (IMASUL)",
-        mapQuery: "Corumba,MS",
-        viveiros: ["Viveiro Pantanal Sustentável", "Mudas Águas do Pantanal"],
-        species: biomeSpeciesCatalog["Pantanal"]
-    },
-    "Bonito": {
-        state: "MS",
-        biome: "Cerrado e Mata Atlântica (Serra da Bodoquena)",
-        desc: "Florestas estacionais preservadas e viveiros de preservação hídrica.",
-        portalUrl: "https://www.imasul.ms.gov.br/",
-        portalName: "Portal Ambiental do MS (IMASUL)",
-        mapQuery: "Bonito,MS",
-        viveiros: ["Viveiro Bodoquena Verde", "Mudas Águas Cristalinas"],
-        species: [...new Set([...biomeSpeciesCatalog["Cerrado"].slice(0, 10), ...biomeSpeciesCatalog["Mata Atlântica"].slice(0, 8)])]
-    },
-    "Santa Fé do Sul": {
-        state: "SP",
-        biome: "Mata Atlântica (Floresta Estacional Semidecidual)",
-        desc: "Noroeste paulista na divisa com MS com viveiros municipais de mudas frutíferas e nativas.",
-        portalUrl: "https://semil.sp.gov.br/",
-        portalName: "Secretaria de Meio Ambiente de SP (SEMIL)",
-        mapQuery: "Santa+Fe+do+Sul,SP",
-        viveiros: ["Viveiro Municipal Santa Fé", "Mudas Paulista Verde"],
-        species: biomeSpeciesCatalog["Mata Atlântica"]
-    },
-    "Jales": {
-        state: "SP",
-        biome: "Mata Atlântica e Cerrado",
-        desc: "Remanescentes de mata nativa e viveiros de reflorestamento.",
-        portalUrl: "https://semil.sp.gov.br/",
-        portalName: "Secretaria de Meio Ambiente de SP (SEMIL)",
-        mapQuery: "Jales,SP",
-        viveiros: ["Viveiro Jales Sustentável", "Mudas Noroeste SP"],
-        species: [...new Set([...biomeSpeciesCatalog["Mata Atlântica"].slice(0, 10), ...biomeSpeciesCatalog["Cerrado"].slice(0, 6)])]
-    },
-    "Fernandópolis": {
-        state: "SP",
-        biome: "Mata Atlântica e Cerrado",
-        desc: "Ecótono entre Cerrado e Floresta Estacional com viveiros especializados.",
-        portalUrl: "https://semil.sp.gov.br/",
-        portalName: "Secretaria de Meio Ambiente de SP (SEMIL)",
-        mapQuery: "Fernandopolis,SP",
-        viveiros: ["Viveiro Municipal Fernandópolis", "EcoMudas Fernandópolis"],
-        species: [...new Set([...biomeSpeciesCatalog["Mata Atlântica"].slice(0, 10), ...biomeSpeciesCatalog["Cerrado"].slice(0, 6)])]
+    "Mata Atlântica": {
+        desc: "Bioma de florestas tropicais com altíssima biodiversidade e endemismo, estendendo-se originalmente por grande parte da costa brasileira.",
+        species: [
+            "Paubrasilia echinata", "Cariniana legalis", "Eugenia uniflora", "Eugenia brasiliensis",
+            "Aspidosperma polyneuron", "Cedrela fissilis", "Ilex paraguariensis", "Psidium cattleyanum",
+            "Euterpe edulis", "Araucaria angustifolia", "Plinia cauliflora", "Schinus terebinthifolia",
+            "Handroanthus chrysotrichus", "Syagrus romanzoffiana", "Jacaranda micrantha", "Lecythidaceae"
+        ]
     }
 };
 
@@ -560,10 +186,12 @@ window.showLearn = () => window.switchView('learn-view');
 window.showAbout = () => window.switchView('about-view');
 window.showEncyclopedia = () => {
     window.switchView('encyclopedia-view');
-    window.identifyBiomeByCity();
+    const select = document.getElementById('manual-biome-select');
+    window.changeSelectedBiome(select ? select.value : 'Cerrado');
 };
 window.showDonate = () => {
     document.getElementById('donate-seed-name').value = '';
+    document.getElementById('donate-seed-qty').value = '10';
     document.getElementById('donate-seed-photo').value = '';
     document.getElementById('donate-seed-type').value = 'Doação';
     const lbl = document.getElementById('camera-label');
@@ -588,7 +216,7 @@ window.showPrivateChats = (chatIdToOpen = null) => {
 window.loadWikipediaSpeciesCards = async (speciesList, biomeName) => {
     const grid = document.getElementById('encyclopedia-grid');
     const titleEl = document.getElementById('species-section-title');
-    titleEl.innerText = `Todas as Árvores, Frutos e Sementes do Bioma: ${biomeName} (${speciesList.length} espécies)`;
+    titleEl.innerText = `Espécies do Bioma: ${biomeName} (${speciesList.length} espécies)`;
     grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1 / -1;">A carregar todas as espécies e fotos oficiais da Wikipédia ao mesmo tempo...</p>';
 
     const fetchPromises = speciesList.map(async (species) => {
@@ -626,119 +254,10 @@ window.loadWikipediaSpeciesCards = async (speciesList, biomeName) => {
     grid.innerHTML = htmlContent || '<p style="color: var(--text-muted);">Nenhuma espécie encontrada.</p>';
 };
 
-window.focusViveiroOnMap = (viveiroName, cityQuery) => {
-    const iframe = document.getElementById('google-maps-iframe');
-    const query = encodeURIComponent(`${viveiroName} ${cityQuery}`);
-    iframe.src = `https://maps.google.com/maps?q=${query}&t=m&z=15&ie=UTF8&iwloc=B&output=embed`;
-};
-
-window.identifyBiomeByCity = () => {
-    const city = userProfileCache?.community || currentCommunity || "Aparecida do Taboado";
-    const info = cityBiomeDatabase[city] || cityBiomeDatabase["Aparecida do Taboado"];
-
-    const resultBox = document.getElementById('biome-result-box');
-    const titleEl = document.getElementById('biome-detected-title');
-    const descEl = document.getElementById('biome-detected-desc');
-    const viveirosContainer = document.getElementById('viveiros-list-container');
-    const gmapsLink = document.getElementById('gmaps-external-link');
-    const portalLink = document.getElementById('state-portal-link');
-    const portalLabel = document.getElementById('state-portal-label');
-    const iframe = document.getElementById('google-maps-iframe');
-
-    titleEl.innerText = `${city} (${info.state}) — Bioma: ${info.biome}`;
-    descEl.innerText = info.desc;
-    
-    let viveirosHtml = `<div style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">Viveiros destacados na região (clique para localizar no mapa):</div>`;
-    info.viveiros.forEach(v => {
-        viveirosHtml += `<button class="viveiro-pin-btn" onclick="window.focusViveiroOnMap('${v}', '${city}, ${info.state}')"><span class="material-icons" style="font-size: 14px; color: #c53030;">location_on</span> ${v}</button>`;
-    });
-    viveirosContainer.innerHTML = viveirosHtml;
-
-    gmapsLink.href = `https://www.google.com/maps/search/?api=1&query=viveiro+de+mudas+${info.mapQuery}`;
-    portalLink.href = info.portalUrl;
-    portalLabel.innerText = info.portalName;
-    iframe.src = `https://maps.google.com/maps?q=viveiro+de+mudas+${info.mapQuery}&t=m&z=13&ie=UTF8&iwloc=B&output=embed`;
-
-    resultBox.style.display = 'block';
-
-    window.loadWikipediaSpeciesCards(info.species, info.biome);
-};
-
-window.detectBiomeWithMaps = () => {
-    if (!navigator.geolocation) {
-        alert("Geolocalização não suportada. A usar cidade do perfil.");
-        return window.identifyBiomeByCity();
-    }
-
-    const titleEl = document.getElementById('biome-detected-title');
-    const resultBox = document.getElementById('biome-result-box');
-    resultBox.style.display = 'block';
-    titleEl.innerText = "A obter coordenadas GPS...";
-
-    navigator.geolocation.getCurrentPosition(
-        async (position) => {
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
-
-            const iframe = document.getElementById('google-maps-iframe');
-            const gmapsLink = document.getElementById('gmaps-external-link');
-            iframe.src = `https://maps.google.com/maps?q=viveiro+de+mudas+${lat},${lng}&t=m&z=13&ie=UTF8&iwloc=B&output=embed`;
-            gmapsLink.href = `https://www.google.com/maps/search/?api=1&query=viveiro+de+mudas+${lat},${lng}`;
-
-            try {
-                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
-                const data = await res.json();
-                const address = data.address || {};
-                const stateName = address.state || "";
-                const cityName = address.city || address.town || address.village || "Localização Atual";
-
-                let biomeName = "Cerrado Brasileiro";
-                let portalUrl = "https://www.gov.br/mma/pt-br";
-                let portalLabel = "Ministério do Meio Ambiente";
-                let viveirosList = ["Viveiro Municipal Regional", "Horto Florestal de Mudas"];
-                let speciesList = biomeSpeciesCatalog["Cerrado"];
-
-                if (stateName.includes("Mato Grosso do Sul")) {
-                    if (lng < -56.0) {
-                        biomeName = "Pantanal Sul-Mato-Grossense";
-                        speciesList = biomeSpeciesCatalog["Pantanal"];
-                    } else {
-                        biomeName = "Cerrado (Transição Mata Atlântica)";
-                        speciesList = [...new Set([...biomeSpeciesCatalog["Cerrado"], "Cariniana legalis", "Eugenia uniflora"])];
-                    }
-                    portalUrl = "https://www.imasul.ms.gov.br/";
-                    portalLabel = "Portal Ambiental do MS (IMASUL)";
-                    viveirosList = ["Viveiro Verdejar MS", "Mudas Nativas Pantanal/Cerrado"];
-                } else if (stateName.includes("São Paulo")) {
-                    biomeName = "Mata Atlântica / Cerrado Paulista";
-                    portalUrl = "https://semil.sp.gov.br/";
-                    portalLabel = "Secretaria de Meio Ambiente de SP (SEMIL)";
-                    viveirosList = ["Viveiro Ecológico Paulista", "Horto de Mudas SP"];
-                    speciesList = biomeSpeciesCatalog["Mata Atlântica"];
-                }
-
-                titleEl.innerText = `${cityName} (${stateName || 'Brasil'}) — Bioma: ${biomeName}`;
-                document.getElementById('biome-detected-desc').innerText = `Coordenadas GPS (${lat.toFixed(4)}, ${lng.toFixed(4)}).`;
-                
-                let viveirosHtml = `<div style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">Viveiros próximos (clique para destacar):</div>`;
-                viveirosList.forEach(v => {
-                    viveirosHtml += `<button class="viveiro-pin-btn" onclick="window.focusViveiroOnMap('${v}', '${cityName}')"><span class="material-icons" style="font-size: 14px; color: #c53030;">location_on</span> ${v}</button>`;
-                });
-                document.getElementById('viveiros-list-container').innerHTML = viveirosHtml;
-
-                document.getElementById('state-portal-link').href = portalUrl;
-                document.getElementById('state-portal-label').innerText = portalLabel;
-
-                window.loadWikipediaSpeciesCards(speciesList, biomeName);
-            } catch (e) {
-                window.identifyBiomeByCity();
-            }
-        },
-        () => {
-            alert("Permissão de localização negada.");
-            window.identifyBiomeByCity();
-        }
-    );
+window.changeSelectedBiome = (biomeName) => {
+    const biome = biomeDataCatalog[biomeName] || biomeDataCatalog["Cerrado"];
+    document.getElementById('biome-manual-desc').innerText = biome.desc;
+    window.loadWikipediaSpeciesCards(biome.species, biomeName);
 };
 
 window.switchProfileSubTab = (subTab) => {
@@ -963,6 +482,7 @@ if (seedPhotoInput) {
 
 window.processDonation = async () => {
     const name = document.getElementById('donate-seed-name').value.trim();
+    const qty = parseInt(document.getElementById('donate-seed-qty').value) || 1;
     const type = document.getElementById('donate-seed-type').value;
     const photoInput = document.getElementById('donate-seed-photo');
     const user = auth.currentUser;
@@ -977,6 +497,8 @@ window.processDonation = async () => {
         const fotoBase64Texto = await comprimirEConverterBase64(photoInput.files[0], 600, 0.7);
         await addDoc(collection(db, "seeds"), {
             name: name,
+            totalQuantity: qty,
+            availableQuantity: qty,
             type: type,
             fotoBase64: fotoBase64Texto,
             author: userProfileCache?.displayName || user.email.split('@')[0],
@@ -1008,23 +530,22 @@ window.renderSeeds = async () => {
             const seedId = docSnap.id;
             const user = auth.currentUser;
             
-            let actionHtml = '';
+            const availableQty = seed.availableQuantity !== undefined ? seed.availableQuantity : (seed.totalQuantity || 10);
             const badgeClass = seed.type === 'Troca' ? 'badge-troca' : 'badge-doacao';
             const badgeText = seed.type || 'Doação';
 
-            if (seed.status === 'reservada') {
-                if (user && seed.reservadoPorId === user.uid) {
-                    actionHtml = `
-                        <p style="color: var(--earth); font-size: 12px; font-weight: 600; text-align: center; margin-top: 8px;">Reservada por você</p>
-                        <button class="btn-cancel-reserve" onclick="window.removerReserva('${seedId}', 'explore')">Cancelar Minha Reserva</button>
-                    `;
-                } else {
-                    actionHtml = `<p style="color: var(--earth); font-size: 13px; font-weight: 600; text-align: center; margin-top: 10px;">Reservada por ${seed.reservadoPor}</p>`;
-                }
+            let actionHtml = '';
+            if (availableQty <= 0) {
+                actionHtml = `<p style="color: #c53030; font-size: 13px; font-weight: 600; text-align: center; margin-top: 10px;">Esgotado</p>`;
             } else if (user && seed.userId !== user.uid) {
-                actionHtml = `<button class="btn-reserve" onclick="window.reservarSemente('${seedId}', '${seed.userId}', '${seed.author}', '${seed.name}')">Reservar e Abrir Chat</button>`;
+                actionHtml = `
+                    <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px;">
+                        <span style="font-size: 12px; font-weight: 600; color: var(--text-muted); text-align: center;">Disponível: ${availableQty} un.</span>
+                        <button class="btn-reserve" onclick="window.reservarSementeComQuantidade('${seedId}', '${seed.userId}', '${seed.author}', '${seed.name}', ${availableQty})">Reservar Quantidade</button>
+                    </div>
+                `;
             } else if (user && seed.userId === user.uid) {
-                actionHtml = `<p style="color: var(--text-muted); font-size: 13px; text-align: center; margin-top: 10px;">Esta semente é sua.</p>`;
+                actionHtml = `<p style="color: var(--text-muted); font-size: 13px; text-align: center; margin-top: 10px;">Esta semente é sua (${availableQty} un. disp.).</p>`;
             }
 
             const box = document.createElement('div');
@@ -1046,60 +567,52 @@ window.renderSeeds = async () => {
     }
 };
 
-window.reservarSemente = async (seedId, ownerId, ownerName, seedName) => {
+window.reservarSementeComQuantidade = async (seedId, ownerId, ownerName, seedName, maxQty) => {
     const user = auth.currentUser;
     if (!user) return;
-    
+
+    const inputQtd = prompt(`Quantas unidades de "${seedName}" deseja reservar? (Disponível: ${maxQty})`, "1");
+    if (inputQtd === null) return;
+
+    const qtdReservada = parseInt(inputQtd);
+    if (isNaN(qtdReservada) || qtdReservada <= 0 || qtdReservada > maxQty) {
+        return alert("Quantidade inválida.");
+    }
+
     const myName = userProfileCache?.displayName || user.email.split('@')[0];
 
-    if(confirm(`Deseja reservar a semente "${seedName}" e iniciar um chat com ${ownerName}?`)) {
-        try {
-            await updateDoc(doc(db, "seeds", seedId), {
-                status: 'reservada',
-                reservadoPor: myName,
-                reservadoPorId: user.uid
-            });
-            
-            const chatRoomRef = await addDoc(collection(db, "private_chats"), {
-                seedId: seedId,
-                seedName: seedName,
-                ownerId: ownerId,
-                ownerName: ownerName,
-                requesterId: user.uid,
-                requesterName: myName,
-                participants: [ownerId, user.uid],
-                createdAt: serverTimestamp()
-            });
+    try {
+        const newAvailable = maxQty - qtdReservada;
+        const newStatus = newAvailable === 0 ? 'esgotado' : 'disponível';
 
-            await addDoc(collection(db, "private_chats", chatRoomRef.id, "messages"), {
-                text: `Olá ${ownerName}! Acabei de reservar a semente "${seedName}". Como podemos combinar a entrega ou troca?`,
-                senderId: user.uid,
-                senderName: myName,
-                avatar: userProfileCache?.avatarBase64 || "",
-                timestamp: serverTimestamp()
-            });
+        await updateDoc(doc(db, "seeds", seedId), {
+            availableQuantity: newAvailable,
+            status: newStatus
+        });
+        
+        const chatRoomRef = await addDoc(collection(db, "private_chats"), {
+            seedId: seedId,
+            seedName: `${seedName} (${qtdReservada} un.)`,
+            ownerId: ownerId,
+            ownerName: ownerName,
+            requesterId: user.uid,
+            requesterName: myName,
+            participants: [ownerId, user.uid],
+            createdAt: serverTimestamp()
+        });
 
-            window.showPrivateChats(chatRoomRef.id);
-        } catch(e) {
-            alert("Erro ao efetuar a reserva e abrir o chat.");
-        }
-    }
-};
+        await addDoc(collection(db, "private_chats", chatRoomRef.id, "messages"), {
+            text: `Olá ${ownerName}! Reservei ${qtdReservada} unidades da semente "${seedName}". Como combinamos a entrega?`,
+            senderId: user.uid,
+            senderName: myName,
+            avatar: userProfileCache?.avatarBase64 || "",
+            timestamp: serverTimestamp()
+        });
 
-window.removerReserva = async (seedId, originView) => {
-    if (confirm("Tem certeza que deseja remover a reserva desta semente?")) {
-        try {
-            await updateDoc(doc(db, "seeds", seedId), {
-                status: 'disponível',
-                reservadoPor: null,
-                reservadoPorId: null
-            });
-            alert("Reserva removida com sucesso!");
-            if (originView === 'profile') window.renderMyProfile();
-            else window.renderSeeds();
-        } catch (e) {
-            alert("Erro ao remover a reserva.");
-        }
+        alert(`Reserva de ${qtdReservada} unidades efetuada com sucesso!`);
+        window.showPrivateChats(chatRoomRef.id);
+    } catch(e) {
+        alert("Erro ao efetuar a reserva.");
     }
 };
 
@@ -1352,24 +865,18 @@ window.renderMyProfile = async () => {
                 
                 const badgeClass = seed.type === 'Troca' ? 'badge-troca' : 'badge-doacao';
                 const badgeText = seed.type || 'Doação';
+                const availableQty = seed.availableQuantity !== undefined ? seed.availableQuantity : (seed.totalQuantity || 10);
                 
-                let statusText = seed.status === 'reservada' 
-                    ? `<span style="color: var(--earth); font-weight: 600;">Reservada por ${seed.reservadoPor}</span>` 
-                    : `<span style="color: var(--lime); font-weight: 600;">Disponível</span>`;
-
-                let removeReserveBtn = seed.status === 'reservada'
-                    ? `<button class="btn-cancel-reserve" onclick="window.removerReserva('${seedId}', 'profile')">Remover Reserva</button>`
-                    : '';
+                let statusText = `<span style="color: var(--lime); font-weight: 600;">Disponível: ${availableQty} / ${seed.totalQuantity || 10} un.</span>`;
 
                 box.innerHTML = `
                     <div>
                         ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}" alt="${seed.name}">` : '<div style="height:180px;background:var(--bg-light);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#888;">Sem imagem</div>'}
                         <span class="badge-tipo ${badgeClass}">${badgeText}</span>
                         <h4 style="color: var(--text-main); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
-                        <p style="font-size: 13px; margin-bottom: 4px;"><strong>Status:</strong> ${statusText}</p>
+                        <p style="font-size: 13px; margin-bottom: 4px;"><strong>Estoque:</strong> ${statusText}</p>
                     </div>
                     <div>
-                        ${removeReserveBtn}
                         <button class="btn-danger" onclick="window.excluirSemente('${seedId}')">Excluir Semente</button>
                     </div>
                 `;
