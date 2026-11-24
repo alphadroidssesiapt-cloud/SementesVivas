@@ -42,7 +42,7 @@ body, html {
     transition: background 0.3s, color 0.3s;
 }
 
-/* CONTROLE DE DISPOSITIVOS */
+/* DETECÇÃO AUTOMÁTICA DE DISPOSITIVO (HUD MOBILE) */
 .device-desktop {
     width: 100%;
     min-height: 100vh;
@@ -52,18 +52,61 @@ body, html {
     width: 100%;
     min-height: 100vh;
     background-color: var(--bg-light);
+    padding-bottom: 70px; /* Espaço para HUD flutuante no telemóvel */
 }
 
+/* HUD MOBILE FIXA (APARECE APENAS EM DISPOSITIVOS MÓVEIS REAIS) */
+.mobile-hud-bar {
+    display: none;
+}
+
+.device-mobile .mobile-hud-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--forest-dark);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    z-index: 9999;
+    justify-content: space-around;
+    padding: 10px 4px;
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.3);
+}
+
+.device-mobile .mobile-hud-btn {
+    background: transparent;
+    border: none;
+    color: #d0ddd4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    gap: 3px;
+    transition: 0.2s;
+}
+
+.device-mobile .mobile-hud-btn .material-icons {
+    font-size: 22px;
+}
+
+.device-mobile .mobile-hud-btn.active {
+    color: var(--lime);
+    font-weight: 700;
+}
+
+/* ADAPTAÇÕES DE LAYOUT MOBILE */
 .device-mobile .header-container {
-    padding: 10px 14px;
+    padding: 8px 12px;
     flex-direction: column;
     align-items: stretch;
-    gap: 8px;
+    gap: 6px;
 }
 
 .device-mobile .nav-links {
-    justify-content: flex-start;
-    padding-bottom: 4px;
+    display: none; /* Substituído pela HUD Mobile inferior para melhor usabilidade no telemóvel */
 }
 
 .device-mobile .nav-actions {
@@ -71,16 +114,16 @@ body, html {
 }
 
 .device-mobile .hero-section {
-    min-height: 320px;
-    padding: 30px 16px;
+    min-height: 280px;
+    padding: 20px 14px;
 }
 
 .device-mobile .hero-title {
-    font-size: 26px;
+    font-size: 24px;
 }
 
 .device-mobile .app-content {
-    padding: 20px 14px;
+    padding: 16px 12px;
 }
 
 .device-mobile .action-grid {
@@ -89,18 +132,18 @@ body, html {
 
 .device-mobile .telegram-chat-layout {
     grid-template-columns: 1fr;
-    min-height: 420px;
+    min-height: 380px;
 }
 
 .device-mobile .tg-sidebar {
-    max-height: 140px;
+    max-height: 120px;
     border-right: none;
     border-bottom: 1px solid var(--border-color);
 }
 
 .device-mobile .biome-locator-card {
     grid-template-columns: 1fr;
-    padding: 18px;
+    padding: 16px;
 }
 
 /* BANNER DE COOKIES */
@@ -481,7 +524,6 @@ header {
     line-height: 1.4;
 }
 
-/* FOTO DA EQUIPE EMOLDURADA E MENOR */
 .team-photo-container {
     text-align: center;
     margin-top: 20px;
@@ -1090,7 +1132,7 @@ header {
     border-color: var(--forest-dark);
 }
 
-/* CÂMARA / UPLOAD */
+/* SELETOR DE FOTO DA GALERIA */
 .camera-wrapper {
     position: relative;
     overflow: hidden;
