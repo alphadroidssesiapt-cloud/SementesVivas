@@ -29,6 +29,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// FUNÇÃO PARA ABRIR E FECHAR A SLIDING BAR DE FUNÇÕES
 window.toggleSlidingSidebar = () => {
     const sidebar = document.getElementById('sliding-sidebar');
     const overlay = document.getElementById('sidebar-overlay');
@@ -629,10 +630,11 @@ if (seedPhotoInput) {
     });
 }
 
-// CADASTRO COM QUANTIDADE DE SEMENTES
+// CADASTRO CORRIGIDO COM CONVERSÃO EXATA DE NÚMERO
 window.processDonation = async () => {
     const name = document.getElementById('donate-seed-name').value.trim();
-    const quantity = parseInt(document.getElementById('donate-seed-quantity').value, 10);
+    const quantityRaw = document.getElementById('donate-seed-quantity').value;
+    const quantity = Number(quantityRaw);
     const availableDate = document.getElementById('donate-seed-date').value;
     const type = document.getElementById('donate-seed-type').value;
     const photoInput = document.getElementById('donate-seed-photo');
@@ -642,7 +644,7 @@ window.processDonation = async () => {
         return alert('Por favor, informe o nome da semente e selecione uma foto da galeria.');
     }
 
-    if (!quantity || quantity < 1) {
+    if (!quantityRaw || isNaN(quantity) || quantity < 1) {
         return alert('Por favor, informe uma quantidade válida de sementes (mínimo 1).');
     }
 
@@ -658,7 +660,7 @@ window.processDonation = async () => {
         const fotoBase64Texto = await comprimirEConverterBase64(photoInput.files[0], 600, 0.7);
         await addDoc(collection(db, "seeds"), {
             name: name,
-            quantity: quantity,
+            quantity: Math.floor(quantity),
             type: type,
             availableDate: availableDate,
             fotoBase64: fotoBase64Texto,
@@ -669,16 +671,16 @@ window.processDonation = async () => {
             status: 'disponível',
             timestamp: serverTimestamp()
         });
-        alert('Semente cadastrada com sucesso!');
+        alert(`Semente cadastrada com sucesso (${Math.floor(quantity)} unidades)!`);
         window.showAvailable();
     } catch (error) {
-        alert('Erro ao guardar na base de dados.');
+        console.error("Erro detalhado ao cadastrar semente:", error);
+        alert('Erro ao guardar na base de dados: ' + error.message);
     } finally {
         btn.disabled = false; loading.style.display = 'none';
     }
 };
 
-// RENDERIZAR SEMENTES COM ESCOLHA DE QUANTIDADE PARA RESERVAR
 window.renderSeeds = async () => {
     const container = document.getElementById('seeds-grid-container');
     container.innerHTML = '<p style="color: var(--text-muted);">A carregar sementes...</p>';
@@ -740,7 +742,6 @@ window.renderSeeds = async () => {
     }
 };
 
-// RESERVAR QUANTIDADE ESPECÍFICA E ABRIR CHAT
 window.reservarSemente = async (seedId, ownerId, ownerName, seedName, maxAvailable) => {
     const user = auth.currentUser;
     if (!user) return;
