@@ -29,7 +29,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// FUNÇÃO PARA ABRIR E FECHAR A SLIDING BAR DE FUNÇÕES
 window.toggleSlidingSidebar = () => {
     const sidebar = document.getElementById('sliding-sidebar');
     const overlay = document.getElementById('sidebar-overlay');
@@ -609,7 +608,6 @@ window.saveProfile = async () => {
     }
 };
 
-// OCR OPCIONAL PARA O INPUT DA SEMENTE
 const seedPhotoInput = document.getElementById('donate-seed-photo-seed');
 if (seedPhotoInput) {
     seedPhotoInput.addEventListener('change', async (e) => {
@@ -642,7 +640,6 @@ if (plantPhotoInput) {
     });
 }
 
-// CADASTRO COM DUAS FOTOS E QUANTIDADE EXATA
 window.processDonation = async () => {
     const name = document.getElementById('donate-seed-name').value.trim();
     const quantityRaw = document.getElementById('donate-seed-quantity').value;
@@ -690,7 +687,7 @@ window.processDonation = async () => {
             timestamp: serverTimestamp()
         });
 
-        alert(`Semente cadastrada com sucesso (${Math.floor(quantity)} unidades, com fotos da semente e da planta)!`);
+        alert(`Semente cadastrada com sucesso (${Math.floor(quantity)} unidades)!`);
         window.showAvailable();
     } catch (error) {
         console.error("Erro detalhado ao cadastrar semente:", error);
@@ -730,11 +727,12 @@ window.renderSeeds = async () => {
                     actionHtml = `<p style="color: #c53030; font-size: 13px; font-weight: 600; text-align: center; margin-top: 10px;">Esgotada / Totalmente Reservada</p>`;
                 }
             } else if (user && seed.userId !== user.uid) {
+                // O INPUT DE RESERVA LIMITA RIGOROSAMENTE AO MÁXIMO DISPONÍVEL ATUAL
                 actionHtml = `
                     <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
                         <label style="font-size: 12px; font-weight: 600; color: var(--text-main);">Qtd:</label>
                         <input type="number" id="reserve-qty-${seedId}" min="1" max="${qtdDisponivel}" value="1" style="width: 70px; padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-light); color: var(--text-main); font-size: 13px;">
-                        <button class="btn-reserve" style="margin-top: 0; flex: 1;" onclick="window.reservarSemente('${seedId}', '${seed.userId}', '${seed.author}', '${seed.name}', ${qtdDisponivel})">Reservar</button>
+                        <button class="btn-reserve" style="margin-top: 0; flex: 1;" onclick="window.reservarSemente('${seedId}', '${seed.userId}', '${seed.author}', '${seed.name}')">Reservar</button>
                     </div>
                 `;
             } else if (user && seed.userId === user.uid) {
@@ -775,24 +773,40 @@ window.renderSeeds = async () => {
     }
 };
 
-window.reservarSemente = async (seedId, ownerId, ownerName, seedName, maxAvailable) => {
+// VALIDAÇÃO ESTRITA: VERIFICA DIRETAMENTE NO FIRESTORE O ESTOQUE ATUAL ANTES DE ABATER
+window.reservarSemente = async (seedId, ownerId, ownerName, seedName) => {
     const user = auth.currentUser;
     if (!user) return;
     
     const qtyInput = document.getElementById(`reserve-qty-${seedId}`);
     const requestedQty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
 
-    if (!requestedQty || requestedQty < 1 || requestedQty > maxAvailable) {
-        return alert(`Por favor, escolha uma quantidade válida entre 1 e ${maxAvailable}.`);
-    }
+    try {
+        const seedRef = doc(db, "seeds", seedId);
+        const seedSnap = await getDoc(seedRef);
 
-    const myName = userProfileCache?.displayName || user.email.split('@')[0];
-    const remainingQty = maxAvailable - requestedQty;
-    const newStatus = remainingQty <= 0 ? 'esgotada' : 'disponível';
+        if (!seedSnap.exists()) {
+            return alert("Esta semente já não existe na base de dados.");
+        }
 
-    if(confirm(`Deseja reservar ${requestedQty} semente(s) de "${seedName}" e iniciar um chat com ${ownerName}?`)) {
-        try {
-            await updateDoc(doc(db, "seeds", seedId), {
+        const currentData = seedSnap.data();
+        const maxAvailable = currentData.quantity !== undefined ? currentData.quantity : 0;
+
+        if (maxAvailable <= 0) {
+            alert("Esta semente acabou de esgotar!");
+            return window.renderSeeds();
+        }
+
+        if (!requestedQty || requestedQty < 1 || requestedQty > maxAvailable) {
+            return alert(`Quantidade inválida! Só existem ${maxAvailable} unidades disponíveis no momento.`);
+        }
+
+        const myName = userProfileCache?.displayName || user.email.split('@')[0];
+        const remainingQty = maxAvailable - requestedQty;
+        const newStatus = remainingQty <= 0 ? 'esgotada' : 'disponível';
+
+        if(confirm(`Deseja reservar ${requestedQty} semente(s) de "${seedName}" (restam ${remainingQty}) e iniciar um chat com ${ownerName}?`)) {
+            await updateDoc(seedRef, {
                 quantity: remainingQty,
                 status: newStatus,
                 reservadoPor: myName,
@@ -820,9 +834,10 @@ window.reservarSemente = async (seedId, ownerId, ownerName, seedName, maxAvailab
             });
 
             window.showPrivateChats(chatRoomRef.id);
-        } catch(e) {
-            alert("Erro ao efetuar a reserva e abrir o chat.");
         }
+    } catch(e) {
+        console.error("Erro ao reservar:", e);
+        alert("Erro ao efetuar a reserva e abrir o chat.");
     }
 };
 
