@@ -181,7 +181,7 @@
                     <div class="action-card" onclick="window.showDonate()">
                         <div class="card-icon-circle"><span class="material-icons">add_a_photo</span></div>
                         <h3>Cadastrar Semente</h3>
-                        <p>Publique novas sementes com data e foto da galeria.</p>
+                        <p>Publique novas sementes com fotos da semente e da planta.</p>
                     </div>
                     <div class="action-card" onclick="window.showPrivateChats()">
                         <div class="card-icon-circle"><span class="material-icons">chat</span></div>
@@ -209,18 +209,28 @@
                 <div id="seeds-grid-container" class="seeds-grid"></div>
             </div>
 
-            <!-- CADASTRAR SEMENTE COM QUANTIDADE -->
+            <!-- CADASTRAR SEMENTE COM 2 FOTOS (SEMENTE E PLANTA) -->
             <div id="donate-view" class="view">
                 <div class="content-card">
                     <h2 style="color: var(--forest-dark); margin-bottom: 20px;">Cadastrar Nova Semente</h2>
                     
                     <div class="input-group">
-                        <label>Fotografia da Semente (Selecione da Galeria ou Câmara)</label>
+                        <label>1. Fotografia da Semente</label>
                         <div class="camera-wrapper">
-                            <div class="camera-btn" id="camera-label">
-                                <span class="material-icons">photo_library</span> Selecionar Foto da Galeria / Dispositivo
+                            <div class="camera-btn" id="camera-label-seed">
+                                <span class="material-icons">photo_library</span> Selecionar Foto da Semente
                             </div>
-                            <input type="file" id="donate-seed-photo" accept="image/*">
+                            <input type="file" id="donate-seed-photo-seed" accept="image/*">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>2. Fotografia da Planta (Árvore/Fruto adulto)</label>
+                        <div class="camera-wrapper">
+                            <div class="camera-btn" id="camera-label-plant">
+                                <span class="material-icons">photo_library</span> Selecionar Foto da Planta
+                            </div>
+                            <input type="file" id="donate-seed-photo-plant" accept="image/*">
                         </div>
                     </div>
 
@@ -231,7 +241,7 @@
 
                     <div class="input-group">
                         <label>Quantidade de Sementes Disponíveis (Obrigatório)</label>
-                        <input type="number" id="donate-seed-quantity" min="1" placeholder="Ex: 20" required>
+                        <input type="number" id="donate-seed-quantity" min="1" placeholder="Ex: 18" required>
                     </div>
 
                     <div class="input-group">
