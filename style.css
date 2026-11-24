@@ -375,6 +375,28 @@ header {
     border-color: #c53030;
 }
 
+/* BOTÕES DE PINOS DE VIVEIROS NO MAPA */
+.viveiro-pin-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--card-bg);
+    border: 1px solid var(--lime);
+    color: var(--text-main);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 20px;
+    margin: 3px 4px 3px 0;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.viveiro-pin-btn:hover {
+    background: var(--lime);
+    color: var(--forest-dark);
+}
+
 /* PÁGINA SOBRE NÓS */
 .about-card-vertical {
     background: var(--card-bg);
