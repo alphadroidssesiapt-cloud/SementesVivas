@@ -11,30 +11,72 @@
 </head>
 <body>
 
+    <!-- SIDEBAR DESLIZANTE (SLIDING BAR) PARA AS FUNÇÕES -->
+    <div id="sliding-sidebar" class="sliding-sidebar">
+        <div class="sidebar-header">
+            <div class="nav-brand">
+                <span class="material-icons brand-icon">spa</span>
+                <span class="brand-title">Sementes Vivas</span>
+            </div>
+            <button class="btn-close-sidebar" onclick="window.toggleSlidingSidebar()">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+        <div class="sidebar-menu-list">
+            <button class="sidebar-link active" id="menu-dashboard-view" onclick="window.showDashboard(); window.toggleSlidingSidebar()">
+                <span class="material-icons">home</span> Início
+            </button>
+            <button class="sidebar-link" id="menu-available-view" onclick="window.showAvailable(); window.toggleSlidingSidebar()">
+                <span class="material-icons">inventory_2</span> Explorar Sementes
+            </button>
+            <button class="sidebar-link" id="menu-donate-view" onclick="window.showDonate(); window.toggleSlidingSidebar()">
+                <span class="material-icons">add_circle</span> Cadastrar Semente
+            </button>
+            <button class="sidebar-link" id="menu-private-chats-view" onclick="window.showPrivateChats(); window.toggleSlidingSidebar()">
+                <span class="material-icons">chat</span> Meus Chats
+            </button>
+            <button class="sidebar-link" id="menu-chat-view" onclick="window.showChat(); window.toggleSlidingSidebar()">
+                <span class="material-icons">forum</span> Chat Comunitário
+            </button>
+            <button class="sidebar-link" id="menu-encyclopedia-view" onclick="window.showEncyclopedia(); window.toggleSlidingSidebar()">
+                <span class="material-icons">public</span> Bioma & Enciclopédia
+            </button>
+            <button class="sidebar-link" id="menu-learn-view" onclick="window.showLearn(); window.toggleSlidingSidebar()">
+                <span class="material-icons">school</span> Aprender a Plantar
+            </button>
+            <button class="sidebar-link" id="menu-about-view" onclick="window.showAbout(); window.toggleSlidingSidebar()">
+                <span class="material-icons">groups</span> Sobre Nós (Alphadroid's)
+            </button>
+            <button class="sidebar-link" id="menu-profile-view" onclick="window.showProfile(); window.toggleSlidingSidebar()">
+                <span class="material-icons">person</span> Meu Perfil
+            </button>
+        </div>
+        <div class="sidebar-footer">
+            <button class="btn-logout-dark" onclick="window.logout(); window.toggleSlidingSidebar()" style="width: 100%;">
+                <span class="material-icons" style="font-size: 16px; vertical-align: middle;">logout</span> Sair da Conta
+            </button>
+        </div>
+    </div>
+    <div id="sidebar-overlay" class="sidebar-overlay" onclick="window.toggleSlidingSidebar()"></div>
+
     <div id="device-frame" class="device-desktop">
 
         <!-- CABEÇALHO -->
         <header id="main-header" style="display: none;">
             <div class="header-container">
-                <div class="nav-brand" onclick="window.showDashboard()">
-                    <span class="material-icons brand-icon">spa</span>
-                    <div class="brand-text">
-                        <span class="brand-title">Sementes Vivas</span>
-                        <span class="brand-sub">REDE DE BIODIVERSIDADE</span>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <!-- BOTÃO HAMBÚRGUER PARA ABRIR A SLIDING BAR -->
+                    <button class="btn-hamburger" onclick="window.toggleSlidingSidebar()" title="Abrir Menu de Funções">
+                        <span class="material-icons">menu</span>
+                    </button>
+                    <div class="nav-brand" onclick="window.showDashboard()">
+                        <span class="material-icons brand-icon">spa</span>
+                        <div class="brand-text">
+                            <span class="brand-title">Sementes Vivas</span>
+                            <span class="brand-sub">REDE DE BIODIVERSIDADE</span>
+                        </div>
                     </div>
                 </div>
-
-                <!-- MENU DE NAVEGAÇÃO COMPLETO -->
-                <nav class="nav-links">
-                    <button class="nav-link active" id="tab-dashboard-view" onclick="window.showDashboard()">Início</button>
-                    <button class="nav-link" id="tab-available-view" onclick="window.showAvailable()">Explorar</button>
-                    <button class="nav-link" id="tab-private-chats-view" onclick="window.showPrivateChats()">Meus Chats</button>
-                    <button class="nav-link" id="tab-chat-view" onclick="window.showChat()">Comunidade</button>
-                    <button class="nav-link" id="tab-encyclopedia-view" onclick="window.showEncyclopedia()">Bioma & Enciclopédia</button>
-                    <button class="nav-link" id="tab-learn-view" onclick="window.showLearn()">Aprender</button>
-                    <button class="nav-link" id="tab-about-view" onclick="window.showAbout()">Sobre Nós</button>
-                    <button class="nav-link" id="tab-profile-view" onclick="window.showProfile()">Perfil</button>
-                </nav>
 
                 <div class="nav-actions">
                     <button class="btn-theme-toggle" onclick="window.toggleTheme()" title="Alternar Modo Claro / Escuro">
@@ -168,7 +210,7 @@
                 <div id="seeds-grid-container" class="seeds-grid"></div>
             </div>
 
-            <!-- CADASTRAR SEMENTE COM SELEÇÃO DA GALERIA E DATA OBRIGATÓRIA -->
+            <!-- CADASTRAR SEMENTE -->
             <div id="donate-view" class="view">
                 <div class="content-card">
                     <h2 style="color: var(--forest-dark); margin-bottom: 20px;">Cadastrar Nova Semente</h2>
