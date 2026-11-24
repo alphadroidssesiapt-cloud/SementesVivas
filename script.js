@@ -23,55 +23,20 @@ let privateChatUnsubscribe = null;
 let privateListUnsubscribe = null;
 
 window.addEventListener('DOMContentLoaded', () => {
-    const frame = document.getElementById('device-frame');
-    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-    
-    if (isMobileDevice) {
-        frame.className = 'device-mobile';
-        criarHudMobile();
-    } else {
-        frame.className = 'device-desktop';
-    }
-
     if (!localStorage.getItem('cookies_accepted')) {
         const banner = document.getElementById('cookie-banner');
         if (banner) banner.style.display = 'block';
     }
 });
 
-function criarHudMobile() {
-    if (document.getElementById('mobile-hud')) return;
-
-    const hud = document.createElement('div');
-    hud.id = 'mobile-hud';
-    hud.className = 'mobile-hud-bar';
-    hud.innerHTML = `
-        <button class="mobile-hud-btn active" id="hud-home" onclick="window.showDashboard(); window.atualizarHudAtiva('home')">
-            <span class="material-icons">home</span>Início
-        </button>
-        <button class="mobile-hud-btn" id="hud-explore" onclick="window.showAvailable(); window.atualizarHudAtiva('explore')">
-            <span class="material-icons">inventory_2</span>Explorar
-        </button>
-        <button class="mobile-hud-btn" id="hud-donate" onclick="window.showDonate(); window.atualizarHudAtiva('donate')">
-            <span class="material-icons">add_circle</span>Cadastrar
-        </button>
-        <button class="mobile-hud-btn" id="hud-chat" onclick="window.showChat(); window.atualizarHudAtiva('chat')">
-            <span class="material-icons">forum</span>Comunidade
-        </button>
-        <button class="mobile-hud-btn" id="hud-bio" onclick="window.showEncyclopedia(); window.atualizarHudAtiva('bio')">
-            <span class="material-icons">public</span>Bioma
-        </button>
-        <button class="mobile-hud-btn" id="hud-profile" onclick="window.showProfile(); window.atualizarHudAtiva('profile')">
-            <span class="material-icons">person</span>Perfil
-        </button>
-    `;
-    document.body.appendChild(hud);
-}
-
-window.atualizarHudAtiva = (btnId) => {
-    document.querySelectorAll('.mobile-hud-btn').forEach(b => b.classList.remove('active'));
-    const el = document.getElementById(`hud-${btnId}`);
-    if (el) el.classList.add('active');
+// FUNÇÃO PARA ABRIR E FECHAR A SLIDING BAR DE FUNÇÕES
+window.toggleSlidingSidebar = () => {
+    const sidebar = document.getElementById('sliding-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (sidebar && overlay) {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('open');
+    }
 };
 
 window.acceptCookies = () => {
@@ -240,16 +205,16 @@ window.switchView = (viewId) => {
         view.style.display = (viewId === 'login-view') ? 'flex' : 'block';
     }
 
-    document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.sidebar-link').forEach(btn => btn.classList.remove('active'));
     const mapTab = {
-        'dashboard-view': 'tab-dashboard-view',
-        'available-view': 'tab-available-view',
-        'private-chats-view': 'tab-private-chats-view',
-        'chat-view': 'tab-chat-view',
-        'encyclopedia-view': 'tab-encyclopedia-view',
-        'learn-view': 'tab-learn-view',
-        'about-view': 'tab-about-view',
-        'profile-view': 'tab-profile-view'
+        'dashboard-view': 'menu-dashboard-view',
+        'available-view': 'menu-available-view',
+        'private-chats-view': 'menu-private-chats-view',
+        'chat-view': 'menu-chat-view',
+        'encyclopedia-view': 'menu-encyclopedia-view',
+        'learn-view': 'menu-learn-view',
+        'about-view': 'menu-about-view',
+        'profile-view': 'menu-profile-view'
     };
     if (mapTab[viewId]) {
         const btn = document.getElementById(mapTab[viewId]);
