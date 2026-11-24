@@ -22,7 +22,6 @@ let chatUnsubscribe = null;
 let privateChatUnsubscribe = null;
 let privateListUnsubscribe = null;
 
-// DETEÇÃO AUTOMÁTICA DE DISPOSITIVO E CRIAÇÃO DA HUD MOBILE
 window.addEventListener('DOMContentLoaded', () => {
     const frame = document.getElementById('device-frame');
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
@@ -40,7 +39,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// FUNÇÃO PARA CRIAR HUD MOBILE FUNCIONAL NO TELEMÓVEL
 function criarHudMobile() {
     if (document.getElementById('mobile-hud')) return;
 
@@ -93,7 +91,6 @@ window.closeTermsModal = () => {
     if (modal) modal.style.display = 'none';
 };
 
-// CATÁLOGO EXPANDIDO DE ESPÉCIES POR BIOMA
 const biomeSpeciesCatalog = {
     "Cerrado": [
         "Handroanthus albus", "Dipteryx alata", "Hymenaea courbaril", "Caryocar brasiliense",
@@ -114,7 +111,6 @@ const biomeSpeciesCatalog = {
     ]
 };
 
-// BASE DE DADOS DE BIOMAS, VIVEIROS E ESPÉCIES
 const cityBiomeDatabase = {
     "Aparecida do Taboado": {
         state: "MS",
@@ -292,7 +288,6 @@ window.showPrivateChats = (chatIdToOpen = null) => {
     window.initPrivateChatListListener(chatIdToOpen);
 };
 
-// CARREGAMENTO SIMULTÂNEO DE TODAS AS ESPÉCIES DO BIOMA VIA WIKIPÉDIA
 window.loadWikipediaSpeciesCards = async (speciesList, biomeName) => {
     const grid = document.getElementById('encyclopedia-grid');
     const titleEl = document.getElementById('species-section-title');
@@ -648,7 +643,6 @@ window.saveProfile = async () => {
     }
 };
 
-// SELEÇÃO DE FOTO DA GALERIA COM LEITURA AUTOMÁTICA
 const seedPhotoInput = document.getElementById('donate-seed-photo');
 if (seedPhotoInput) {
     seedPhotoInput.addEventListener('change', async (e) => {
@@ -670,7 +664,6 @@ if (seedPhotoInput) {
     });
 }
 
-// CADASTRO COM DATA OBRIGATÓRIA
 window.processDonation = async () => {
     const name = document.getElementById('donate-seed-name').value.trim();
     const availableDate = document.getElementById('donate-seed-date').value;
@@ -834,7 +827,6 @@ const formatTelegramDateTime = (timestamp) => {
     return `${dia}/${mes}/${ano} às ${hora}:${min}`;
 };
 
-// CHATS COM AUTO-ATUALIZAÇÃO EM TEMPO REAL
 window.initPrivateChatListListener = (chatIdToOpen = null) => {
     const listContainer = document.getElementById('private-chat-list');
     const user = auth.currentUser;
