@@ -11,9 +11,10 @@
 </head>
 <body>
 
+    <!-- DISPOSITIVO DINÂMICO (DETECTA MOBILE / DESKTOP) -->
     <div id="device-frame" class="device-desktop">
 
-        <!-- CABEÇALHO -->
+        <!-- CABEÇALHO / HUD MOBILE (NAVEGAÇÃO INFERIOR SE FOR TELEMÓVEL) -->
         <header id="main-header" style="display: none;">
             <div class="header-container">
                 <div class="nav-brand" onclick="window.showDashboard()">
@@ -25,27 +26,20 @@
                 </div>
 
                 <nav class="nav-links">
-                    <button class="nav-link active" id="tab-dashboard-view" onclick="window.showDashboard()">Início</button>
-                    <button class="nav-link" id="tab-available-view" onclick="window.showAvailable()">Explorar</button>
-                    <button class="nav-link" id="tab-private-chats-view" onclick="window.showPrivateChats()">Meus Chats</button>
-                    <button class="nav-link" id="tab-chat-view" onclick="window.showChat()">Comunidade</button>
-                    <button class="nav-link" id="tab-encyclopedia-view" onclick="window.showEncyclopedia()">Bioma & Enciclopédia</button>
-                    <button class="nav-link" id="tab-learn-view" onclick="window.showLearn()">Aprender</button>
-                    <button class="nav-link" id="tab-about-view" onclick="window.showAbout()">Sobre Nós</button>
-                    <button class="nav-link" id="tab-profile-view" onclick="window.showProfile()">Perfil</button>
+                    <button class="nav-link active" id="tab-dashboard-view" onclick="window.showDashboard()"><span class="material-icons">home</span> Início</button>
+                    <button class="nav-link" id="tab-available-view" onclick="window.showAvailable()"><span class="material-icons">inventory_2</span> Explorar</button>
+                    <button class="nav-link" id="tab-private-chats-view" onclick="window.showPrivateChats()"><span class="material-icons">chat</span> Chats</button>
+                    <button class="nav-link" id="tab-chat-view" onclick="window.showChat()"><span class="material-icons">forum</span> Comunidade</button>
+                    <button class="nav-link" id="tab-encyclopedia-view" onclick="window.showEncyclopedia()"><span class="material-icons">public</span> Biomas</button>
+                    <button class="nav-link" id="tab-learn-view" onclick="window.showLearn()"><span class="material-icons">school</span> Aprender</button>
+                    <button class="nav-link" id="tab-about-view" onclick="window.showAbout()"><span class="material-icons">info</span> Sobre</button>
+                    <button class="nav-link" id="tab-profile-view" onclick="window.showProfile()"><span class="material-icons">person</span> Perfil</button>
                 </nav>
 
                 <div class="nav-actions">
-                    <select id="language-selector" class="select-styled" style="width: auto; padding: 6px 10px; font-size: 12px; font-weight: 700;" onchange="window.changeLanguage(this.value)">
-                        <option value="pt">🇧🇷 PT</option>
-                        <option value="en">🇺🇸 EN</option>
-                        <option value="es">🇪🇸 ES</option>
-                    </select>
-
-                    <button class="btn-theme-toggle" onclick="window.toggleTheme()" title="Alternar Modo Claro / Escuro">
+                    <button class="btn-theme-toggle" onclick="window.toggleTheme()" title="Modo Claro / Escuro">
                         <span id="theme-icon" class="material-icons" style="font-size: 18px;">dark_mode</span>
                     </button>
-
                     <button class="btn-lime-pill" onclick="window.showDonate()">
                         <span class="material-icons" style="font-size: 16px;">add_circle</span> Cadastrar
                     </button>
@@ -145,7 +139,7 @@
                     <div class="action-card" onclick="window.showDonate()">
                         <div class="card-icon-circle"><span class="material-icons">add_a_photo</span></div>
                         <h3>Cadastrar Semente</h3>
-                        <p>Publique novas sementes com leitura automática e quantidade.</p>
+                        <p>Publique novas sementes com data de disponibilidade e galeria.</p>
                     </div>
                     <div class="action-card" onclick="window.showPrivateChats()">
                         <div class="card-icon-circle"><span class="material-icons">chat</span></div>
@@ -168,23 +162,24 @@
             <div id="available-view" class="view">
                 <div class="page-header-dark">
                     <h2>Sementes da Comunidade</h2>
-                    <p>Reserve a quantidade que precisa para abrir uma conversa direta com o doador.</p>
+                    <p>Reserve a quantidade que precisa e verifique a data de disponibilidade.</p>
                 </div>
                 <div id="seeds-grid-container" class="seeds-grid"></div>
             </div>
 
-            <!-- CADASTRAR SEMENTE -->
+            <!-- CADASTRAR SEMENTE (COM GALERIA E DATA OBRIGATÓRIA) -->
             <div id="donate-view" class="view">
                 <div class="content-card">
                     <h2 style="color: var(--forest-dark); margin-bottom: 20px;">Cadastrar Nova Semente</h2>
                     
                     <div class="input-group">
-                        <label>Fotografar Semente (A leitura automática preencherá o nome)</label>
+                        <label>Foto da Semente (Escolher da Galeria ou Tirar Foto)</label>
                         <div class="camera-wrapper">
                             <div class="camera-btn" id="camera-label">
-                                <span class="material-icons">camera_alt</span> Clique para fotografar ou carregar imagem
+                                <span class="material-icons">photo_library</span> Selecionar da Galeria / Fotografar
                             </div>
-                            <input type="file" id="donate-seed-photo" accept="image/*" capture="environment">
+                            <!-- Permitir escolher da galeria do telemóvel ou ficheiros do pc -->
+                            <input type="file" id="donate-seed-photo" accept="image/*">
                         </div>
                     </div>
 
@@ -196,6 +191,11 @@
                     <div class="input-group">
                         <label>Quantidade Disponível (Unidades / Gramas / Pacotes)</label>
                         <input type="number" id="donate-seed-qty" placeholder="Ex: 50" min="1" value="10">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Data em que a Semente estará Disponível (Obrigatório)</label>
+                        <input type="date" id="donate-seed-date" class="select-styled" required>
                     </div>
 
                     <div class="input-group">
@@ -337,7 +337,6 @@
                 </div>
 
                 <div class="about-card-vertical">
-                    <!-- Topo: Logo e Texto -->
                     <div class="about-header-flex">
                         <div class="about-logo-container">
                             <img src="alphas.jpg" alt="Logo ALPHADROID'S" class="team-logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
@@ -353,28 +352,6 @@
                             <p>
                                 O projeto <strong>Sementes Vivas</strong> nasceu da união de ideias, criatividade e propósito da equipe <strong>ALPHADROID'S</strong>. Nosso grande objetivo sempre foi utilizar a tecnologia como uma ponte para aproximar as pessoas da natureza, incentivando a troca de sementes crioulas e o fortalecimento da biodiversidade brasileira.
                             </p>
-                            <p>
-                                Para transformar esse sonho em uma ferramenta útil, unimos o pensamento inovador do nosso time a um rigoroso processo de pesquisas em conjunto com biólogos. Cada funcionalidade foi pensada para respeitar os biomas do país.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Pilares do Projeto -->
-                    <div class="about-pillars">
-                        <div class="pillar-item">
-                            <span class="material-icons">biotech</span>
-                            <h4>Base Científica</h4>
-                            <p>Desenvolvido com apoio e pesquisa junto a biólogos.</p>
-                        </div>
-                        <div class="pillar-item">
-                            <span class="material-icons">psychology</span>
-                            <h4>Pensamento Criativo</h4>
-                            <p>Soluções digitais pensadas pelo time ALPHADROID'S.</p>
-                        </div>
-                        <div class="pillar-item">
-                            <span class="material-icons">volunteer_activism</span>
-                            <h4>Impacto Verde</h4>
-                            <p>Fomento à partilha comunitária e reflorestamento.</p>
                         </div>
                     </div>
 
@@ -405,7 +382,7 @@
                     </div>
 
                     <div class="input-group">
-                        <label>Alterar Foto de Perfil</label>
+                        <label>Alterar Foto de Perfil (Galeria / Ficheiro)</label>
                         <input type="file" id="profile-photo-input" accept="image/*">
                     </div>
 
@@ -443,6 +420,7 @@
 
     </div>
 
+    <!-- SCRIPT DA HUD MOBILE E APLICAÇÃO -->
     <script type="module" src="script.js"></script>
 </body>
 </html>
