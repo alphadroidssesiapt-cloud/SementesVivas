@@ -65,7 +65,6 @@
         <header id="main-header" style="display: none;">
             <div class="header-container">
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <!-- BOTÃO HAMBÚRGUER PARA ABRIR A SLIDING BAR -->
                     <button class="btn-hamburger" onclick="window.toggleSlidingSidebar()" title="Abrir Menu de Funções">
                         <span class="material-icons">menu</span>
                     </button>
@@ -205,12 +204,12 @@
             <div id="available-view" class="view">
                 <div class="page-header-dark">
                     <h2>Sementes da Comunidade</h2>
-                    <p>Reserve uma semente para abrir uma conversa direta com o doador.</p>
+                    <p>Escolha a quantidade desejada e reserve uma semente para abrir conversa direta com o doador.</p>
                 </div>
                 <div id="seeds-grid-container" class="seeds-grid"></div>
             </div>
 
-            <!-- CADASTRAR SEMENTE -->
+            <!-- CADASTRAR SEMENTE COM QUANTIDADE -->
             <div id="donate-view" class="view">
                 <div class="content-card">
                     <h2 style="color: var(--forest-dark); margin-bottom: 20px;">Cadastrar Nova Semente</h2>
@@ -228,6 +227,11 @@
                     <div class="input-group">
                         <label>Nome da Semente</label>
                         <input type="text" id="donate-seed-name" placeholder="Ex: Tomate Coração de Boi">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Quantidade de Sementes Disponíveis (Obrigatório)</label>
+                        <input type="number" id="donate-seed-quantity" min="1" placeholder="Ex: 20" required>
                     </div>
 
                     <div class="input-group">
@@ -413,7 +417,7 @@
                         <div class="about-text-content">
                             <h3>Tecnologia e Natureza em Harmonia</h3>
                             <p>
-                                O projeto <strong>Sementes Vivas</strong> nasceu da união de ideias, criatividade e propósito da equipe <strong>ALPHADROID'S</strong>[cite: 2]. Nosso grande objetivo sempre foi utilizar a tecnologia como uma ponte para aproximar as pessoas da natureza, incentivando a troca de sementes crioulas, o cultivo sustentável e o fortalecimento da biodiversidade local.
+                                O projeto <strong>Sementes Vivas</strong> nasceu da união de ideias, criatividade e propósito da equipe <strong>ALPHADROID'S</strong>. Nosso grande objetivo sempre foi utilizar a tecnologia como uma ponte para aproximar as pessoas da natureza, incentivando a troca de sementes crioulas, o cultivo sustentável e o fortalecimento da biodiversidade local.
                             </p>
                             <p>
                                 Para transformar esse sonho em uma ferramenta verdadeiramente útil e confiável, unimos o pensamento inovador do nosso time a um rigoroso processo de <strong>pesquisas realizadas em conjunto com biólogos e especialistas ambientais</strong>. Cada funcionalidade — desde a identificação inteligente dos biomas até o mapeamento de viveiros e a enciclopédia de espécies nativas — foi pensada para respeitar os ciclos ecológicos de cada região.
@@ -440,10 +444,10 @@
                     </div>
 
                     <div class="team-photo-container">
-                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 12px; text-align: center;">Nossa Equipe[cite: 3]</h4>
+                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 12px; text-align: center;">Nossa Equipe</h4>
                         <img src="flltc oi.jpg" alt="Equipe ALPHADROID'S" class="team-group-photo-framed" onerror="this.style.display='none'; document.getElementById('team-photo-fallback').style.display='block';">
                         <div id="team-photo-fallback" style="display: none; padding: 30px; text-align: center; background: var(--bg-light); border-radius: 12px; color: var(--text-muted); font-size: 14px;">
-                            Coloque a foto da equipe na mesma pasta do site com o nome <strong>flltc oi.jpg</strong>[cite: 3].
+                            Coloque a foto da equipe na mesma pasta do site com o nome <strong>flltc oi.jpg</strong>.
                         </div>
                     </div>
                 </div>
