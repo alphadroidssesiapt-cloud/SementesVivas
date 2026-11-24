@@ -22,20 +22,14 @@ let chatUnsubscribe = null;
 let privateChatUnsubscribe = null;
 let privateListUnsubscribe = null;
 
-window.changeLanguage = (lang) => {
-    localStorage.setItem('site_lang', lang);
-};
-
+// DETEÇÃO AUTOMÁTICA DE DISPOSITIVO E CRIAÇÃO DA HUD MOBILE
 window.addEventListener('DOMContentLoaded', () => {
-    const savedLang = localStorage.getItem('site_lang') || 'pt';
-    const langSelect = document.getElementById('language-selector');
-    if (langSelect) langSelect.value = savedLang;
-
     const frame = document.getElementById('device-frame');
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
     
     if (isMobileDevice) {
         frame.className = 'device-mobile';
+        criarHudMobile();
     } else {
         frame.className = 'device-desktop';
     }
@@ -45,6 +39,42 @@ window.addEventListener('DOMContentLoaded', () => {
         if (banner) banner.style.display = 'block';
     }
 });
+
+// FUNÇÃO PARA CRIAR HUD MOBILE FUNCIONAL NO TELEMÓVEL
+function criarHudMobile() {
+    if (document.getElementById('mobile-hud')) return;
+
+    const hud = document.createElement('div');
+    hud.id = 'mobile-hud';
+    hud.className = 'mobile-hud-bar';
+    hud.innerHTML = `
+        <button class="mobile-hud-btn active" id="hud-home" onclick="window.showDashboard(); window.atualizarHudAtiva('home')">
+            <span class="material-icons">home</span>Início
+        </button>
+        <button class="mobile-hud-btn" id="hud-explore" onclick="window.showAvailable(); window.atualizarHudAtiva('explore')">
+            <span class="material-icons">inventory_2</span>Explorar
+        </button>
+        <button class="mobile-hud-btn" id="hud-donate" onclick="window.showDonate(); window.atualizarHudAtiva('donate')">
+            <span class="material-icons">add_circle</span>Cadastrar
+        </button>
+        <button class="mobile-hud-btn" id="hud-chat" onclick="window.showChat(); window.atualizarHudAtiva('chat')">
+            <span class="material-icons">forum</span>Comunidade
+        </button>
+        <button class="mobile-hud-btn" id="hud-bio" onclick="window.showEncyclopedia(); window.atualizarHudAtiva('bio')">
+            <span class="material-icons">public</span>Bioma
+        </button>
+        <button class="mobile-hud-btn" id="hud-profile" onclick="window.showProfile(); window.atualizarHudAtiva('profile')">
+            <span class="material-icons">person</span>Perfil
+        </button>
+    `;
+    document.body.appendChild(hud);
+}
+
+window.atualizarHudAtiva = (btnId) => {
+    document.querySelectorAll('.mobile-hud-btn').forEach(b => b.classList.remove('active'));
+    const el = document.getElementById(`hud-${btnId}`);
+    if (el) el.classList.add('active');
+};
 
 window.acceptCookies = () => {
     localStorage.setItem('cookies_accepted', 'true');
@@ -63,50 +93,128 @@ window.closeTermsModal = () => {
     if (modal) modal.style.display = 'none';
 };
 
-// CATÁLOGO COMPLETO DOS 6 BIOMAS DO BRASIL
-const biomeDataCatalog = {
-    "Cerrado": {
-        desc: "O segundo maior bioma do Brasil, conhecido como a savana brasileira. Apresenta rica biodiversidade com árvores de troncos tortuosos e raízes profundas.",
-        species: [
-            "Handroanthus albus", "Dipteryx alata", "Hymenaea courbaril", "Caryocar brasiliense",
-            "Campomanesia adamantium", "Schinus terebinthifolia", "Mauritia flexuosa", "Handroanthus impetiginosus",
-            "Inga edulis", "Annona crassiflora", "Eugenia dysenterica", "Hancornia speciosa"
-        ]
+// CATÁLOGO EXPANDIDO DE ESPÉCIES POR BIOMA
+const biomeSpeciesCatalog = {
+    "Cerrado": [
+        "Handroanthus albus", "Dipteryx alata", "Hymenaea courbaril", "Caryocar brasiliense",
+        "Campomanesia adamantium", "Schinus terebinthifolia", "Mauritia flexuosa", "Handroanthus impetiginosus",
+        "Inga edulis", "Annona crassiflora", "Eugenia dysenterica", "Hancornia speciosa",
+        "Anadenanthera colubrina", "Tabebuia aurea", "Genipa americana", "Acrocomia aculeata"
+    ],
+    "Pantanal": [
+        "Handroanthus heptaphyllus", "Copernicia alba", "Attalea phalerata", "Ficus insipida",
+        "Mauritia flexuosa", "Tabebuia aurea", "Hymenaea courbaril", "Genipa americana",
+        "Inga vera", "Vitex cymosa", "Erythrina dominguezii", "Triplaris americana"
+    ],
+    "Mata Atlântica": [
+        "Paubrasilia echinata", "Cariniana legalis", "Eugenia uniflora", "Eugenia brasiliensis",
+        "Aspidosperma polyneuron", "Cedrela fissilis", "Ilex paraguariensis", "Psidium cattleyanum",
+        "Euterpe edulis", "Araucaria angustifolia", "Plinia cauliflora", "Schinus terebinthifolia",
+        "Handroanthus chrysotrichus", "Syagrus romanzoffiana", "Jacaranda micrantha", "Lecythidaceae"
+    ]
+};
+
+// BASE DE DADOS DE BIOMAS, VIVEIROS E ESPÉCIES
+const cityBiomeDatabase = {
+    "Aparecida do Taboado": {
+        state: "MS",
+        biome: "Cerrado (Transição Mata Atlântica)",
+        desc: "Região de solos arenosos com viveiros municipais e particulares ativos para reflorestamento e cultivo regional.",
+        portalUrl: "https://www.imasul.ms.gov.br/",
+        portalName: "Portal Ambiental do MS (IMASUL)",
+        mapQuery: "Aparecida+do+Taboado,MS",
+        viveiros: ["Viveiro Municipal Verdejar", "Viveiro Sementes do Paraná", "Viveiro Nativo Taboado"],
+        species: [...new Set([...biomeSpeciesCatalog["Cerrado"], "Cariniana legalis", "Eugenia uniflora"])]
     },
-    "Pantanal": {
-        desc: "A maior planície alagável contínua do planeta, com rica fauna e flora adaptada aos ciclos intensos de cheias e secas.",
-        species: [
-            "Handroanthus heptaphyllus", "Copernicia alba", "Attalea phalerata", "Ficus insipida",
-            "Mauritia flexuosa", "Tabebuia aurea", "Genipa americana", "Vitex cymosa"
-        ]
+    "Paranaíba": {
+        state: "MS",
+        biome: "Cerrado",
+        desc: "Predominância de Cerrado típico e matas ciliares do rio Paranaíba.",
+        portalUrl: "https://www.imasul.ms.gov.br/",
+        portalName: "Portal Ambiental do MS (IMASUL)",
+        mapQuery: "Paranaiba,MS",
+        viveiros: ["Viveiro Floresta Paranaíba", "Viveiro EcoMudas"],
+        species: biomeSpeciesCatalog["Cerrado"]
     },
-    "Mata Atlântica": {
-        desc: "Bioma de florestas tropicais com altíssima biodiversidade e endemismo, estendendo-se originalmente por grande parte da costa brasileira.",
-        species: [
-            "Paubrasilia echinata", "Cariniana legalis", "Eugenia uniflora", "Eugenia brasiliensis",
-            "Aspidosperma polyneuron", "Cedrela fissilis", "Ilex paraguariensis", "Euterpe edulis"
-        ]
+    "Três Lagoas": {
+        state: "MS",
+        biome: "Cerrado",
+        desc: "Bacia do rio Paraná com grande diversidade florestal.",
+        portalUrl: "https://www.imasul.ms.gov.br/",
+        portalName: "Portal Ambiental do MS (IMASUL)",
+        mapQuery: "Tres+Lagoas,MS",
+        viveiros: ["Viveiro Municipal Três Lagoas", "Mudas Rio Paraná"],
+        species: biomeSpeciesCatalog["Cerrado"]
     },
-    "Amazônia": {
-        desc: "A maior floresta tropical do mundo e a maior bacia hidrográfica da Terra, com imensa riqueza em biodiversidade e árvores gigantescas.",
-        species: [
-            "Bertholletia excelsa", "Hevea brasiliensis", "Swietenia macrophylla", "Ceiba pentandra",
-            "Mauritia flexuosa", "Theobroma cacao", "Euterpe oleracea", "Carapa guianensis"
-        ]
+    "Campo Grande": {
+        state: "MS",
+        biome: "Cerrado",
+        desc: "Capital do Cerrado com horto florestal e viveiros de referência.",
+        portalUrl: "https://www.imasul.ms.gov.br/",
+        portalName: "Portal Ambiental do MS (IMASUL)",
+        mapQuery: "Campo+Grande,MS",
+        viveiros: ["Horto Florestal Municipal", "Viveiro Campo Verde", "Viveiro Pantanal MS"],
+        species: biomeSpeciesCatalog["Cerrado"]
     },
-    "Caatinga": {
-        desc: "Bioma exclusivamente brasileiro caracterizado pelo clima semiárido, vegetação xerófila adaptada à seca e rica fauna endêmica.",
-        species: [
-            "Spondias tuberosa", "Schinopsis brasiliensis", "Mimosa tenuiflora", "Cereus jamacaru",
-            "Pilosocereus gounellei", "Ziziphus joazeiro", "Amburana cearensis", "Combretum leprosum"
-        ]
+    "Dourados": {
+        state: "MS",
+        biome: "Mata Atlântica e Cerrado",
+        desc: "Zona de transição ecológica com solos férteis e viveiros de árvores nobres.",
+        portalUrl: "https://www.imasul.ms.gov.br/",
+        portalName: "Portal Ambiental do MS (IMASUL)",
+        mapQuery: "Dourados,MS",
+        viveiros: ["Viveiro Floresta Dourados", "Mudas Nativas Sul-Mato-Grossenses"],
+        species: [...new Set([...biomeSpeciesCatalog["Mata Atlântica"], ...biomeSpeciesCatalog["Cerrado"].slice(0, 8)])]
     },
-    "Pampa": {
-        desc: "Caracterizado por vastas planícies de campos nativos e vegetação rasteira, localizado na região sul do país.",
-        species: [
-            "Erythrina crista-galli", "Butia yatay", "Schinus molle", "Acca sellowiana",
-            "Sebastiania commersoniana", "Blepharocalyx salicifolius"
-        ]
+    "Corumbá": {
+        state: "MS",
+        biome: "Pantanal",
+        desc: "Planície alagável com espécies adaptadas ao ciclo das águas.",
+        portalUrl: "https://www.imasul.ms.gov.br/",
+        portalName: "Portal Ambiental do MS (IMASUL)",
+        mapQuery: "Corumba,MS",
+        viveiros: ["Viveiro Pantanal Sustentável", "Mudas Águas do Pantanal"],
+        species: biomeSpeciesCatalog["Pantanal"]
+    },
+    "Bonito": {
+        state: "MS",
+        biome: "Cerrado e Mata Atlântica (Serra da Bodoquena)",
+        desc: "Florestas estacionais preservadas e viveiros de preservação hídrica.",
+        portalUrl: "https://www.imasul.ms.gov.br/",
+        portalName: "Portal Ambiental do MS (IMASUL)",
+        mapQuery: "Bonito,MS",
+        viveiros: ["Viveiro Bodoquena Verde", "Mudas Águas Cristalinas"],
+        species: [...new Set([...biomeSpeciesCatalog["Cerrado"].slice(0, 10), ...biomeSpeciesCatalog["Mata Atlântica"].slice(0, 8)])]
+    },
+    "Santa Fé do Sul": {
+        state: "SP",
+        biome: "Mata Atlântica (Floresta Estacional Semidecidual)",
+        desc: "Noroeste paulista na divisa com MS com viveiros municipais de mudas frutíferas e nativas.",
+        portalUrl: "https://semil.sp.gov.br/",
+        portalName: "Secretaria de Meio Ambiente de SP (SEMIL)",
+        mapQuery: "Santa+Fe+do+Sul,SP",
+        viveiros: ["Viveiro Municipal Santa Fé", "Mudas Paulista Verde"],
+        species: biomeSpeciesCatalog["Mata Atlântica"]
+    },
+    "Jales": {
+        state: "SP",
+        biome: "Mata Atlântica e Cerrado",
+        desc: "Remanescentes de mata nativa e viveiros de reflorestamento.",
+        portalUrl: "https://semil.sp.gov.br/",
+        portalName: "Secretaria de Meio Ambiente de SP (SEMIL)",
+        mapQuery: "Jales,SP",
+        viveiros: ["Viveiro Jales Sustentável", "Mudas Noroeste SP"],
+        species: [...new Set([...biomeSpeciesCatalog["Mata Atlântica"].slice(0, 10), ...biomeSpeciesCatalog["Cerrado"].slice(0, 6)])]
+    },
+    "Fernandópolis": {
+        state: "SP",
+        biome: "Mata Atlântica e Cerrado",
+        desc: "Ecótono entre Cerrado e Floresta Estacional com viveiros especializados.",
+        portalUrl: "https://semil.sp.gov.br/",
+        portalName: "Secretaria de Meio Ambiente de SP (SEMIL)",
+        mapQuery: "Fernandopolis,SP",
+        viveiros: ["Viveiro Municipal Fernandópolis", "EcoMudas Fernandópolis"],
+        species: [...new Set([...biomeSpeciesCatalog["Mata Atlântica"].slice(0, 10), ...biomeSpeciesCatalog["Cerrado"].slice(0, 6)])]
     }
 };
 
@@ -158,16 +266,15 @@ window.showLearn = () => window.switchView('learn-view');
 window.showAbout = () => window.switchView('about-view');
 window.showEncyclopedia = () => {
     window.switchView('encyclopedia-view');
-    const select = document.getElementById('manual-biome-select');
-    window.changeSelectedBiome(select ? select.value : 'Cerrado');
+    window.identifyBiomeByCity();
 };
 window.showDonate = () => {
     document.getElementById('donate-seed-name').value = '';
-    document.getElementById('donate-seed-qty').value = '10';
+    document.getElementById('donate-seed-date').value = '';
     document.getElementById('donate-seed-photo').value = '';
     document.getElementById('donate-seed-type').value = 'Doação';
     const lbl = document.getElementById('camera-label');
-    lbl.innerHTML = 'Clique para fotografar ou carregar imagem';
+    lbl.innerHTML = '<span class="material-icons">photo_library</span> Selecionar Foto da Galeria / Dispositivo';
     lbl.className = 'camera-btn';
     window.switchView('donate-view');
 };
@@ -185,10 +292,11 @@ window.showPrivateChats = (chatIdToOpen = null) => {
     window.initPrivateChatListListener(chatIdToOpen);
 };
 
+// CARREGAMENTO SIMULTÂNEO DE TODAS AS ESPÉCIES DO BIOMA VIA WIKIPÉDIA
 window.loadWikipediaSpeciesCards = async (speciesList, biomeName) => {
     const grid = document.getElementById('encyclopedia-grid');
     const titleEl = document.getElementById('species-section-title');
-    titleEl.innerText = `Espécies do Bioma: ${biomeName} (${speciesList.length} espécies)`;
+    titleEl.innerText = `Todas as Árvores, Frutos e Sementes do Bioma: ${biomeName} (${speciesList.length} espécies)`;
     grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1 / -1;">A carregar todas as espécies e fotos oficiais da Wikipédia ao mesmo tempo...</p>';
 
     const fetchPromises = speciesList.map(async (species) => {
@@ -226,10 +334,119 @@ window.loadWikipediaSpeciesCards = async (speciesList, biomeName) => {
     grid.innerHTML = htmlContent || '<p style="color: var(--text-muted);">Nenhuma espécie encontrada.</p>';
 };
 
-window.changeSelectedBiome = (biomeName) => {
-    const biome = biomeDataCatalog[biomeName] || biomeDataCatalog["Cerrado"];
-    document.getElementById('biome-manual-desc').innerText = biome.desc;
-    window.loadWikipediaSpeciesCards(biome.species, biomeName);
+window.focusViveiroOnMap = (viveiroName, cityQuery) => {
+    const iframe = document.getElementById('google-maps-iframe');
+    const query = encodeURIComponent(`${viveiroName} ${cityQuery}`);
+    iframe.src = `https://maps.google.com/maps?q=${query}&t=m&z=15&ie=UTF8&iwloc=B&output=embed`;
+};
+
+window.identifyBiomeByCity = () => {
+    const city = userProfileCache?.community || currentCommunity || "Aparecida do Taboado";
+    const info = cityBiomeDatabase[city] || cityBiomeDatabase["Aparecida do Taboado"];
+
+    const resultBox = document.getElementById('biome-result-box');
+    const titleEl = document.getElementById('biome-detected-title');
+    const descEl = document.getElementById('biome-detected-desc');
+    const viveirosContainer = document.getElementById('viveiros-list-container');
+    const gmapsLink = document.getElementById('gmaps-external-link');
+    const portalLink = document.getElementById('state-portal-link');
+    const portalLabel = document.getElementById('state-portal-label');
+    const iframe = document.getElementById('google-maps-iframe');
+
+    titleEl.innerText = `${city} (${info.state}) — Bioma: ${info.biome}`;
+    descEl.innerText = info.desc;
+    
+    let viveirosHtml = `<div style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">Viveiros destacados na região (clique para localizar no mapa):</div>`;
+    info.viveiros.forEach(v => {
+        viveirosHtml += `<button class="viveiro-pin-btn" onclick="window.focusViveiroOnMap('${v}', '${city}, ${info.state}')"><span class="material-icons" style="font-size: 14px; color: #c53030;">location_on</span> ${v}</button>`;
+    });
+    viveirosContainer.innerHTML = viveirosHtml;
+
+    gmapsLink.href = `https://www.google.com/maps/search/?api=1&query=viveiro+de+mudas+${info.mapQuery}`;
+    portalLink.href = info.portalUrl;
+    portalLabel.innerText = info.portalName;
+    iframe.src = `https://maps.google.com/maps?q=viveiro+de+mudas+${info.mapQuery}&t=m&z=13&ie=UTF8&iwloc=B&output=embed`;
+
+    resultBox.style.display = 'block';
+
+    window.loadWikipediaSpeciesCards(info.species, info.biome);
+};
+
+window.detectBiomeWithMaps = () => {
+    if (!navigator.geolocation) {
+        alert("Geolocalização não suportada. A usar cidade do perfil.");
+        return window.identifyBiomeByCity();
+    }
+
+    const titleEl = document.getElementById('biome-detected-title');
+    const resultBox = document.getElementById('biome-result-box');
+    resultBox.style.display = 'block';
+    titleEl.innerText = "A obter coordenadas GPS...";
+
+    navigator.geolocation.getCurrentPosition(
+        async (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+
+            const iframe = document.getElementById('google-maps-iframe');
+            const gmapsLink = document.getElementById('gmaps-external-link');
+            iframe.src = `https://maps.google.com/maps?q=viveiro+de+mudas+${lat},${lng}&t=m&z=13&ie=UTF8&iwloc=B&output=embed`;
+            gmapsLink.href = `https://www.google.com/maps/search/?api=1&query=viveiro+de+mudas+${lat},${lng}`;
+
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+                const data = await res.json();
+                const address = data.address || {};
+                const stateName = address.state || "";
+                const cityName = address.city || address.town || address.village || "Localização Atual";
+
+                let biomeName = "Cerrado Brasileiro";
+                let portalUrl = "https://www.gov.br/mma/pt-br";
+                let portalLabel = "Ministério do Meio Ambiente";
+                let viveirosList = ["Viveiro Municipal Regional", "Horto Florestal de Mudas"];
+                let speciesList = biomeSpeciesCatalog["Cerrado"];
+
+                if (stateName.includes("Mato Grosso do Sul")) {
+                    if (lng < -56.0) {
+                        biomeName = "Pantanal Sul-Mato-Grossense";
+                        speciesList = biomeSpeciesCatalog["Pantanal"];
+                    } else {
+                        biomeName = "Cerrado (Transição Mata Atlântica)";
+                        speciesList = [...new Set([...biomeSpeciesCatalog["Cerrado"], "Cariniana legalis", "Eugenia uniflora"])];
+                    }
+                    portalUrl = "https://www.imasul.ms.gov.br/";
+                    portalLabel = "Portal Ambiental do MS (IMASUL)";
+                    viveirosList = ["Viveiro Verdejar MS", "Mudas Nativas Pantanal/Cerrado"];
+                } else if (stateName.includes("São Paulo")) {
+                    biomeName = "Mata Atlântica / Cerrado Paulista";
+                    portalUrl = "https://semil.sp.gov.br/";
+                    portalLabel = "Secretaria de Meio Ambiente de SP (SEMIL)";
+                    viveirosList = ["Viveiro Ecológico Paulista", "Horto de Mudas SP"];
+                    speciesList = biomeSpeciesCatalog["Mata Atlântica"];
+                }
+
+                titleEl.innerText = `${cityName} (${stateName || 'Brasil'}) — Bioma: ${biomeName}`;
+                document.getElementById('biome-detected-desc').innerText = `Coordenadas GPS (${lat.toFixed(4)}, ${lng.toFixed(4)}).`;
+                
+                let viveirosHtml = `<div style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">Viveiros próximos (clique para destacar):</div>`;
+                viveirosList.forEach(v => {
+                    viveirosHtml += `<button class="viveiro-pin-btn" onclick="window.focusViveiroOnMap('${v}', '${cityName}')"><span class="material-icons" style="font-size: 14px; color: #c53030;">location_on</span> ${v}</button>`;
+                });
+                document.getElementById('viveiros-list-container').innerHTML = viveirosHtml;
+
+                document.getElementById('state-portal-link').href = portalUrl;
+                document.getElementById('state-portal-label').innerText = portalLabel;
+
+                window.loadWikipediaSpeciesCards(speciesList, biomeName);
+            } catch (e) {
+                window.identifyBiomeByCity();
+            }
+        },
+        () => {
+            alert("Permissão de localização negada.");
+            window.identifyBiomeByCity();
+        }
+    );
 };
 
 window.switchProfileSubTab = (subTab) => {
@@ -431,35 +648,43 @@ window.saveProfile = async () => {
     }
 };
 
+// SELEÇÃO DE FOTO DA GALERIA COM LEITURA AUTOMÁTICA
 const seedPhotoInput = document.getElementById('donate-seed-photo');
 if (seedPhotoInput) {
     seedPhotoInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (!file) return;
         const lbl = document.getElementById('camera-label');
-        lbl.innerHTML = 'A ler texto da imagem...';
+        lbl.innerHTML = 'A ler foto da galeria...';
         try {
             const result = await Tesseract.recognize(file, 'por');
             if (result.data.text.trim()) {
                 document.getElementById('donate-seed-name').value = result.data.text.trim().split('\n')[0].substring(0, 30);
             }
-            lbl.innerHTML = 'Foto processada com sucesso!';
+            lbl.innerHTML = 'Foto carregada com sucesso!';
             lbl.className = 'camera-btn success';
         } catch (e) {
-            lbl.innerHTML = 'Foto adicionada!';
+            lbl.innerHTML = 'Foto da galeria selecionada!';
             lbl.className = 'camera-btn success';
         }
     });
 }
 
+// CADASTRO COM DATA OBRIGATÓRIA
 window.processDonation = async () => {
     const name = document.getElementById('donate-seed-name').value.trim();
-    const qty = parseInt(document.getElementById('donate-seed-qty').value) || 1;
+    const availableDate = document.getElementById('donate-seed-date').value;
     const type = document.getElementById('donate-seed-type').value;
     const photoInput = document.getElementById('donate-seed-photo');
     const user = auth.currentUser;
 
-    if (!name || photoInput.files.length === 0) return alert('Nome e foto são obrigatórios.');
+    if (!name || photoInput.files.length === 0) {
+        return alert('Por favor, informe o nome da semente e selecione uma foto da galeria.');
+    }
+
+    if (!availableDate) {
+        return alert('A data em que a semente estará disponível é obrigatória!');
+    }
 
     const btn = document.getElementById('btn-donate');
     const loading = document.getElementById('upload-loading');
@@ -469,9 +694,8 @@ window.processDonation = async () => {
         const fotoBase64Texto = await comprimirEConverterBase64(photoInput.files[0], 600, 0.7);
         await addDoc(collection(db, "seeds"), {
             name: name,
-            totalQuantity: qty,
-            availableQuantity: qty,
             type: type,
+            availableDate: availableDate,
             fotoBase64: fotoBase64Texto,
             author: userProfileCache?.displayName || user.email.split('@')[0],
             authorEmail: user.email,
@@ -502,22 +726,24 @@ window.renderSeeds = async () => {
             const seedId = docSnap.id;
             const user = auth.currentUser;
             
-            const availableQty = seed.availableQuantity !== undefined ? seed.availableQuantity : (seed.totalQuantity || 10);
+            let actionHtml = '';
             const badgeClass = seed.type === 'Troca' ? 'badge-troca' : 'badge-doacao';
             const badgeText = seed.type || 'Doação';
+            const dataDisponivelFormatada = seed.availableDate ? seed.availableDate.split('-').reverse().join('/') : 'Não informada';
 
-            let actionHtml = '';
-            if (availableQty <= 0) {
-                actionHtml = `<p style="color: #c53030; font-size: 13px; font-weight: 600; text-align: center; margin-top: 10px;">Esgotado</p>`;
+            if (seed.status === 'reservada') {
+                if (user && seed.reservadoPorId === user.uid) {
+                    actionHtml = `
+                        <p style="color: var(--earth); font-size: 12px; font-weight: 600; text-align: center; margin-top: 8px;">Reservada por você</p>
+                        <button class="btn-cancel-reserve" onclick="window.removerReserva('${seedId}', 'explore')">Cancelar Minha Reserva</button>
+                    `;
+                } else {
+                    actionHtml = `<p style="color: var(--earth); font-size: 13px; font-weight: 600; text-align: center; margin-top: 10px;">Reservada por ${seed.reservadoPor}</p>`;
+                }
             } else if (user && seed.userId !== user.uid) {
-                actionHtml = `
-                    <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px;">
-                        <span style="font-size: 12px; font-weight: 600; color: var(--text-muted); text-align: center;">Disponível: ${availableQty} un.</span>
-                        <button class="btn-reserve" onclick="window.reservarSementeComQuantidade('${seedId}', '${seed.userId}', '${seed.author}', '${seed.name}', ${availableQty})">Reservar Quantidade</button>
-                    </div>
-                `;
+                actionHtml = `<button class="btn-reserve" onclick="window.reservarSemente('${seedId}', '${seed.userId}', '${seed.author}', '${seed.name}')">Reservar e Abrir Chat</button>`;
             } else if (user && seed.userId === user.uid) {
-                actionHtml = `<p style="color: var(--text-muted); font-size: 13px; text-align: center; margin-top: 10px;">Esta semente é sua (${availableQty} un. disp.).</p>`;
+                actionHtml = `<p style="color: var(--text-muted); font-size: 13px; text-align: center; margin-top: 10px;">Esta semente é sua.</p>`;
             }
 
             const box = document.createElement('div');
@@ -527,6 +753,7 @@ window.renderSeeds = async () => {
                     ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}" alt="${seed.name}">` : '<div style="height:180px;background:var(--bg-light);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#888;">Sem imagem</div>'}
                     <span class="badge-tipo ${badgeClass}">${badgeText}</span>
                     <h4 style="color: var(--text-main); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 2px;">📅 Disponível em: <strong>${dataDisponivelFormatada}</strong></p>
                     <p style="font-size: 13px; color: var(--text-muted);">Doador: <strong>${seed.author}</strong></p>
                     <p style="font-size: 12px; color: var(--text-muted);">Comunidade: ${seed.community || 'Geral'}</p>
                 </div>
@@ -539,52 +766,60 @@ window.renderSeeds = async () => {
     }
 };
 
-window.reservarSementeComQuantidade = async (seedId, ownerId, ownerName, seedName, maxQty) => {
+window.reservarSemente = async (seedId, ownerId, ownerName, seedName) => {
     const user = auth.currentUser;
     if (!user) return;
-
-    const inputQtd = prompt(`Quantas unidades de "${seedName}" deseja reservar? (Disponível: ${maxQty})`, "1");
-    if (inputQtd === null) return;
-
-    const qtdReservada = parseInt(inputQtd);
-    if (isNaN(qtdReservada) || qtdReservada <= 0 || qtdReservada > maxQty) {
-        return alert("Quantidade inválida.");
-    }
-
+    
     const myName = userProfileCache?.displayName || user.email.split('@')[0];
 
-    try {
-        const newAvailable = maxQty - qtdReservada;
-        const newStatus = newAvailable === 0 ? 'esgotado' : 'disponível';
+    if(confirm(`Deseja reservar a semente "${seedName}" e iniciar um chat com ${ownerName}?`)) {
+        try {
+            await updateDoc(doc(db, "seeds", seedId), {
+                status: 'reservada',
+                reservadoPor: myName,
+                reservadoPorId: user.uid
+            });
+            
+            const chatRoomRef = await addDoc(collection(db, "private_chats"), {
+                seedId: seedId,
+                seedName: seedName,
+                ownerId: ownerId,
+                ownerName: ownerName,
+                requesterId: user.uid,
+                requesterName: myName,
+                participants: [ownerId, user.uid],
+                createdAt: serverTimestamp()
+            });
 
-        await updateDoc(doc(db, "seeds", seedId), {
-            availableQuantity: newAvailable,
-            status: newStatus
-        });
-        
-        const chatRoomRef = await addDoc(collection(db, "private_chats"), {
-            seedId: seedId,
-            seedName: `${seedName} (${qtdReservada} un.)`,
-            ownerId: ownerId,
-            ownerName: ownerName,
-            requesterId: user.uid,
-            requesterName: myName,
-            participants: [ownerId, user.uid],
-            createdAt: serverTimestamp()
-        });
+            await addDoc(collection(db, "private_chats", chatRoomRef.id, "messages"), {
+                text: `Olá ${ownerName}! Acabei de reservar a semente "${seedName}". Como podemos combinar a entrega ou troca?`,
+                senderId: user.uid,
+                senderName: myName,
+                avatar: userProfileCache?.avatarBase64 || "",
+                timestamp: serverTimestamp()
+            });
 
-        await addDoc(collection(db, "private_chats", chatRoomRef.id, "messages"), {
-            text: `Olá ${ownerName}! Reservei ${qtdReservada} unidades da semente "${seedName}". Como combinamos a entrega?`,
-            senderId: user.uid,
-            senderName: myName,
-            avatar: userProfileCache?.avatarBase64 || "",
-            timestamp: serverTimestamp()
-        });
+            window.showPrivateChats(chatRoomRef.id);
+        } catch(e) {
+            alert("Erro ao efetuar a reserva e abrir o chat.");
+        }
+    }
+};
 
-        alert(`Reserva de ${qtdReservada} unidades efetuada com sucesso!`);
-        window.showPrivateChats(chatRoomRef.id);
-    } catch(e) {
-        alert("Erro ao efetuar a reserva.");
+window.removerReserva = async (seedId, originView) => {
+    if (confirm("Tem certeza que deseja remover a reserva desta semente?")) {
+        try {
+            await updateDoc(doc(db, "seeds", seedId), {
+                status: 'disponível',
+                reservadoPor: null,
+                reservadoPorId: null
+            });
+            alert("Reserva removida com sucesso!");
+            if (originView === 'profile') window.renderMyProfile();
+            else window.renderSeeds();
+        } catch (e) {
+            alert("Erro ao remover a reserva.");
+        }
     }
 };
 
@@ -599,6 +834,7 @@ const formatTelegramDateTime = (timestamp) => {
     return `${dia}/${mes}/${ano} às ${hora}:${min}`;
 };
 
+// CHATS COM AUTO-ATUALIZAÇÃO EM TEMPO REAL
 window.initPrivateChatListListener = (chatIdToOpen = null) => {
     const listContainer = document.getElementById('private-chat-list');
     const user = auth.currentUser;
@@ -837,18 +1073,26 @@ window.renderMyProfile = async () => {
                 
                 const badgeClass = seed.type === 'Troca' ? 'badge-troca' : 'badge-doacao';
                 const badgeText = seed.type || 'Doação';
-                const availableQty = seed.availableQuantity !== undefined ? seed.availableQuantity : (seed.totalQuantity || 10);
+                const dataDisponivelFormatada = seed.availableDate ? seed.availableDate.split('-').reverse().join('/') : 'Não informada';
                 
-                let statusText = `<span style="color: var(--lime); font-weight: 600;">Disponível: ${availableQty} / ${seed.totalQuantity || 10} un.</span>`;
+                let statusText = seed.status === 'reservada' 
+                    ? `<span style="color: var(--earth); font-weight: 600;">Reservada por ${seed.reservadoPor}</span>` 
+                    : `<span style="color: var(--lime); font-weight: 600;">Disponível</span>`;
+
+                let removeReserveBtn = seed.status === 'reservada'
+                    ? `<button class="btn-cancel-reserve" onclick="window.removerReserva('${seedId}', 'profile')">Remover Reserva</button>`
+                    : '';
 
                 box.innerHTML = `
                     <div>
                         ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}" alt="${seed.name}">` : '<div style="height:180px;background:var(--bg-light);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#888;">Sem imagem</div>'}
                         <span class="badge-tipo ${badgeClass}">${badgeText}</span>
                         <h4 style="color: var(--text-main); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
-                        <p style="font-size: 13px; margin-bottom: 4px;"><strong>Estoque:</strong> ${statusText}</p>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 4px;">📅 Disponível em: <strong>${dataDisponivelFormatada}</strong></p>
+                        <p style="font-size: 13px; margin-bottom: 4px;"><strong>Status:</strong> ${statusText}</p>
                     </div>
                     <div>
+                        ${removeReserveBtn}
                         <button class="btn-danger" onclick="window.excluirSemente('${seedId}')">Excluir Semente</button>
                     </div>
                 `;
