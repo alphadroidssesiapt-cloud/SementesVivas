@@ -29,7 +29,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// FUNÇÃO PARA ABRIR E FECHAR A SLIDING BAR DE FUNÇÕES
 window.toggleSlidingSidebar = () => {
     const sidebar = document.getElementById('sliding-sidebar');
     const overlay = document.getElementById('sidebar-overlay');
@@ -231,6 +230,7 @@ window.showEncyclopedia = () => {
 };
 window.showDonate = () => {
     document.getElementById('donate-seed-name').value = '';
+    document.getElementById('donate-seed-quantity').value = '';
     document.getElementById('donate-seed-date').value = '';
     document.getElementById('donate-seed-photo').value = '';
     document.getElementById('donate-seed-type').value = 'Doação';
@@ -629,8 +629,10 @@ if (seedPhotoInput) {
     });
 }
 
+// CADASTRO COM QUANTIDADE DE SEMENTES
 window.processDonation = async () => {
     const name = document.getElementById('donate-seed-name').value.trim();
+    const quantity = parseInt(document.getElementById('donate-seed-quantity').value, 10);
     const availableDate = document.getElementById('donate-seed-date').value;
     const type = document.getElementById('donate-seed-type').value;
     const photoInput = document.getElementById('donate-seed-photo');
@@ -638,6 +640,10 @@ window.processDonation = async () => {
 
     if (!name || photoInput.files.length === 0) {
         return alert('Por favor, informe o nome da semente e selecione uma foto da galeria.');
+    }
+
+    if (!quantity || quantity < 1) {
+        return alert('Por favor, informe uma quantidade válida de sementes (mínimo 1).');
     }
 
     if (!availableDate) {
@@ -652,6 +658,7 @@ window.processDonation = async () => {
         const fotoBase64Texto = await comprimirEConverterBase64(photoInput.files[0], 600, 0.7);
         await addDoc(collection(db, "seeds"), {
             name: name,
+            quantity: quantity,
             type: type,
             availableDate: availableDate,
             fotoBase64: fotoBase64Texto,
@@ -671,6 +678,7 @@ window.processDonation = async () => {
     }
 };
 
+// RENDERIZAR SEMENTES COM ESCOLHA DE QUANTIDADE PARA RESERVAR
 window.renderSeeds = async () => {
     const container = document.getElementById('seeds-grid-container');
     container.innerHTML = '<p style="color: var(--text-muted);">A carregar sementes...</p>';
@@ -688,18 +696,25 @@ window.renderSeeds = async () => {
             const badgeClass = seed.type === 'Troca' ? 'badge-troca' : 'badge-doacao';
             const badgeText = seed.type || 'Doação';
             const dataDisponivelFormatada = seed.availableDate ? seed.availableDate.split('-').reverse().join('/') : 'Não informada';
+            const qtdDisponivel = seed.quantity !== undefined ? seed.quantity : 1;
 
-            if (seed.status === 'reservada') {
+            if (seed.status === 'esgotada' || qtdDisponivel <= 0) {
                 if (user && seed.reservadoPorId === user.uid) {
                     actionHtml = `
-                        <p style="color: var(--earth); font-size: 12px; font-weight: 600; text-align: center; margin-top: 8px;">Reservada por você</p>
-                        <button class="btn-cancel-reserve" onclick="window.removerReserva('${seedId}', 'explore')">Cancelar Minha Reserva</button>
+                        <p style="color: var(--earth); font-size: 12px; font-weight: 600; text-align: center; margin-top: 8px;">Reservada por você (${seed.reservadoQtd || 1} un.)</p>
+                        <button class="btn-cancel-reserve" onclick="window.removerReserva('${seedId}', 'explore', ${seed.reservadoQtd || 1})">Cancelar Minha Reserva</button>
                     `;
                 } else {
-                    actionHtml = `<p style="color: var(--earth); font-size: 13px; font-weight: 600; text-align: center; margin-top: 10px;">Reservada por ${seed.reservadoPor}</p>`;
+                    actionHtml = `<p style="color: #c53030; font-size: 13px; font-weight: 600; text-align: center; margin-top: 10px;">Esgotada / Totalmente Reservada</p>`;
                 }
             } else if (user && seed.userId !== user.uid) {
-                actionHtml = `<button class="btn-reserve" onclick="window.reservarSemente('${seedId}', '${seed.userId}', '${seed.author}', '${seed.name}')">Reservar e Abrir Chat</button>`;
+                actionHtml = `
+                    <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
+                        <label style="font-size: 12px; font-weight: 600; color: var(--text-main);">Qtd:</label>
+                        <input type="number" id="reserve-qty-${seedId}" min="1" max="${qtdDisponivel}" value="1" style="width: 70px; padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-light); color: var(--text-main); font-size: 13px;">
+                        <button class="btn-reserve" style="margin-top: 0; flex: 1;" onclick="window.reservarSemente('${seedId}', '${seed.userId}', '${seed.author}', '${seed.name}', ${qtdDisponivel})">Reservar</button>
+                    </div>
+                `;
             } else if (user && seed.userId === user.uid) {
                 actionHtml = `<p style="color: var(--text-muted); font-size: 13px; text-align: center; margin-top: 10px;">Esta semente é sua.</p>`;
             }
@@ -711,6 +726,7 @@ window.renderSeeds = async () => {
                     ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}" alt="${seed.name}">` : '<div style="height:180px;background:var(--bg-light);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#888;">Sem imagem</div>'}
                     <span class="badge-tipo ${badgeClass}">${badgeText}</span>
                     <h4 style="color: var(--text-main); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 2px;">📦 Disponíveis: <strong>${qtdDisponivel} sementes</strong></p>
                     <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 2px;">📅 Disponível em: <strong>${dataDisponivelFormatada}</strong></p>
                     <p style="font-size: 13px; color: var(--text-muted);">Doador: <strong>${seed.author}</strong></p>
                     <p style="font-size: 12px; color: var(--text-muted);">Comunidade: ${seed.community || 'Geral'}</p>
@@ -724,18 +740,30 @@ window.renderSeeds = async () => {
     }
 };
 
-window.reservarSemente = async (seedId, ownerId, ownerName, seedName) => {
+// RESERVAR QUANTIDADE ESPECÍFICA E ABRIR CHAT
+window.reservarSemente = async (seedId, ownerId, ownerName, seedName, maxAvailable) => {
     const user = auth.currentUser;
     if (!user) return;
     
-    const myName = userProfileCache?.displayName || user.email.split('@')[0];
+    const qtyInput = document.getElementById(`reserve-qty-${seedId}`);
+    const requestedQty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
 
-    if(confirm(`Deseja reservar a semente "${seedName}" e iniciar um chat com ${ownerName}?`)) {
+    if (!requestedQty || requestedQty < 1 || requestedQty > maxAvailable) {
+        return alert(`Por favor, escolha uma quantidade válida entre 1 e ${maxAvailable}.`);
+    }
+
+    const myName = userProfileCache?.displayName || user.email.split('@')[0];
+    const remainingQty = maxAvailable - requestedQty;
+    const newStatus = remainingQty <= 0 ? 'esgotada' : 'disponível';
+
+    if(confirm(`Deseja reservar ${requestedQty} semente(s) de "${seedName}" e iniciar um chat com ${ownerName}?`)) {
         try {
             await updateDoc(doc(db, "seeds", seedId), {
-                status: 'reservada',
+                quantity: remainingQty,
+                status: newStatus,
                 reservadoPor: myName,
-                reservadoPorId: user.uid
+                reservadoPorId: user.uid,
+                reservadoQtd: requestedQty
             });
             
             const chatRoomRef = await addDoc(collection(db, "private_chats"), {
@@ -750,7 +778,7 @@ window.reservarSemente = async (seedId, ownerId, ownerName, seedName) => {
             });
 
             await addDoc(collection(db, "private_chats", chatRoomRef.id, "messages"), {
-                text: `Olá ${ownerName}! Acabei de reservar a semente "${seedName}". Como podemos combinar a entrega ou troca?`,
+                text: `Olá ${ownerName}! Acabei de reservar ${requestedQty} semente(s) de "${seedName}". Como podemos combinar a entrega ou troca?`,
                 senderId: user.uid,
                 senderName: myName,
                 avatar: userProfileCache?.avatarBase64 || "",
@@ -764,13 +792,19 @@ window.reservarSemente = async (seedId, ownerId, ownerName, seedName) => {
     }
 };
 
-window.removerReserva = async (seedId, originView) => {
+window.removerReserva = async (seedId, originView, restoredQty = 1) => {
     if (confirm("Tem certeza que deseja remover a reserva desta semente?")) {
         try {
-            await updateDoc(doc(db, "seeds", seedId), {
+            const seedRef = doc(db, "seeds", seedId);
+            const seedSnap = await getDoc(seedRef);
+            const currentQty = seedSnap.exists() ? (seedSnap.data().quantity || 0) : 0;
+
+            await updateDoc(seedRef, {
+                quantity: currentQty + restoredQty,
                 status: 'disponível',
                 reservadoPor: null,
-                reservadoPorId: null
+                reservadoPorId: null,
+                reservadoQtd: null
             });
             alert("Reserva removida com sucesso!");
             if (originView === 'profile') window.renderMyProfile();
@@ -1031,13 +1065,14 @@ window.renderMyProfile = async () => {
                 const badgeClass = seed.type === 'Troca' ? 'badge-troca' : 'badge-doacao';
                 const badgeText = seed.type || 'Doação';
                 const dataDisponivelFormatada = seed.availableDate ? seed.availableDate.split('-').reverse().join('/') : 'Não informada';
+                const qtdDisponivel = seed.quantity !== undefined ? seed.quantity : 1;
                 
-                let statusText = seed.status === 'reservada' 
-                    ? `<span style="color: var(--earth); font-weight: 600;">Reservada por ${seed.reservadoPor}</span>` 
-                    : `<span style="color: var(--lime); font-weight: 600;">Disponível</span>`;
+                let statusText = seed.status === 'esgotada' || qtdDisponivel <= 0
+                    ? `<span style="color: #c53030; font-weight: 600;">Esgotada / Reservada</span>` 
+                    : `<span style="color: var(--lime); font-weight: 600;">Disponível (${qtdDisponivel} un.)</span>`;
 
-                let removeReserveBtn = seed.status === 'reservada'
-                    ? `<button class="btn-cancel-reserve" onclick="window.removerReserva('${seedId}', 'profile')">Remover Reserva</button>`
+                let removeReserveBtn = seed.reservadoPor
+                    ? `<button class="btn-cancel-reserve" onclick="window.removerReserva('${seedId}', 'profile', ${seed.reservadoQtd || 1})">Remover Última Reserva (${seed.reservadoPor})</button>`
                     : '';
 
                 box.innerHTML = `
@@ -1045,6 +1080,7 @@ window.renderMyProfile = async () => {
                         ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}" alt="${seed.name}">` : '<div style="height:180px;background:var(--bg-light);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#888;">Sem imagem</div>'}
                         <span class="badge-tipo ${badgeClass}">${badgeText}</span>
                         <h4 style="color: var(--text-main); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 2px;">📦 Estoque: <strong>${qtdDisponivel} sementes</strong></p>
                         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 4px;">📅 Disponível em: <strong>${dataDisponivelFormatada}</strong></p>
                         <p style="font-size: 13px; margin-bottom: 4px;"><strong>Status:</strong> ${statusText}</p>
                     </div>
