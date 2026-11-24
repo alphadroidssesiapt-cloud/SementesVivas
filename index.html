@@ -11,10 +11,9 @@
 </head>
 <body>
 
-    <!-- CONTAINER COM DETEÇÃO DE DISPOSITIVO (MOBILE / DESKTOP) -->
     <div id="device-frame" class="device-desktop">
 
-        <!-- CABEÇALHO / HUD (ADAPTÁVEL) -->
+        <!-- CABEÇALHO -->
         <header id="main-header" style="display: none;">
             <div class="header-container">
                 <div class="nav-brand" onclick="window.showDashboard()">
@@ -25,6 +24,7 @@
                     </div>
                 </div>
 
+                <!-- MENU DE NAVEGAÇÃO COMPLETO -->
                 <nav class="nav-links">
                     <button class="nav-link active" id="tab-dashboard-view" onclick="window.showDashboard()">Início</button>
                     <button class="nav-link" id="tab-available-view" onclick="window.showAvailable()">Explorar</button>
@@ -179,7 +179,6 @@
                             <div class="camera-btn" id="camera-label">
                                 <span class="material-icons">photo_library</span> Selecionar Foto da Galeria / Dispositivo
                             </div>
-                            <!-- Aceita ficheiros e abre a galeria diretamente em dispositivos móveis -->
                             <input type="file" id="donate-seed-photo" accept="image/*">
                         </div>
                     </div>
