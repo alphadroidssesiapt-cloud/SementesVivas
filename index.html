@@ -11,10 +11,9 @@
 </head>
 <body>
 
-    <!-- DISPOSITIVO DINÂMICO (DETECTA MOBILE / DESKTOP) -->
     <div id="device-frame" class="device-desktop">
 
-        <!-- CABEÇALHO / HUD MOBILE (NAVEGAÇÃO INFERIOR SE FOR TELEMÓVEL) -->
+        <!-- CABEÇALHO -->
         <header id="main-header" style="display: none;">
             <div class="header-container">
                 <div class="nav-brand" onclick="window.showDashboard()">
@@ -26,20 +25,21 @@
                 </div>
 
                 <nav class="nav-links">
-                    <button class="nav-link active" id="tab-dashboard-view" onclick="window.showDashboard()"><span class="material-icons">home</span> Início</button>
-                    <button class="nav-link" id="tab-available-view" onclick="window.showAvailable()"><span class="material-icons">inventory_2</span> Explorar</button>
-                    <button class="nav-link" id="tab-private-chats-view" onclick="window.showPrivateChats()"><span class="material-icons">chat</span> Chats</button>
-                    <button class="nav-link" id="tab-chat-view" onclick="window.showChat()"><span class="material-icons">forum</span> Comunidade</button>
-                    <button class="nav-link" id="tab-encyclopedia-view" onclick="window.showEncyclopedia()"><span class="material-icons">public</span> Biomas</button>
-                    <button class="nav-link" id="tab-learn-view" onclick="window.showLearn()"><span class="material-icons">school</span> Aprender</button>
-                    <button class="nav-link" id="tab-about-view" onclick="window.showAbout()"><span class="material-icons">info</span> Sobre</button>
-                    <button class="nav-link" id="tab-profile-view" onclick="window.showProfile()"><span class="material-icons">person</span> Perfil</button>
+                    <button class="nav-link active" id="tab-dashboard-view" onclick="window.showDashboard()">Início</button>
+                    <button class="nav-link" id="tab-available-view" onclick="window.showAvailable()">Explorar</button>
+                    <button class="nav-link" id="tab-private-chats-view" onclick="window.showPrivateChats()">Meus Chats</button>
+                    <button class="nav-link" id="tab-chat-view" onclick="window.showChat()">Comunidade</button>
+                    <button class="nav-link" id="tab-encyclopedia-view" onclick="window.showEncyclopedia()">Bioma & Enciclopédia</button>
+                    <button class="nav-link" id="tab-learn-view" onclick="window.showLearn()">Aprender</button>
+                    <button class="nav-link" id="tab-about-view" onclick="window.showAbout()">Sobre Nós</button>
+                    <button class="nav-link" id="tab-profile-view" onclick="window.showProfile()">Perfil</button>
                 </nav>
 
                 <div class="nav-actions">
-                    <button class="btn-theme-toggle" onclick="window.toggleTheme()" title="Modo Claro / Escuro">
+                    <button class="btn-theme-toggle" onclick="window.toggleTheme()" title="Alternar Modo Claro / Escuro">
                         <span id="theme-icon" class="material-icons" style="font-size: 18px;">dark_mode</span>
                     </button>
+
                     <button class="btn-lime-pill" onclick="window.showDonate()">
                         <span class="material-icons" style="font-size: 16px;">add_circle</span> Cadastrar
                     </button>
@@ -119,7 +119,7 @@
                             <span class="material-icons" style="font-size: 18px;">inventory_2</span> Explorar Sementes Disponíveis
                         </button>
                         <button class="btn-glass-hero" onclick="window.showEncyclopedia()">
-                            Ver Enciclopédia de Biomas <span class="material-icons" style="font-size: 18px;">public</span>
+                            Identificar Meu Bioma <span class="material-icons" style="font-size: 18px;">public</span>
                         </button>
                     </div>
                 </div>
@@ -139,7 +139,7 @@
                     <div class="action-card" onclick="window.showDonate()">
                         <div class="card-icon-circle"><span class="material-icons">add_a_photo</span></div>
                         <h3>Cadastrar Semente</h3>
-                        <p>Publique novas sementes com data de disponibilidade e galeria.</p>
+                        <p>Publique novas sementes com leitura automática.</p>
                     </div>
                     <div class="action-card" onclick="window.showPrivateChats()">
                         <div class="card-icon-circle"><span class="material-icons">chat</span></div>
@@ -148,8 +148,8 @@
                     </div>
                     <div class="action-card" onclick="window.showEncyclopedia()">
                         <div class="card-icon-circle"><span class="material-icons">public</span></div>
-                        <h3>Enciclopédia de Biomas</h3>
-                        <p>Explore todos os 6 biomas do Brasil e conheça espécies nativas.</p>
+                        <h3>Mapa do Bioma e Viveiros</h3>
+                        <p>Identifique seu bioma no Google Maps e localize viveiros de mudas.</p>
                     </div>
                 </div>
             </div>
@@ -162,40 +162,29 @@
             <div id="available-view" class="view">
                 <div class="page-header-dark">
                     <h2>Sementes da Comunidade</h2>
-                    <p>Reserve a quantidade que precisa e verifique a data de disponibilidade.</p>
+                    <p>Reserve uma semente para abrir uma conversa direta com o doador.</p>
                 </div>
                 <div id="seeds-grid-container" class="seeds-grid"></div>
             </div>
 
-            <!-- CADASTRAR SEMENTE (COM GALERIA E DATA OBRIGATÓRIA) -->
+            <!-- CADASTRAR SEMENTE -->
             <div id="donate-view" class="view">
                 <div class="content-card">
                     <h2 style="color: var(--forest-dark); margin-bottom: 20px;">Cadastrar Nova Semente</h2>
                     
                     <div class="input-group">
-                        <label>Foto da Semente (Escolher da Galeria ou Tirar Foto)</label>
+                        <label>Fotografar Semente (A leitura automática preencherá o nome)</label>
                         <div class="camera-wrapper">
                             <div class="camera-btn" id="camera-label">
-                                <span class="material-icons">photo_library</span> Selecionar da Galeria / Fotografar
+                                <span class="material-icons">camera_alt</span> Clique para fotografar ou carregar imagem
                             </div>
-                            <!-- Permitir escolher da galeria do telemóvel ou ficheiros do pc -->
-                            <input type="file" id="donate-seed-photo" accept="image/*">
+                            <input type="file" id="donate-seed-photo" accept="image/*" capture="environment">
                         </div>
                     </div>
 
                     <div class="input-group">
                         <label>Nome da Semente</label>
                         <input type="text" id="donate-seed-name" placeholder="Ex: Tomate Coração de Boi">
-                    </div>
-
-                    <div class="input-group">
-                        <label>Quantidade Disponível (Unidades / Gramas / Pacotes)</label>
-                        <input type="number" id="donate-seed-qty" placeholder="Ex: 50" min="1" value="10">
-                    </div>
-
-                    <div class="input-group">
-                        <label>Data em que a Semente estará Disponível (Obrigatório)</label>
-                        <input type="date" id="donate-seed-date" class="select-styled" required>
                     </div>
 
                     <div class="input-group">
@@ -285,30 +274,56 @@
                 </div>
             </div>
 
-            <!-- ENCICLOPÉDIA DE TODOS OS 6 BIOMAS DO BRASIL -->
+            <!-- ENCICLOPÉDIA DE SEMENTES NATIVAS & BIOMA -->
             <div id="encyclopedia-view" class="view">
                 <div class="page-header-dark">
-                    <h2>Enciclopédia dos Biomas do Brasil</h2>
-                    <p>Selecione abaixo qualquer um dos 6 biomas brasileiros para carregar árvores, frutos e sementes oficiais da Wikipédia.</p>
+                    <h2>Identificação de Bioma, Viveiros e Espécies Nativas</h2>
+                    <p>Geolocalização para detecção de biomas, pinos de viveiros no mapa e catálogo completo de árvores, frutos e sementes via Wikipédia.</p>
                 </div>
 
-                <div class="biome-locator-card" style="display: flex; flex-direction: column; gap: 15px; padding: 25px;">
-                    <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
-                        <label style="font-weight: 700; color: var(--forest-dark);">Escolha o Bioma:</label>
-                        <select id="manual-biome-select" class="select-styled" style="max-width: 320px;" onchange="window.changeSelectedBiome(this.value)">
-                            <option value="Cerrado">Cerrado</option>
-                            <option value="Pantanal">Pantanal</option>
-                            <option value="Mata Atlântica">Mata Atlântica</option>
-                            <option value="Amazônia">Amazônia</option>
-                            <option value="Caatinga">Caatinga</option>
-                            <option value="Pampa">Pampa</option>
-                        </select>
+                <div class="biome-locator-card">
+                    <div class="biome-locator-info">
+                        <span class="enc-tag" style="margin-bottom: 8px;">GEOLOCALIZAÇÃO E VIVEIROS</span>
+                        <h3 style="color: var(--forest-dark); font-size: 20px; margin-bottom: 8px;">Identificar Meu Bioma e Viveiros</h3>
+                        <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
+                            Detete seu bioma e clique nos viveiros abaixo para destacá-los diretamente no mapa ao lado.
+                        </p>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
+                            <button class="btn-lime-pill" onclick="window.detectBiomeWithMaps()">
+                                <span class="material-icons" style="font-size: 17px;">my_location</span> Detectar por GPS
+                            </button>
+                            <button class="btn-outline-dark" style="width: auto; padding: 9px 18px;" onclick="window.identifyBiomeByCity()">
+                                Usar Cidade do Perfil
+                            </button>
+                        </div>
+
+                        <div id="biome-result-box" class="biome-result-box" style="display: none;">
+                            <h4 id="biome-detected-title" style="color: var(--forest-dark); font-size: 16px; margin-bottom: 6px;">Bioma Identificado</h4>
+                            <p id="biome-detected-desc" style="font-size: 13px; color: var(--text-main); line-height: 1.5; margin-bottom: 10px;"></p>
+                            
+                            <div id="viveiros-list-container" style="margin-bottom: 12px;"></div>
+                            
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <a id="gmaps-external-link" href="#" target="_blank" class="btn-outline-dark" style="width: auto; padding: 8px 16px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                                    <span class="material-icons" style="font-size: 16px;">map</span> Ver Todos no Google Maps
+                                </a>
+                                <a id="state-portal-link" href="#" target="_blank" class="btn-lime-pill" style="text-decoration: none;">
+                                    <span class="material-icons" style="font-size: 16px;">open_in_new</span> <span id="state-portal-label">Portal do Estado</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <p id="biome-manual-desc" style="font-size: 14px; color: var(--text-muted); line-height: 1.5; margin: 0;"></p>
+
+                    <div class="biome-map-frame">
+                        <iframe id="google-maps-iframe" 
+                            src="https://maps.google.com/maps?q=viveiro+de+mudas+Aparecida+do+Taboado,MS&t=m&z=13&ie=UTF8&iwloc=B&output=embed" 
+                            width="100%" height="280" style="border:0; border-radius: 12px;" allowfullscreen="" loading="lazy">
+                        </iframe>
+                    </div>
                 </div>
                 
                 <div style="margin-top: 35px;">
-                    <h3 id="species-section-title" style="color: var(--forest-dark); font-size: 20px; margin-bottom: 8px;">Espécies do Bioma</h3>
+                    <h3 id="species-section-title" style="color: var(--forest-dark); font-size: 20px; margin-bottom: 8px;">Árvores, Frutos e Sementes do Bioma</h3>
                     <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Carregamento simultâneo de fotos e artigos oficiais da Wikipédia.</p>
                     <div id="encyclopedia-grid" class="encyclopedia-grid">
                         <p style="color: var(--text-muted);">A carregar espécies do bioma...</p>
@@ -337,6 +352,7 @@
                 </div>
 
                 <div class="about-card-vertical">
+                    <!-- Topo: Logo e Texto -->
                     <div class="about-header-flex">
                         <div class="about-logo-container">
                             <img src="alphas.jpg" alt="Logo ALPHADROID'S" class="team-logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
@@ -350,17 +366,39 @@
                         <div class="about-text-content">
                             <h3>Tecnologia e Natureza em Harmonia</h3>
                             <p>
-                                O projeto <strong>Sementes Vivas</strong> nasceu da união de ideias, criatividade e propósito da equipe <strong>ALPHADROID'S</strong>. Nosso grande objetivo sempre foi utilizar a tecnologia como uma ponte para aproximar as pessoas da natureza, incentivando a troca de sementes crioulas e o fortalecimento da biodiversidade brasileira.
+                                O projeto <strong>Sementes Vivas</strong> nasceu da união de ideias, criatividade e propósito da equipe <strong>ALPHADROID'S</strong>[cite: 2]. Nosso grande objetivo sempre foi utilizar a tecnologia como uma ponte para aproximar as pessoas da natureza, incentivando a troca de sementes crioulas, o cultivo sustentável e o fortalecimento da biodiversidade local.
                             </p>
+                            <p>
+                                Para transformar esse sonho em uma ferramenta verdadeiramente útil e confiável, unimos o pensamento inovador do nosso time a um rigoroso processo de <strong>pesquisas realizadas em conjunto com biólogos e especialistas ambientais</strong>. Cada funcionalidade — desde a identificação inteligente dos biomas até o mapeamento de viveiros e a enciclopédia de espécies nativas — foi pensada para respeitar os ciclos ecológicos de cada região.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Pilares do Projeto -->
+                    <div class="about-pillars">
+                        <div class="pillar-item">
+                            <span class="material-icons">biotech</span>
+                            <h4>Base Científica</h4>
+                            <p>Desenvolvido com apoio e pesquisa junto a biólogos.</p>
+                        </div>
+                        <div class="pillar-item">
+                            <span class="material-icons">psychology</span>
+                            <h4>Pensamento Criativo</h4>
+                            <p>Soluções digitais pensadas pelo time ALPHADROID'S.</p>
+                        </div>
+                        <div class="pillar-item">
+                            <span class="material-icons">volunteer_activism</span>
+                            <h4>Impacto Verde</h4>
+                            <p>Fomento à partilha comunitária e reflorestamento.</p>
                         </div>
                     </div>
 
                     <!-- FOTO DA EQUIPE MENOR E EMOLDURADA EMBAIXO DO TEXTO -->
                     <div class="team-photo-container">
-                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 12px; text-align: center;">Nossa Equipe</h4>
+                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 12px; text-align: center;">Nossa Equipe[cite: 3]</h4>
                         <img src="flltc oi.jpg" alt="Equipe ALPHADROID'S" class="team-group-photo-framed" onerror="this.style.display='none'; document.getElementById('team-photo-fallback').style.display='block';">
                         <div id="team-photo-fallback" style="display: none; padding: 30px; text-align: center; background: var(--bg-light); border-radius: 12px; color: var(--text-muted); font-size: 14px;">
-                            Certifique-se de que o ficheiro <strong>flltc oi.jpg</strong> está na mesma pasta do site.
+                            Coloque a foto da equipe na mesma pasta do site com o nome <strong>flltc oi.jpg</strong>[cite: 3].
                         </div>
                     </div>
                 </div>
@@ -382,7 +420,7 @@
                     </div>
 
                     <div class="input-group">
-                        <label>Alterar Foto de Perfil (Galeria / Ficheiro)</label>
+                        <label>Alterar Foto de Perfil</label>
                         <input type="file" id="profile-photo-input" accept="image/*">
                     </div>
 
@@ -420,7 +458,6 @@
 
     </div>
 
-    <!-- SCRIPT DA HUD MOBILE E APLICAÇÃO -->
     <script type="module" src="script.js"></script>
 </body>
 </html>
