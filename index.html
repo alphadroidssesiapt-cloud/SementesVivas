@@ -11,9 +11,10 @@
 </head>
 <body>
 
+    <!-- CONTAINER COM DETEÇÃO DE DISPOSITIVO (MOBILE / DESKTOP) -->
     <div id="device-frame" class="device-desktop">
 
-        <!-- CABEÇALHO -->
+        <!-- CABEÇALHO / HUD (ADAPTÁVEL) -->
         <header id="main-header" style="display: none;">
             <div class="header-container">
                 <div class="nav-brand" onclick="window.showDashboard()">
@@ -139,7 +140,7 @@
                     <div class="action-card" onclick="window.showDonate()">
                         <div class="card-icon-circle"><span class="material-icons">add_a_photo</span></div>
                         <h3>Cadastrar Semente</h3>
-                        <p>Publique novas sementes com leitura automática.</p>
+                        <p>Publique novas sementes com data e foto da galeria.</p>
                     </div>
                     <div class="action-card" onclick="window.showPrivateChats()">
                         <div class="card-icon-circle"><span class="material-icons">chat</span></div>
@@ -167,24 +168,30 @@
                 <div id="seeds-grid-container" class="seeds-grid"></div>
             </div>
 
-            <!-- CADASTRAR SEMENTE -->
+            <!-- CADASTRAR SEMENTE COM SELEÇÃO DA GALERIA E DATA OBRIGATÓRIA -->
             <div id="donate-view" class="view">
                 <div class="content-card">
                     <h2 style="color: var(--forest-dark); margin-bottom: 20px;">Cadastrar Nova Semente</h2>
                     
                     <div class="input-group">
-                        <label>Fotografar Semente (A leitura automática preencherá o nome)</label>
+                        <label>Fotografia da Semente (Selecione da Galeria ou Câmara)</label>
                         <div class="camera-wrapper">
                             <div class="camera-btn" id="camera-label">
-                                <span class="material-icons">camera_alt</span> Clique para fotografar ou carregar imagem
+                                <span class="material-icons">photo_library</span> Selecionar Foto da Galeria / Dispositivo
                             </div>
-                            <input type="file" id="donate-seed-photo" accept="image/*" capture="environment">
+                            <!-- Aceita ficheiros e abre a galeria diretamente em dispositivos móveis -->
+                            <input type="file" id="donate-seed-photo" accept="image/*">
                         </div>
                     </div>
 
                     <div class="input-group">
                         <label>Nome da Semente</label>
                         <input type="text" id="donate-seed-name" placeholder="Ex: Tomate Coração de Boi">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Data em que a Semente estará Disponível (Obrigatório)</label>
+                        <input type="date" id="donate-seed-date" class="input-styled" required>
                     </div>
 
                     <div class="input-group">
@@ -352,7 +359,6 @@
                 </div>
 
                 <div class="about-card-vertical">
-                    <!-- Topo: Logo e Texto -->
                     <div class="about-header-flex">
                         <div class="about-logo-container">
                             <img src="alphas.jpg" alt="Logo ALPHADROID'S" class="team-logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
@@ -374,7 +380,6 @@
                         </div>
                     </div>
 
-                    <!-- Pilares do Projeto -->
                     <div class="about-pillars">
                         <div class="pillar-item">
                             <span class="material-icons">biotech</span>
@@ -393,7 +398,6 @@
                         </div>
                     </div>
 
-                    <!-- FOTO DA EQUIPE MENOR E EMOLDURADA EMBAIXO DO TEXTO -->
                     <div class="team-photo-container">
                         <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 12px; text-align: center;">Nossa Equipe[cite: 3]</h4>
                         <img src="flltc oi.jpg" alt="Equipe ALPHADROID'S" class="team-group-photo-framed" onerror="this.style.display='none'; document.getElementById('team-photo-fallback').style.display='block';">
