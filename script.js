@@ -233,11 +233,11 @@ window.showDonate = () => {
     document.getElementById('donate-seed-name').value = '';
     document.getElementById('donate-seed-quantity').value = '';
     document.getElementById('donate-seed-date').value = '';
-    document.getElementById('donate-seed-photo').value = '';
+    document.getElementById('donate-seed-photo-seed').value = '';
+    document.getElementById('donate-seed-photo-plant').value = '';
     document.getElementById('donate-seed-type').value = 'Doação';
-    const lbl = document.getElementById('camera-label');
-    lbl.innerHTML = '<span class="material-icons">photo_library</span> Selecionar Foto da Galeria / Dispositivo';
-    lbl.className = 'camera-btn';
+    document.getElementById('camera-label-seed').innerHTML = '<span class="material-icons">photo_library</span> Selecionar Foto da Semente';
+    document.getElementById('camera-label-plant').innerHTML = '<span class="material-icons">photo_library</span> Selecionar Foto da Planta';
     window.switchView('donate-view');
 };
 window.showAvailable = () => { window.switchView('available-view'); window.renderSeeds(); };
@@ -609,39 +609,53 @@ window.saveProfile = async () => {
     }
 };
 
-const seedPhotoInput = document.getElementById('donate-seed-photo');
+// OCR OPCIONAL PARA O INPUT DA SEMENTE
+const seedPhotoInput = document.getElementById('donate-seed-photo-seed');
 if (seedPhotoInput) {
     seedPhotoInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        const lbl = document.getElementById('camera-label');
-        lbl.innerHTML = 'A ler foto da galeria...';
+        const lbl = document.getElementById('camera-label-seed');
+        lbl.innerHTML = 'A ler foto da semente...';
         try {
             const result = await Tesseract.recognize(file, 'por');
             if (result.data.text.trim()) {
                 document.getElementById('donate-seed-name').value = result.data.text.trim().split('\n')[0].substring(0, 30);
             }
-            lbl.innerHTML = 'Foto carregada com sucesso!';
+            lbl.innerHTML = 'Foto da semente carregada!';
             lbl.className = 'camera-btn success';
         } catch (e) {
-            lbl.innerHTML = 'Foto da galeria selecionada!';
+            lbl.innerHTML = 'Foto da semente selecionada!';
             lbl.className = 'camera-btn success';
         }
     });
 }
 
-// CADASTRO CORRIGIDO COM CONVERSÃO EXATA DE NÚMERO
+const plantPhotoInput = document.getElementById('donate-seed-photo-plant');
+if (plantPhotoInput) {
+    plantPhotoInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const lbl = document.getElementById('camera-label-plant');
+        lbl.innerHTML = 'Foto da planta selecionada!';
+        lbl.className = 'camera-btn success';
+    });
+}
+
+// CADASTRO COM DUAS FOTOS E QUANTIDADE EXATA
 window.processDonation = async () => {
     const name = document.getElementById('donate-seed-name').value.trim();
     const quantityRaw = document.getElementById('donate-seed-quantity').value;
     const quantity = Number(quantityRaw);
     const availableDate = document.getElementById('donate-seed-date').value;
     const type = document.getElementById('donate-seed-type').value;
-    const photoInput = document.getElementById('donate-seed-photo');
+    
+    const photoSeedInput = document.getElementById('donate-seed-photo-seed');
+    const photoPlantInput = document.getElementById('donate-seed-photo-plant');
     const user = auth.currentUser;
 
-    if (!name || photoInput.files.length === 0) {
-        return alert('Por favor, informe o nome da semente e selecione uma foto da galeria.');
+    if (!name || photoSeedInput.files.length === 0 || photoPlantInput.files.length === 0) {
+        return alert('Por favor, informe o nome e selecione ambas as fotos (da semente e da planta).');
     }
 
     if (!quantityRaw || isNaN(quantity) || quantity < 1) {
@@ -654,16 +668,20 @@ window.processDonation = async () => {
 
     const btn = document.getElementById('btn-donate');
     const loading = document.getElementById('upload-loading');
-    btn.disabled = true; loading.style.display = 'block';
+    btn.disabled = true; 
+    if (loading) loading.style.display = 'block';
 
     try {
-        const fotoBase64Texto = await comprimirEConverterBase64(photoInput.files[0], 600, 0.7);
+        const fotoSementeBase64 = await comprimirEConverterBase64(photoSeedInput.files[0], 600, 0.7);
+        const fotoPlantaBase64 = await comprimirEConverterBase64(photoPlantInput.files[0], 600, 0.7);
+
         await addDoc(collection(db, "seeds"), {
             name: name,
             quantity: Math.floor(quantity),
             type: type,
             availableDate: availableDate,
-            fotoBase64: fotoBase64Texto,
+            fotoBase64: fotoSementeBase64,
+            fotoPlantaBase64: fotoPlantaBase64,
             author: userProfileCache?.displayName || user.email.split('@')[0],
             authorEmail: user.email,
             userId: user.uid,
@@ -671,13 +689,15 @@ window.processDonation = async () => {
             status: 'disponível',
             timestamp: serverTimestamp()
         });
-        alert(`Semente cadastrada com sucesso (${Math.floor(quantity)} unidades)!`);
+
+        alert(`Semente cadastrada com sucesso (${Math.floor(quantity)} unidades, com fotos da semente e da planta)!`);
         window.showAvailable();
     } catch (error) {
         console.error("Erro detalhado ao cadastrar semente:", error);
         alert('Erro ao guardar na base de dados: ' + error.message);
     } finally {
-        btn.disabled = false; loading.style.display = 'none';
+        btn.disabled = false; 
+        if (loading) loading.style.display = 'none';
     }
 };
 
@@ -721,11 +741,24 @@ window.renderSeeds = async () => {
                 actionHtml = `<p style="color: var(--text-muted); font-size: 13px; text-align: center; margin-top: 10px;">Esta semente é sua.</p>`;
             }
 
+            const fotosHtml = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px;">
+                    <div>
+                        <span style="font-size: 10px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 2px;">SEMENTE</span>
+                        ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}" alt="${seed.name}" style="height: 110px; margin-bottom: 0;">` : '<div style="height:110px;background:var(--bg-light);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#888;">Sem foto</div>'}
+                    </div>
+                    <div>
+                        <span style="font-size: 10px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 2px;">PLANTA</span>
+                        ${seed.fotoPlantaBase64 ? `<img src="${seed.fotoPlantaBase64}" alt="${seed.name} planta" style="height: 110px; margin-bottom: 0;">` : '<div style="height:110px;background:var(--bg-light);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#888;">Sem foto</div>'}
+                    </div>
+                </div>
+            `;
+
             const box = document.createElement('div');
             box.className = 'seed-box';
             box.innerHTML = `
                 <div>
-                    ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}" alt="${seed.name}">` : '<div style="height:180px;background:var(--bg-light);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#888;">Sem imagem</div>'}
+                    ${fotosHtml}
                     <span class="badge-tipo ${badgeClass}">${badgeText}</span>
                     <h4 style="color: var(--text-main); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
                     <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 2px;">📦 Disponíveis: <strong>${qtdDisponivel} sementes</strong></p>
@@ -1076,9 +1109,22 @@ window.renderMyProfile = async () => {
                     ? `<button class="btn-cancel-reserve" onclick="window.removerReserva('${seedId}', 'profile', ${seed.reservadoQtd || 1})">Remover Última Reserva (${seed.reservadoPor})</button>`
                     : '';
 
+                const fotosHtml = `
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px;">
+                        <div>
+                            <span style="font-size: 10px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 2px;">SEMENTE</span>
+                            ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}" alt="${seed.name}" style="height: 110px; margin-bottom: 0;">` : '<div style="height:110px;background:var(--bg-light);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#888;">Sem foto</div>'}
+                        </div>
+                        <div>
+                            <span style="font-size: 10px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 2px;">PLANTA</span>
+                            ${seed.fotoPlantaBase64 ? `<img src="${seed.fotoPlantaBase64}" alt="${seed.name} planta" style="height: 110px; margin-bottom: 0;">` : '<div style="height:110px;background:var(--bg-light);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#888;">Sem foto</div>'}
+                        </div>
+                    </div>
+                `;
+
                 box.innerHTML = `
                     <div>
-                        ${seed.fotoBase64 ? `<img src="${seed.fotoBase64}" alt="${seed.name}">` : '<div style="height:180px;background:var(--bg-light);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#888;">Sem imagem</div>'}
+                        ${fotosHtml}
                         <span class="badge-tipo ${badgeClass}">${badgeText}</span>
                         <h4 style="color: var(--text-main); font-size: 16px; margin-bottom: 4px;">${seed.name}</h4>
                         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 2px;">📦 Estoque: <strong>${qtdDisponivel} sementes</strong></p>
