@@ -23,7 +23,6 @@ let privateChatUnsubscribe = null;
 let privateListUnsubscribe = null;
 let currentLanguage = "pt";
 
-// DICIONÁRIO COMPLETO PARA TRADUZIR O SITE INTEIRO (MANTENDO O NOME "Sementes Vivas" FIXO)
 const translations = {
     pt: {
         menu_home: "Início",
@@ -325,8 +324,8 @@ const translations = {
         tech_1_title: "Frontend & Diseño",
         tech_1_desc: "HTML5, CSS3 Personalizado con Modo Oscuro/Claro inteligente, JavaScript ES6+ Modular y Google Material Icons.",
         tech_2_title: "Base de Datos & Auth",
-        tech_2_desc: "Google Firebase Firestore (NoSQL) en tiempo real y Firebase Authentication para protección y gestión de cuentas.",
-        tech_3_title: "IA & Visión Computacional",
+        tech_2_desc: "Google Firebase Firestore (NoSQL) en tempo real y Firebase Authentication para protección y gestión de cuentas.",
+        tech_3_title: "IA & Visão Computacional",
         tech_3_desc: "Integración con Tesseract.js (OCR) para lectura automática de etiquetas e identificación de nombres de semillas por foto.",
         tech_4_title: "APIs & Geoprocesamiento",
         tech_4_desc: "API REST de Wikipedia (Catálogo botánico), OpenStreetMap / Nominatim (Geocodificación inversa) y Google Maps Embed.",
@@ -335,7 +334,7 @@ const translations = {
         pillar_2_title: "Inventario Dinámico",
         pillar_2_desc: "Control de stock automatizado que garantiza un intercambio justo sin desperdicios.",
         pillar_3_title: "Comunidad Activa",
-        pillar_3_desc: "Chats privados automáticos que transforman las reservas de semillas en jornadas de siembra.",
+        pillar_3_desc: "Chats privados automáticos que transformam las reservas de semillas en jornadas de siembra.",
         team_members_title: "Miembros del Equipo Alphadroid's",
         profile_tab_edit: "Editar Datos y Avatar",
         profile_tab_seeds: "Mis Semillas",
@@ -355,6 +354,20 @@ window.changeLanguage = (lang) => {
         const key = el.getAttribute('data-i18n');
         if (dict[key]) el.innerText = dict[key];
     });
+};
+
+window.toggleTheme = () => {
+    const htmlEl = document.documentElement;
+    const themeIcon = document.getElementById('theme-icon');
+    const currentTheme = htmlEl.getAttribute('data-theme');
+    
+    if (currentTheme === 'dark') {
+        htmlEl.setAttribute('data-theme', 'light');
+        if (themeIcon) themeIcon.innerText = 'dark_mode';
+    } else {
+        htmlEl.setAttribute('data-theme', 'dark');
+        if (themeIcon) themeIcon.innerText = 'light_mode';
+    }
 };
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -510,20 +523,6 @@ const cityBiomeDatabase = {
         mapQuery: "Fernandopolis,SP",
         viveiros: ["Viveiro Municipal Fernandópolis", "EcoMudas Fernandópolis"],
         species: [...new Set([...biomeSpeciesCatalog["Mata Atlântica"].slice(0, 10), ...biomeSpeciesCatalog["Cerrado"].slice(0, 6)])]
-    }
-};
-
-window.toggleTheme = () => {
-    const htmlEl = document.documentElement;
-    const themeIcon = document.getElementById('theme-icon');
-    const currentTheme = htmlEl.getAttribute('data-theme');
-    
-    if (currentTheme === 'dark') {
-        htmlEl.setAttribute('data-theme', 'light');
-        themeIcon.innerText = 'dark_mode';
-    } else {
-        htmlEl.setAttribute('data-theme', 'dark');
-        themeIcon.innerText = 'light_mode';
     }
 };
 
@@ -778,7 +777,7 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-const comprimirEConverterBase64 = (file, max_size = 600, quality = 0.7) => {
+const comprimirEConverterBase64 = (file, max_size = 400, quality = 0.6) => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -803,8 +802,7 @@ const comprimirEConverterBase64 = (file, max_size = 600, quality = 0.7) => {
 window.loadProfileData = async () => {
     const user = auth.currentUser;
     if (!user) return;
-    const userDoc = await doc(db, "users", user.uid);
-    const snap = await getDoc(userDoc);
+    const snap = await getDoc(doc(db, "users", user.uid));
     if (snap.exists()) {
         const data = snap.data();
         document.getElementById('profile-name').value = data.displayName || '';
@@ -842,8 +840,9 @@ window.processDonation = async () => {
     }
 
     try {
-        const fotoSemente = await comprimirEConverterBase64(photoSeed.files[0], 600, 0.7);
-        const fotoPlanta = await comprimirEConverterBase64(photoPlant.files[0], 600, 0.7);
+        document.getElementById('upload-loading').style.display = 'block';
+        const fotoSemente = await comprimirEConverterBase64(photoSeed.files[0], 400, 0.6);
+        const fotoPlanta = await comprimirEConverterBase64(photoPlant.files[0], 400, 0.6);
 
         await addDoc(collection(db, "seeds"), {
             name, quantity, type, availableDate,
@@ -856,9 +855,11 @@ window.processDonation = async () => {
             status: 'disponível',
             timestamp: serverTimestamp()
         });
+        document.getElementById('upload-loading').style.display = 'none';
         alert('Semente cadastrada com sucesso!');
         window.showAvailable();
     } catch (e) {
+        document.getElementById('upload-loading').style.display = 'none';
         alert('Erro ao cadastrar.');
     }
 };
@@ -874,15 +875,24 @@ window.renderSeeds = async () => {
         const seed = docSnap.data();
         const seedId = docSnap.id;
         const user = auth.currentUser;
+        
+        const quantidadeExibida = (seed.quantity !== undefined && seed.quantity !== null) ? seed.quantity : 0;
+        const imgSemente = seed.fotoBase64 || 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=300&q=80';
+        const imgPlanta = seed.fotoPlantaBase64 || 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=300&q=80';
+
         const box = document.createElement('div');
         box.className = 'seed-box';
         box.innerHTML = `
-            <div>
-                <h4>${seed.name}</h4>
-                <p>Qtd: ${seed.quantity}</p>
-                <p>Doador: ${seed.author}</p>
+            <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                <img src="${imgSemente}" alt="Semente" style="width: 50%; height: 90px; object-fit: cover; border-radius: 8px;" />
+                <img src="${imgPlanta}" alt="Planta" style="width: 50%; height: 90px; object-fit: cover; border-radius: 8px;" />
             </div>
-            ${user && seed.userId !== user.uid ? `<button class="btn-reserve" onclick="window.reservarSemente('${seedId}', '${seed.userId}', '${seed.author}', '${seed.name}')">Reservar</button>` : ''}
+            <div>
+                <h4>${seed.name || 'Semente'}</h4>
+                <p>Qtd: ${quantidadeExibida}</p>
+                <p>Doador: ${seed.author || 'Desconhecido'}</p>
+            </div>
+            ${user && seed.userId !== user.uid && quantidadeExibida > 0 ? `<button class="btn-reserve" onclick="window.reservarSemente('${seedId}', '${seed.userId}', '${seed.author}', '${seed.name}')">Reservar</button>` : ''}
         `;
         container.appendChild(box);
     });
@@ -989,9 +999,14 @@ window.renderMyProfile = async () => {
     snapshot.forEach(d => {
         const seed = d.data();
         if (seed.userId === user.uid) {
+            const imgSemente = seed.fotoBase64 || 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=300&q=80';
             const box = document.createElement('div');
             box.className = 'seed-box';
-            box.innerHTML = `<h4>${seed.name}</h4><button class="btn-danger" onclick="window.excluirSemente('${d.id}')">Excluir</button>`;
+            box.innerHTML = `
+                <img src="${imgSemente}" alt="Semente" style="width: 100%; height: 90px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;" />
+                <h4>${seed.name}</h4>
+                <button class="btn-danger" onclick="window.excluirSemente('${d.id}')">Excluir</button>
+            `;
             container.appendChild(box);
         }
     });
