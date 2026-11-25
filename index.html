@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    <!-- SIDEBAR DESLIZANTE (SLIDING BAR) PARA AS FUNÇÕES -->
+    <!-- SIDEBAR DESLIZANTE PARA AS FUNÇÕES -->
     <div id="sliding-sidebar" class="sliding-sidebar">
         <div class="sidebar-header">
             <div class="nav-brand">
@@ -71,14 +71,14 @@
                     <div class="nav-brand" onclick="window.showDashboard()">
                         <span class="material-icons brand-icon">spa</span>
                         <div class="brand-text">
-                            <span class="brand-title">Sementes Vivas</span>
+                            <span class="brand-title" data-i18n="brand_title">Sementes Vivas</span>
                             <span class="brand-sub">REDE DE BIODIVERSIDADE</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="nav-actions">
-                    <!-- SELETOR DE IDIOMAS ORIGINAL -->
+                    <!-- SELETOR DE IDIOMAS FUNCIONAL -->
                     <select id="language-select" class="select-styled" style="width: auto; padding: 6px 10px; font-size: 12px; font-weight: 600;" onchange="window.changeLanguage(this.value)">
                         <option value="pt">PT</option>
                         <option value="en">EN</option>
@@ -413,11 +413,11 @@
                 </div>
             </div>
 
-            <!-- SOBRE NÓS (PROFISSIONAL, DETALHADA E TÉCNICA PARA FLL) -->
+            <!-- SOBRE NÓS (TEXTO MAIS HUMANO, BONITO E FICHA TÉCNICA PROFISSIONAL) -->
             <div id="about-view" class="view">
                 <div class="page-header-dark">
-                    <h2>Ficha Técnica e Sobre Nós</h2>
-                    <p>Documentação de inovação e especificações técnicas da equipe Alphadroid's para a FLL.</p>
+                    <h2>Sementes Vivas: Quando a Tecnologia Floresce a Natureza 🌿🤖</h2>
+                    <p>Conheça a história, o propósito e as especificações técnicas da equipe Alphadroid's na FLL.</p>
                 </div>
 
                 <div class="about-card-vertical" style="display: flex; flex-direction: column; gap: 30px;">
@@ -433,37 +433,37 @@
                         </div>
 
                         <div class="about-text-content">
-                            <h3>Inovação Tecnológica com Impacto Socioambiental</h3>
+                            <h3>De onde nasceu o Sementes Vivas?</h3>
                             <p>
-                                O projeto <strong>Sementes Vivas</strong> foi concebido pela equipe <strong>ALPHADROID'S</strong> no contexto da FIRST LEGO League (FLL). Nosso propósito central é resolver os gargalos logísticos do reflorestamento regional através de engenharia de software e inteligência de dados, unindo cultivadores, bancos de sementes crioulas e viveiros de mudas nativas.
+                                Sabe aquela vontade de ver a nossa cidade mais verde, cheia de vida e com árvores que realmente pertencem à nossa região? Foi exatamente a partir desse sonho — e de muita conversa — que nós, da equipe <strong>ALPHADROID'S</strong>, criamos o <strong>Sementes Vivas</strong> para a FIRST LEGO League (FLL).
                             </p>
                             <p>
-                                Desenvolvido com rigor metodológico e embasamento em pesquisas científicas de biólogos ambientais, o sistema garante a assertividade ecológica no plantio de espécies adequadas aos biomas do Cerrado, Pantanal e Mata Atlântica.
+                                Percebemos que muitas pessoas têm sementes crioulas incríveis guardadas em casa ou mudas sobrando no quintal, mas não sabiam com quem partilhar. Do outro lado, há quem queira muito plantar, mas esbarra na dúvida: <em>qual árvore plantar aqui? Onde encontro um viveiro perto de mim?</em> Unimos a nossa paixão pela tecnologia e pela natureza para criar essa ponte real!
                             </p>
                         </div>
                     </div>
 
-                    <!-- ESPECIFICAÇÕES TÉCNICAS (NOVO BLOCO PROFISSIONAL) -->
+                    <!-- ESPECIFICAÇÕES TÉCNICAS (FICHA PROFISSIONAL) -->
                     <div style="background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 14px; padding: 24px;">
                         <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
                             <span class="material-icons" style="color: var(--lime);">code</span> Especificações Técnicas e Arquitetura do Sistema
                         </h4>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; font-size: 13px; color: var(--text-main);">
                             <div>
-                                <strong style="color: var(--lime); display: block; margin-bottom: 4px;">Frontend & UI/UX</strong>
-                                HTML5, CSS3 Customizado com Variáveis Dinâmicas (Dark/Light Mode), JavaScript ES6+ Modular, Google Material Icons.
+                                <strong style="color: var(--lime); display: block; margin-bottom: 4px;">Frontend & Design</strong>
+                                HTML5, CSS3 Customizado com Modo Escuro/Claro automático, JavaScript ES6+ Modular e Google Material Icons.
                             </div>
                             <div>
-                                <strong style="color: var(--lime); display: block; margin-bottom: 4px;">Banco de Dados & Backend</strong>
-                                Google Firebase Firestore (NoSQL) em tempo real, Firebase Authentication (Segurança e Gestão de Contas).
+                                <strong style="color: var(--lime); display: block; margin-bottom: 4px;">Banco de Dados & Auth</strong>
+                                Google Firebase Firestore em tempo real (NoSQL) e Firebase Authentication para segurança dos utilizadores.
                             </div>
                             <div>
-                                <strong style="color: var(--lime); display: block; margin-bottom: 4px;">IA & Visão Computacional</strong>
-                                Integração com Tesseract.js (OCR para leitura automática de rótulos e nomes de sementes a partir de fotografias).
+                                <strong style="color: var(--lime); display: block; margin-bottom: 4px;">Inteligência Artificial (OCR)</strong>
+                                Tesseract.js integrado para leitura automática de rótulos e nomes de sementes a partir de fotografias.
                             </div>
                             <div>
-                                <strong style="color: var(--lime); display: block; margin-bottom: 4px;">APIs & Geolocalização</strong>
-                                API REST da Wikipédia (Catálogo botânico), OpenStreetMap / Nominatim (Reverse Geocoding) e Google Maps Embed API.
+                                <strong style="color: var(--lime); display: block; margin-bottom: 4px;">APIs & Mapas</strong>
+                                API oficial da Wikipédia (Enciclopédia botânica), OpenStreetMap Reverse Geocoding e Google Maps Embed.
                             </div>
                         </div>
                     </div>
@@ -473,17 +473,17 @@
                         <div class="pillar-item">
                             <span class="material-icons">biotech</span>
                             <h4>Rigor Científico</h4>
-                            <p>Validação botânica e mapeamento de espécies nativas com suporte de especialistas.</p>
+                            <p>Pesquisas e diretrizes desenvolvidas em conjunto com biólogos e especialistas ambientais.</p>
                         </div>
                         <div class="pillar-item">
                             <span class="material-icons">psychology</span>
-                            <h4>Engenharia Criativa</h4>
-                            <p>Lógica de inventário dinâmico com controle de estoque automatizado.</p>
+                            <h4>Inventário Dinâmico</h4>
+                            <p>Controle de estoque automatizado que garante partilha justa sem desperdícios.</p>
                         </div>
                         <div class="pillar-item">
                             <span class="material-icons">volunteer_activism</span>
-                            <h4>Impacto Sustentável</h4>
-                            <p>Fomento ativo ao reflorestamento e economia circular verde comunitária.</p>
+                            <h4>Comunidade Ativa</h4>
+                            <p>Chats privados automáticos que transformam reservas de sementes em mutirões de plantio.</p>
                         </div>
                     </div>
 
