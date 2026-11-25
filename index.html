@@ -71,7 +71,7 @@
                     <div class="nav-brand" onclick="window.showDashboard()">
                         <span class="material-icons brand-icon">spa</span>
                         <div class="brand-text">
-                            <!-- NOME DA MARCA FIXO EM PORTUGUÊS -->
+                            <!-- NOME DA MARCA FIXO -->
                             <span class="brand-title">Sementes Vivas</span>
                             <span class="brand-sub">REDE DE BIODIVERSIDADE</span>
                         </div>
@@ -79,7 +79,6 @@
                 </div>
 
                 <div class="nav-actions">
-                    <!-- SELETOR DE IDIOMAS FUNCIONAL -->
                     <select id="language-select" class="select-styled" style="width: auto; padding: 6px 10px; font-size: 12px; font-weight: 600;" onchange="window.changeLanguage(this.value)">
                         <option value="pt">PT</option>
                         <option value="en">EN</option>
@@ -414,83 +413,79 @@
                 </div>
             </div>
 
-            <!-- SOBRE NÓS (MAIS BONITA, INSPIRADORA E COM FOTOS ORIGINAIS) -->
+            <!-- SOBRE NÓS (TOTALMENTE LIGADA AO DICIONÁRIO DE TRADUÇÃO) -->
             <div id="about-view" class="view">
                 <div class="page-header-dark">
-                    <h2>Sobre Nós & Ficha Técnica FLL</h2>
-                    <p>Conheça a história, o coração e a tecnologia por trás do projeto da equipe Alphadroid's.</p>
+                    <h2 data-i18n="about_title">Sobre Nós & Ficha Técnica FLL</h2>
+                    <p data-i18n="about_subtitle">Conheça a história, o coração e a tecnologia por trás do projeto da equipe Alphadroid's.</p>
                 </div>
 
                 <div class="about-card-vertical" style="display: flex; flex-direction: column; gap: 30px;">
                     
-                    <!-- BLOCO DE APRESENTAÇÃO COM A LOGO logo.jotapegue.avif -->
                     <div class="about-header-flex" style="background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; align-items: center;">
                         <div class="about-logo-container" style="flex-shrink: 0; text-align: center;">
                             <img src="logo.jotapegue.avif" alt="Logo Equipe Alphadroid's" class="team-logo-img" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid var(--lime); box-shadow: 0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
                             <div id="logo-fallback" class="team-logo-fallback" style="display: none; width: 110px; height: 110px; border-radius: 50%; background: var(--forest-dark); align-items: center; justify-content: center; margin: 0 auto;">
                                 <span class="material-icons" style="font-size: 40px; color: var(--lime);">eco</span>
                             </div>
-                            <span class="team-badge" style="margin-top: 8px; display: inline-block; font-size: 11px; font-weight: 800; color: var(--forest-dark); background: var(--lime-light); padding: 4px 10px; border-radius: 20px;">EQUIPE ALPHADROID'S</span>
+                            <span class="team-badge" data-i18n="about_team_badge" style="margin-top: 8px; display: inline-block; font-size: 11px; font-weight: 800; color: var(--forest-dark); background: var(--lime-light); padding: 4px 10px; border-radius: 20px;">EQUIPE ALPHADROID'S</span>
                         </div>
 
                         <div class="about-text-content" style="flex: 1;">
-                            <h3 style="color: var(--forest-dark); font-size: 22px; margin-bottom: 10px;">Quando a Tecnologia Floresce a Natureza 🌿🤖</h3>
-                            <p style="color: var(--text-main); font-size: 14px; line-height: 1.6; margin-bottom: 10px;">
-                                Sabe aquela vontade de ver a nossa cidade mais verde, cheia de vida e com árvores que realmente pertencem à nossa região? Foi exatamente a partir desse sonho — e de muita conversa na temporada da FIRST LEGO League (FLL) — que nós, da equipe <strong>ALPHADROID'S</strong>, criamos o projeto <strong>Sementes Vivas</strong>.
+                            <h3 data-i18n="about_heading" style="color: var(--forest-dark); font-size: 22px; margin-bottom: 10px;">Quando a Tecnologia Floresce a Natureza 🌿🤖</h3>
+                            <p data-i18n="about_p1" style="color: var(--text-main); font-size: 14px; line-height: 1.6; margin-bottom: 10px;">
+                                Sabe aquela vontade de ver a nossa cidade mais verde, cheia de vida e com árvores que realmente pertencem à nossa região? Foi exatamente a partir desse sonho — e de muita conversa na temporada da FIRST LEGO League (FLL) — que nós, da equipe <strong>ALPHADROID'S</strong>, criamos o projeto Sementes Vivas.
                             </p>
-                            <p style="color: var(--text-main); font-size: 14px; line-height: 1.6;">
+                            <p data-i18n="about_p2" style="color: var(--text-main); font-size: 14px; line-height: 1.6;">
                                 Percebemos que muitas pessoas têm sementes crioulas incríveis guardadas ou mudas sobrando, mas não sabiam com quem partilhar. Unimos a engenharia de software ao amor pela biodiversidade para criar uma ponte real entre cultivadores e o reflorestamento ativo.
                             </p>
                         </div>
                     </div>
 
-                    <!-- ESPECIFICAÇÕES TÉCNICAS E ARQUITETURA -->
                     <div style="background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 16px; padding: 25px;">
-                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                        <h4 data-i18n="tech_title" style="color: var(--forest-dark); font-size: 18px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
                             <span class="material-icons" style="color: var(--lime); font-size: 22px;">code</span> Ficha Técnica e Arquitetura do Sistema
                         </h4>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; font-size: 13px; color: var(--text-main);">
                             <div style="background: var(--card-bg); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color);">
-                                <strong style="color: var(--lime); display: block; margin-bottom: 6px; font-size: 14px;">Frontend & Design</strong>
-                                HTML5, CSS3 Customizado com Modo Escuro/Claro inteligente, JavaScript ES6+ Modular e Google Material Icons.
+                                <strong data-i18n="tech_1_title" style="color: var(--lime); display: block; margin-bottom: 6px; font-size: 14px;">Frontend & Design</strong>
+                                <span data-i18n="tech_1_desc">HTML5, CSS3 Customizado com Modo Escuro/Claro inteligente, JavaScript ES6+ Modular e Google Material Icons.</span>
                             </div>
                             <div style="background: var(--card-bg); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color);">
-                                <strong style="color: var(--lime); display: block; margin-bottom: 6px; font-size: 14px;">Banco de Dados & Auth</strong>
-                                Google Firebase Firestore (NoSQL) em tempo real e Firebase Authentication para proteção e gestão de contas.
+                                <strong data-i18n="tech_2_title" style="color: var(--lime); display: block; margin-bottom: 6px; font-size: 14px;">Banco de Dados & Auth</strong>
+                                <span data-i18n="tech_2_desc">Google Firebase Firestore (NoSQL) em tempo real e Firebase Authentication para proteção e gestão de contas.</span>
                             </div>
                             <div style="background: var(--card-bg); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color);">
-                                <strong style="color: var(--lime); display: block; margin-bottom: 6px; font-size: 14px;">IA & Visão Computacional</strong>
-                                Integração com Tesseract.js (OCR) para leitura automática de rótulos e identificação de nomes de sementes por foto.
+                                <strong data-i18n="tech_3_title" style="color: var(--lime); display: block; margin-bottom: 6px; font-size: 14px;">IA & Visão Computacional</strong>
+                                <span data-i18n="tech_3_desc">Integração com Tesseract.js (OCR) para leitura automática de rótulos e identificação de nomes de sementes por foto.</span>
                             </div>
                             <div style="background: var(--card-bg); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color);">
-                                <strong style="color: var(--lime); display: block; margin-bottom: 6px; font-size: 14px;">APIs & Geoprocessamento</strong>
-                                API REST da Wikipédia (Catálogo botânico), OpenStreetMap / Nominatim (Reverse Geocoding) e Google Maps Embed.
+                                <strong data-i18n="tech_4_title" style="color: var(--lime); display: block; margin-bottom: 6px; font-size: 14px;">APIs & Geoprocessamento</strong>
+                                <span data-i18n="tech_4_desc">API REST da Wikipédia (Catálogo botânico), OpenStreetMap / Nominatim (Reverse Geocoding) e Google Maps Embed.</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- PILARES DE DESTAQUE -->
                     <div class="about-pillars">
                         <div class="pillar-item">
                             <span class="material-icons" style="font-size: 28px; color: var(--lime);">biotech</span>
-                            <h4 style="color: var(--forest-dark); font-size: 16px; margin: 8px 0 4px 0;">Rigor Científico</h4>
-                            <p style="font-size: 13px; color: var(--text-muted);">Pesquisas e validações botânicas realizadas em conjunto com biólogos ambientais.</p>
+                            <h4 data-i18n="pillar_1_title" style="color: var(--forest-dark); font-size: 16px; margin: 8px 0 4px 0;">Rigor Científico</h4>
+                            <p data-i18n="pillar_1_desc" style="font-size: 13px; color: var(--text-muted);">Pesquisas e validações botânicas realizadas em conjunto com biólogos ambientais.</p>
                         </div>
                         <div class="pillar-item">
                             <span class="material-icons" style="font-size: 28px; color: var(--lime);">psychology</span>
-                            <h4 style="color: var(--forest-dark); font-size: 16px; margin: 8px 0 4px 0;">Inventário Dinâmico</h4>
-                            <p style="font-size: 13px; color: var(--text-muted);">Controle de estoque automatizado que garante partilha justa sem desperdícios.</p>
+                            <h4 data-i18n="pillar_2_title" style="color: var(--forest-dark); font-size: 16px; margin: 8px 0 4px 0;">Inventário Dinâmico</h4>
+                            <p data-i18n="pillar_2_desc" style="font-size: 13px; color: var(--text-muted);">Controle de estoque automatizado que garante partilha justa sem desperdícios.</p>
                         </div>
                         <div class="pillar-item">
                             <span class="material-icons" style="font-size: 28px; color: var(--lime);">volunteer_activism</span>
-                            <h4 style="color: var(--forest-dark); font-size: 16px; margin: 8px 0 4px 0;">Comunidade Ativa</h4>
-                            <p style="font-size: 13px; color: var(--text-muted);">Chats privados automáticos que transformam reservas em mutirões de plantio.</p>
+                            <h4 data-i18n="pillar_3_title" style="color: var(--forest-dark); font-size: 16px; margin: 8px 0 4px 0;">Comunidade Ativa</h4>
+                            <p data-i18n="pillar_3_desc" style="font-size: 13px; color: var(--text-muted);">Chats privados automáticos que transformam reservas em mutirões de plantio.</p>
                         </div>
                     </div>
 
-                    <!-- FOTO DA EQUIPE (flltc oi.jpg) -->
                     <div class="team-photo-container" style="background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; text-align: center;">
-                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 14px;">Membros da Equipe Alphadroid's</h4>
+                        <h4 data-i18n="team_members_title" style="color: var(--forest-dark); font-size: 18px; margin-bottom: 14px;">Membros da Equipe Alphadroid's</h4>
                         <img src="flltc oi.jpg" alt="Equipe ALPHADROID'S" class="team-group-photo-framed" style="width: 100%; max-height: 420px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);" onerror="this.style.display='none'; document.getElementById('team-photo-fallback').style.display='block';">
                         <div id="team-photo-fallback" style="display: none; padding: 30px; text-align: center; background: var(--bg-light); border-radius: 12px; color: var(--text-muted); font-size: 14px;">
                             Coloque a foto da equipe na mesma pasta do site com o nome exato <strong>flltc oi.jpg</strong>.
