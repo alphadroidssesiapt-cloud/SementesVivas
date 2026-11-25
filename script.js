@@ -21,6 +21,65 @@ let activePrivateChatId = null;
 let chatUnsubscribe = null;
 let privateChatUnsubscribe = null;
 let privateListUnsubscribe = null;
+let currentLanguage = "pt";
+
+// DICIONÁRIO DE IDIOMAS ORIGINAL (SEM GOOGLE TRADUTOR)
+const translations = {
+    pt: {
+        brand_title: "Sementes Vivas",
+        menu_home: "Início",
+        menu_explore: "Explorar Sementes",
+        menu_donate: "Cadastrar Semente",
+        menu_chats: "Meus Chats",
+        menu_community: "Chat Comunitário",
+        menu_biome: "Bioma & Enciclopédia",
+        menu_learn: "Aprender a Plantar",
+        menu_about: "Sobre Nós (Alphadroid's)",
+        menu_profile: "Meu Perfil",
+        btn_logout: "Sair da Conta",
+        nav_register: "Cadastrar",
+        nav_logout: "Sair"
+    },
+    en: {
+        brand_title: "Living Seeds",
+        menu_home: "Home",
+        menu_explore: "Explore Seeds",
+        menu_donate: "Donate Seed",
+        menu_chats: "My Chats",
+        menu_community: "Community Chat",
+        menu_biome: "Biome & Encyclopedia",
+        menu_learn: "Learn to Plant",
+        menu_about: "About Us (Alphadroid's)",
+        menu_profile: "My Profile",
+        btn_logout: "Log Out",
+        nav_register: "Register",
+        nav_logout: "Logout"
+    },
+    es: {
+        brand_title: "Semillas Vivas",
+        menu_home: "Inicio",
+        menu_explore: "Explorar Semillas",
+        menu_donate: "Registrar Semilla",
+        menu_chats: "Mis Chats",
+        menu_community: "Chat Comunitario",
+        menu_biome: "Bioma y Enciclopedia",
+        menu_learn: "Aprender a Plantar",
+        menu_about: "Sobre Nosotros (Alphadroid's)",
+        menu_profile: "Mi Perfil",
+        btn_logout: "Cerrar Sesión",
+        nav_register: "Registrar",
+        nav_logout: "Salir"
+    }
+};
+
+window.changeLanguage = (lang) => {
+    currentLanguage = lang;
+    const dict = translations[lang] || translations.pt;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) el.innerText = dict[key];
+    });
+};
 
 window.addEventListener('DOMContentLoaded', () => {
     if (!localStorage.getItem('cookies_accepted')) {
@@ -330,6 +389,43 @@ window.identifyBiomeByCity = () => {
     resultBox.style.display = 'block';
 
     window.loadWikipediaSpeciesCards(info.species, info.biome);
+};
+
+// DETECÇÃO AUTOMÁTICA DA CIDADE POR GPS (PARA O PERFIL)
+window.detectCityByGPS = () => {
+    if (!navigator.geolocation) {
+        return alert("Geolocalização não suportada pelo seu navegador.");
+    }
+    alert("A obter localização GPS para definir a sua cidade...");
+    navigator.geolocation.getCurrentPosition(async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        try {
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+            const data = await res.json();
+            const address = data.address || {};
+            const cityName = address.city || address.town || address.village || "";
+            
+            const select = document.getElementById('profile-community');
+            let found = false;
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].value.toLowerCase() === cityName.toLowerCase()) {
+                    select.selectedIndex = i;
+                    found = true;
+                    break;
+                }
+            }
+            if (found) {
+                alert(`Cidade detetada e selecionada com sucesso: ${cityName}!`);
+            } else {
+                alert(`Localizado em ${cityName || 'Região'}, mantendo cidade mais próxima disponível.`);
+            }
+        } catch (e) {
+            alert("Erro ao identificar a cidade pelo GPS.");
+        }
+    }, () => {
+        alert("Permissão de localização negada.");
+    });
 };
 
 window.detectBiomeWithMaps = () => {
