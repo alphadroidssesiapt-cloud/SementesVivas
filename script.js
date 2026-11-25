@@ -23,10 +23,9 @@ let privateChatUnsubscribe = null;
 let privateListUnsubscribe = null;
 let currentLanguage = "pt";
 
-// DICIONÁRIO DE IDIOMAS FUNCIONAL
+// DICIONÁRIO DE IDIOMAS (NOME DO SITE MANTIDO EXATAMENTE COMO "Sementes Vivas")
 const translations = {
     pt: {
-        brand_title: "Sementes Vivas",
         menu_home: "Início",
         menu_explore: "Explorar Sementes",
         menu_donate: "Cadastrar Semente",
@@ -41,7 +40,6 @@ const translations = {
         nav_logout: "Sair"
     },
     en: {
-        brand_title: "Living Seeds",
         menu_home: "Home",
         menu_explore: "Explore Seeds",
         menu_donate: "Donate Seed",
@@ -56,7 +54,6 @@ const translations = {
         nav_logout: "Logout"
     },
     es: {
-        brand_title: "Semillas Vivas",
         menu_home: "Inicio",
         menu_explore: "Explorar Semillas",
         menu_donate: "Registrar Semilla",
