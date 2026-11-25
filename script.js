@@ -23,7 +23,7 @@ let privateChatUnsubscribe = null;
 let privateListUnsubscribe = null;
 let currentLanguage = "pt";
 
-// DICIONÁRIO DE IDIOMAS ORIGINAL (SEM GOOGLE TRADUTOR)
+// DICIONÁRIO DE IDIOMAS FUNCIONAL
 const translations = {
     pt: {
         brand_title: "Sementes Vivas",
@@ -391,7 +391,6 @@ window.identifyBiomeByCity = () => {
     window.loadWikipediaSpeciesCards(info.species, info.biome);
 };
 
-// DETECÇÃO AUTOMÁTICA DA CIDADE POR GPS (PARA O PERFIL)
 window.detectCityByGPS = () => {
     if (!navigator.geolocation) {
         return alert("Geolocalização não suportada pelo seu navegador.");
