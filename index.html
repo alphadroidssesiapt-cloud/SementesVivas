@@ -16,7 +16,7 @@
         <div class="sidebar-header">
             <div class="nav-brand">
                 <span class="material-icons brand-icon">spa</span>
-                <span class="brand-title" data-i18n="brand_title">Sementes Vivas</span>
+                <span class="brand-title">Sementes Vivas</span>
             </div>
             <button class="btn-close-sidebar" onclick="window.toggleSlidingSidebar()">
                 <span class="material-icons">close</span>
@@ -71,14 +71,15 @@
                     <div class="nav-brand" onclick="window.showDashboard()">
                         <span class="material-icons brand-icon">spa</span>
                         <div class="brand-text">
-                            <span class="brand-title" data-i18n="brand_title">Sementes Vivas</span>
+                            <!-- NOME DA MARCA FIXO (NÃO MUDA NUNCA) -->
+                            <span class="brand-title">Sementes Vivas</span>
                             <span class="brand-sub">REDE DE BIODIVERSIDADE</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="nav-actions">
-                    <!-- SELETOR DE IDIOMAS FUNCIONAL -->
+                    <!-- SELETOR DE IDIOMAS (100% FUNCIONAL SEM MEXER NO NOME DA MARCA) -->
                     <select id="language-select" class="select-styled" style="width: auto; padding: 6px 10px; font-size: 12px; font-weight: 600;" onchange="window.changeLanguage(this.value)">
                         <option value="pt">PT</option>
                         <option value="en">EN</option>
@@ -413,86 +414,86 @@
                 </div>
             </div>
 
-            <!-- SOBRE NÓS (TEXTO MAIS HUMANO, BONITO E FICHA TÉCNICA PROFISSIONAL) -->
+            <!-- SOBRE NÓS (REDESENHADA, MAIS BONITA, INSPIRADORA E TÉCNICA) -->
             <div id="about-view" class="view">
                 <div class="page-header-dark">
-                    <h2>Sementes Vivas: Quando a Tecnologia Floresce a Natureza 🌿🤖</h2>
-                    <p>Conheça a história, o propósito e as especificações técnicas da equipe Alphadroid's na FLL.</p>
+                    <h2>Sobre Nós & Ficha Técnica FLL</h2>
+                    <p>Conheça a história, o coração e a tecnologia por trás do projeto da equipe Alphadroid's.</p>
                 </div>
 
                 <div class="about-card-vertical" style="display: flex; flex-direction: column; gap: 30px;">
-                    <!-- CABEÇALHO DA EQUIPE -->
-                    <div class="about-header-flex">
-                        <div class="about-logo-container">
-                            <img src="logo.jotapegue.avif" alt="Logo Equipe" class="team-logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
-                            <div id="logo-fallback" class="team-logo-fallback" style="display: none;">
-                                <span class="material-icons" style="font-size: 48px; color: #00e5ff;">pets</span>
-                                <span class="material-icons" style="font-size: 32px; color: var(--lime); margin-left: -10px;">settings</span>
+                    
+                    <!-- BLOCO DE APRESENTAÇÃO COM A LOGO logo.jotapegue.avif -->
+                    <div class="about-header-flex" style="background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; align-items: center;">
+                        <div class="about-logo-container" style="flex-shrink: 0; text-align: center;">
+                            <img src="logo.jotapegue.avif" alt="Logo Equipe Alphadroid's" class="team-logo-img" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid var(--lime); box-shadow: 0 4px 12px rgba(0,0,0,0.1);" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
+                            <div id="logo-fallback" class="team-logo-fallback" style="display: none; width: 110px; height: 110px; border-radius: 50%; background: var(--forest-dark); align-items: center; justify-content: center; margin: 0 auto;">
+                                <span class="material-icons" style="font-size: 40px; color: var(--lime);">eco</span>
                             </div>
-                            <span class="team-badge">EQUIPE ALPHADROID'S</span>
+                            <span class="team-badge" style="margin-top: 8px; display: inline-block; font-size: 11px; font-weight: 800; color: var(--forest-dark); background: var(--lime-light); padding: 4px 10px; border-radius: 20px;">EQUIPE ALPHADROID'S</span>
                         </div>
 
-                        <div class="about-text-content">
-                            <h3>De onde nasceu o Sementes Vivas?</h3>
-                            <p>
-                                Sabe aquela vontade de ver a nossa cidade mais verde, cheia de vida e com árvores que realmente pertencem à nossa região? Foi exatamente a partir desse sonho — e de muita conversa — que nós, da equipe <strong>ALPHADROID'S</strong>, criamos o <strong>Sementes Vivas</strong> para a FIRST LEGO League (FLL).
+                        <div class="about-text-content" style="flex: 1;">
+                            <h3 style="color: var(--forest-dark); font-size: 22px; margin-bottom: 10px;">Quando a Tecnologia Floresce a Natureza 🌿🤖</h3>
+                            <p style="color: var(--text-main); font-size: 14px; line-height: 1.6; margin-bottom: 10px;">
+                                Sabe aquela vontade de ver a nossa cidade mais verde, cheia de vida e com árvores que realmente pertencem à nossa região? Foi exatamente a partir desse sonho — e de muita conversa na temporada da FIRST LEGO League (FLL) — que nós, da equipe <strong>ALPHADROID'S</strong>, criamos o projeto <strong>Sementes Vivas</strong>.
                             </p>
-                            <p>
-                                Percebemos que muitas pessoas têm sementes crioulas incríveis guardadas em casa ou mudas sobrando no quintal, mas não sabiam com quem partilhar. Do outro lado, há quem queira muito plantar, mas esbarra na dúvida: <em>qual árvore plantar aqui? Onde encontro um viveiro perto de mim?</em> Unimos a nossa paixão pela tecnologia e pela natureza para criar essa ponte real!
+                            <p style="color: var(--text-main); font-size: 14px; line-height: 1.6;">
+                                Percebemos que muitas pessoas têm sementes crioulas incríveis guardadas ou mudas sobrando, mas não sabiam com quem partilhar. Unimos a engenharia de software ao amor pela biodiversidade para criar uma ponte real entre cultivadores e o reflorestamento ativo.
                             </p>
                         </div>
                     </div>
 
-                    <!-- ESPECIFICAÇÕES TÉCNICAS (FICHA PROFISSIONAL) -->
-                    <div style="background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 14px; padding: 24px;">
-                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
-                            <span class="material-icons" style="color: var(--lime);">code</span> Especificações Técnicas e Arquitetura do Sistema
+                    <!-- ESPECIFICAÇÕES TÉCNICAS E ARQUITETURA -->
+                    <div style="background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 16px; padding: 25px;">
+                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                            <span class="material-icons" style="color: var(--lime); font-size: 22px;">code</span> Ficha Técnica e Arquitetura do Sistema
                         </h4>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; font-size: 13px; color: var(--text-main);">
-                            <div>
-                                <strong style="color: var(--lime); display: block; margin-bottom: 4px;">Frontend & Design</strong>
-                                HTML5, CSS3 Customizado com Modo Escuro/Claro automático, JavaScript ES6+ Modular e Google Material Icons.
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; font-size: 13px; color: var(--text-main);">
+                            <div style="background: var(--card-bg); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color);">
+                                <strong style="color: var(--lime); display: block; margin-bottom: 6px; font-size: 14px;">Frontend & Design</strong>
+                                HTML5, CSS3 Customizado com Modo Escuro/Claro inteligente, JavaScript ES6+ Modular e Google Material Icons.
                             </div>
-                            <div>
-                                <strong style="color: var(--lime); display: block; margin-bottom: 4px;">Banco de Dados & Auth</strong>
-                                Google Firebase Firestore em tempo real (NoSQL) e Firebase Authentication para segurança dos utilizadores.
+                            <div style="background: var(--card-bg); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color);">
+                                <strong style="color: var(--lime); display: block; margin-bottom: 6px; font-size: 14px;">Banco de Dados & Auth</strong>
+                                Google Firebase Firestore (NoSQL) em tempo real e Firebase Authentication para proteção e gestão de contas.
                             </div>
-                            <div>
-                                <strong style="color: var(--lime); display: block; margin-bottom: 4px;">Inteligência Artificial (OCR)</strong>
-                                Tesseract.js integrado para leitura automática de rótulos e nomes de sementes a partir de fotografias.
+                            <div style="background: var(--card-bg); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color);">
+                                <strong style="color: var(--lime); display: block; margin-bottom: 6px; font-size: 14px;">IA & Visão Computacional</strong>
+                                Integração com Tesseract.js (OCR) para leitura automática de rótulos e identificação de nomes de sementes por foto.
                             </div>
-                            <div>
-                                <strong style="color: var(--lime); display: block; margin-bottom: 4px;">APIs & Mapas</strong>
-                                API oficial da Wikipédia (Enciclopédia botânica), OpenStreetMap Reverse Geocoding e Google Maps Embed.
+                            <div style="background: var(--card-bg); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color);">
+                                <strong style="color: var(--lime); display: block; margin-bottom: 6px; font-size: 14px;">APIs & Geoprocessamento</strong>
+                                API REST da Wikipédia (Catálogo botânico), OpenStreetMap / Nominatim (Reverse Geocoding) e Google Maps Embed.
                             </div>
                         </div>
                     </div>
 
-                    <!-- PILARES DO PROJETO -->
+                    <!-- PILARES DE DESTAQUE -->
                     <div class="about-pillars">
                         <div class="pillar-item">
-                            <span class="material-icons">biotech</span>
-                            <h4>Rigor Científico</h4>
-                            <p>Pesquisas e diretrizes desenvolvidas em conjunto com biólogos e especialistas ambientais.</p>
+                            <span class="material-icons" style="font-size: 28px; color: var(--lime);">biotech</span>
+                            <h4 style="color: var(--forest-dark); font-size: 16px; margin: 8px 0 4px 0;">Rigor Científico</h4>
+                            <p style="font-size: 13px; color: var(--text-muted);">Pesquisas e validações botânicas realizadas em conjunto com biólogos ambientais.</p>
                         </div>
                         <div class="pillar-item">
-                            <span class="material-icons">psychology</span>
-                            <h4>Inventário Dinâmico</h4>
-                            <p>Controle de estoque automatizado que garante partilha justa sem desperdícios.</p>
+                            <span class="material-icons" style="font-size: 28px; color: var(--lime);">psychology</span>
+                            <h4 style="color: var(--forest-dark); font-size: 16px; margin: 8px 0 4px 0;">Inventário Dinâmico</h4>
+                            <p style="font-size: 13px; color: var(--text-muted);">Controle de estoque automatizado que garante partilha justa sem desperdícios.</p>
                         </div>
                         <div class="pillar-item">
-                            <span class="material-icons">volunteer_activism</span>
-                            <h4>Comunidade Ativa</h4>
-                            <p>Chats privados automáticos que transformam reservas de sementes em mutirões de plantio.</p>
+                            <span class="material-icons" style="font-size: 28px; color: var(--lime);">volunteer_activism</span>
+                            <h4 style="color: var(--forest-dark); font-size: 16px; margin: 8px 0 4px 0;">Comunidade Ativa</h4>
+                            <p style="font-size: 13px; color: var(--text-muted);">Chats privados automáticos que transformam reservas em mutirões de plantio.</p>
                         </div>
                     </div>
 
-                    <!-- FOTO DA EQUIPE -->
-                    <div class="team-photo-container">
-                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 12px; text-align: center;">Membros da Equipe Alphadroid's</h4>
-                        <img src="flltc oi.jpg" alt="Equipe ALPHADROID'S" class="team-group-photo-framed" onerror="this.style.display='none'; document.getElementById('team-photo-fallback').style.display='block';">
+                    <!-- FOTO DA EQUIPE (flltc oi.jpg) -->
+                    <div class="team-photo-container" style="background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; text-align: center;">
+                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 14px;">Membros da Equipe Alphadroid's</h4>
+                        <img src="flltc oi.jpg" alt="Equipe ALPHADROID'S" class="team-group-photo-framed" style="width: 100%; max-height: 420px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);" onerror="this.style.display='none'; document.getElementById('team-photo-fallback').style.display='block';">
                         <div id="team-photo-fallback" style="display: none; padding: 30px; text-align: center; background: var(--bg-light); border-radius: 12px; color: var(--text-muted); font-size: 14px;">
-                            Coloque a foto da equipe na mesma pasta do site com o nome <strong>flltc oi.jpg</strong>.
+                            Coloque a foto da equipe na mesma pasta do site com o nome exato <strong>flltc oi.jpg</strong>.
                         </div>
                     </div>
                 </div>
