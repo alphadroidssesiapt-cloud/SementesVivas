@@ -16,7 +16,7 @@
         <div class="sidebar-header">
             <div class="nav-brand">
                 <span class="material-icons brand-icon">spa</span>
-                <span class="brand-title">Sementes Vivas</span>
+                <span class="brand-title" data-i18n="brand_title">Sementes Vivas</span>
             </div>
             <button class="btn-close-sidebar" onclick="window.toggleSlidingSidebar()">
                 <span class="material-icons">close</span>
@@ -24,36 +24,36 @@
         </div>
         <div class="sidebar-menu-list">
             <button class="sidebar-link active" id="menu-dashboard-view" onclick="window.showDashboard(); window.toggleSlidingSidebar()">
-                <span class="material-icons">home</span> Início
+                <span class="material-icons">home</span> <span data-i18n="menu_home">Início</span>
             </button>
             <button class="sidebar-link" id="menu-available-view" onclick="window.showAvailable(); window.toggleSlidingSidebar()">
-                <span class="material-icons">inventory_2</span> Explorar Sementes
+                <span class="material-icons">inventory_2</span> <span data-i18n="menu_explore">Explorar Sementes</span>
             </button>
             <button class="sidebar-link" id="menu-donate-view" onclick="window.showDonate(); window.toggleSlidingSidebar()">
-                <span class="material-icons">add_circle</span> Cadastrar Semente
+                <span class="material-icons">add_circle</span> <span data-i18n="menu_donate">Cadastrar Semente</span>
             </button>
             <button class="sidebar-link" id="menu-private-chats-view" onclick="window.showPrivateChats(); window.toggleSlidingSidebar()">
-                <span class="material-icons">chat</span> Meus Chats
+                <span class="material-icons">chat</span> <span data-i18n="menu_chats">Meus Chats</span>
             </button>
             <button class="sidebar-link" id="menu-chat-view" onclick="window.showChat(); window.toggleSlidingSidebar()">
-                <span class="material-icons">forum</span> Chat Comunitário
+                <span class="material-icons">forum</span> <span data-i18n="menu_community">Chat Comunitário</span>
             </button>
             <button class="sidebar-link" id="menu-encyclopedia-view" onclick="window.showEncyclopedia(); window.toggleSlidingSidebar()">
-                <span class="material-icons">public</span> Bioma & Enciclopédia
+                <span class="material-icons">public</span> <span data-i18n="menu_biome">Bioma & Enciclopédia</span>
             </button>
             <button class="sidebar-link" id="menu-learn-view" onclick="window.showLearn(); window.toggleSlidingSidebar()">
-                <span class="material-icons">school</span> Aprender a Plantar
+                <span class="material-icons">school</span> <span data-i18n="menu_learn">Aprender a Plantar</span>
             </button>
             <button class="sidebar-link" id="menu-about-view" onclick="window.showAbout(); window.toggleSlidingSidebar()">
-                <span class="material-icons">groups</span> Sobre Nós (Alphadroid's)
+                <span class="material-icons">groups</span> <span data-i18n="menu_about">Sobre Nós (Alphadroid's)</span>
             </button>
             <button class="sidebar-link" id="menu-profile-view" onclick="window.showProfile(); window.toggleSlidingSidebar()">
-                <span class="material-icons">person</span> Meu Perfil
+                <span class="material-icons">person</span> <span data-i18n="menu_profile">Meu Perfil</span>
             </button>
         </div>
         <div class="sidebar-footer">
             <button class="btn-logout-dark" onclick="window.logout(); window.toggleSlidingSidebar()" style="width: 100%;">
-                <span class="material-icons" style="font-size: 16px; vertical-align: middle;">logout</span> Sair da Conta
+                <span class="material-icons" style="font-size: 16px; vertical-align: middle;">logout</span> <span data-i18n="btn_logout">Sair da Conta</span>
             </button>
         </div>
     </div>
@@ -78,14 +78,21 @@
                 </div>
 
                 <div class="nav-actions">
+                    <!-- SELETOR DE IDIOMAS ORIGINAL -->
+                    <select id="language-select" class="select-styled" style="width: auto; padding: 6px 10px; font-size: 12px; font-weight: 600;" onchange="window.changeLanguage(this.value)">
+                        <option value="pt">PT</option>
+                        <option value="en">EN</option>
+                        <option value="es">ES</option>
+                    </select>
+
                     <button class="btn-theme-toggle" onclick="window.toggleTheme()" title="Alternar Modo Claro / Escuro">
                         <span id="theme-icon" class="material-icons" style="font-size: 18px;">dark_mode</span>
                     </button>
 
                     <button class="btn-lime-pill" onclick="window.showDonate()">
-                        <span class="material-icons" style="font-size: 16px;">add_circle</span> Cadastrar
+                        <span class="material-icons" style="font-size: 16px;">add_circle</span> <span data-i18n="nav_register">Cadastrar</span>
                     </button>
-                    <button onclick="window.logout()" class="btn-logout-dark" title="Sair da conta">Sair</button>
+                    <button onclick="window.logout()" class="btn-logout-dark" title="Sair da conta" data-i18n="nav_logout">Sair</button>
                 </div>
             </div>
         </header>
@@ -406,14 +413,15 @@
                 </div>
             </div>
 
-            <!-- SOBRE NÓS (COM LOGO logo.jotapegue.avif E FOTO flltc oi.jpg) -->
+            <!-- SOBRE NÓS (PROFISSIONAL, DETALHADA E TÉCNICA PARA FLL) -->
             <div id="about-view" class="view">
                 <div class="page-header-dark">
-                    <h2>Sobre Nós</h2>
-                    <p>Conheça a história, a equipe e a ciência por trás do projeto Sementes Vivas.</p>
+                    <h2>Ficha Técnica e Sobre Nós</h2>
+                    <p>Documentação de inovação e especificações técnicas da equipe Alphadroid's para a FLL.</p>
                 </div>
 
-                <div class="about-card-vertical">
+                <div class="about-card-vertical" style="display: flex; flex-direction: column; gap: 30px;">
+                    <!-- CABEÇALHO DA EQUIPE -->
                     <div class="about-header-flex">
                         <div class="about-logo-container">
                             <img src="logo.jotapegue.avif" alt="Logo Equipe" class="team-logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
@@ -425,36 +433,63 @@
                         </div>
 
                         <div class="about-text-content">
-                            <h3>Tecnologia e Natureza em Harmonia</h3>
+                            <h3>Inovação Tecnológica com Impacto Socioambiental</h3>
                             <p>
-                                O projeto <strong>Sementes Vivas</strong> nasceu da união de ideias, criatividade e propósito da equipe <strong>ALPHADROID'S</strong>. Nosso grande objetivo sempre foi utilizar a tecnologia como uma ponte para aproximar as pessoas da natureza, incentivando a troca de sementes crioulas, o cultivo sustentável e o fortalecimento da biodiversidade local.
+                                O projeto <strong>Sementes Vivas</strong> foi concebido pela equipe <strong>ALPHADROID'S</strong> no contexto da FIRST LEGO League (FLL). Nosso propósito central é resolver os gargalos logísticos do reflorestamento regional através de engenharia de software e inteligência de dados, unindo cultivadores, bancos de sementes crioulas e viveiros de mudas nativas.
                             </p>
                             <p>
-                                Para transformar esse sonho em uma ferramenta verdadeiramente útil e confiável, unimos o pensamento inovador do nosso time a um rigoroso processo de <strong>pesquisas realizadas em conjunto com biólogos e especialistas ambientais</strong>. Cada funcionalidade — desde a identificação inteligente dos biomas até o mapeamento de viveiros e a enciclopédia de espécies nativas — foi pensada para respeitar os ciclos ecológicos de cada região.
+                                Desenvolvido com rigor metodológico e embasamento em pesquisas científicas de biólogos ambientais, o sistema garante a assertividade ecológica no plantio de espécies adequadas aos biomas do Cerrado, Pantanal e Mata Atlântica.
                             </p>
                         </div>
                     </div>
 
+                    <!-- ESPECIFICAÇÕES TÉCNICAS (NOVO BLOCO PROFISSIONAL) -->
+                    <div style="background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 14px; padding: 24px;">
+                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                            <span class="material-icons" style="color: var(--lime);">code</span> Especificações Técnicas e Arquitetura do Sistema
+                        </h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; font-size: 13px; color: var(--text-main);">
+                            <div>
+                                <strong style="color: var(--lime); display: block; margin-bottom: 4px;">Frontend & UI/UX</strong>
+                                HTML5, CSS3 Customizado com Variáveis Dinâmicas (Dark/Light Mode), JavaScript ES6+ Modular, Google Material Icons.
+                            </div>
+                            <div>
+                                <strong style="color: var(--lime); display: block; margin-bottom: 4px;">Banco de Dados & Backend</strong>
+                                Google Firebase Firestore (NoSQL) em tempo real, Firebase Authentication (Segurança e Gestão de Contas).
+                            </div>
+                            <div>
+                                <strong style="color: var(--lime); display: block; margin-bottom: 4px;">IA & Visão Computacional</strong>
+                                Integração com Tesseract.js (OCR para leitura automática de rótulos e nomes de sementes a partir de fotografias).
+                            </div>
+                            <div>
+                                <strong style="color: var(--lime); display: block; margin-bottom: 4px;">APIs & Geolocalização</strong>
+                                API REST da Wikipédia (Catálogo botânico), OpenStreetMap / Nominatim (Reverse Geocoding) e Google Maps Embed API.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PILARES DO PROJETO -->
                     <div class="about-pillars">
                         <div class="pillar-item">
                             <span class="material-icons">biotech</span>
-                            <h4>Base Científica</h4>
-                            <p>Desenvolvido com apoio e pesquisa junto a biólogos.</p>
+                            <h4>Rigor Científico</h4>
+                            <p>Validação botânica e mapeamento de espécies nativas com suporte de especialistas.</p>
                         </div>
                         <div class="pillar-item">
                             <span class="material-icons">psychology</span>
-                            <h4>Pensamento Criativo</h4>
-                            <p>Soluções digitais pensadas pelo time ALPHADROID'S.</p>
+                            <h4>Engenharia Criativa</h4>
+                            <p>Lógica de inventário dinâmico com controle de estoque automatizado.</p>
                         </div>
                         <div class="pillar-item">
                             <span class="material-icons">volunteer_activism</span>
-                            <h4>Impacto Verde</h4>
-                            <p>Fomento à partilha comunitária e reflorestamento.</p>
+                            <h4>Impacto Sustentável</h4>
+                            <p>Fomento ativo ao reflorestamento e economia circular verde comunitária.</p>
                         </div>
                     </div>
 
+                    <!-- FOTO DA EQUIPE -->
                     <div class="team-photo-container">
-                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 12px; text-align: center;">Nossa Equipe</h4>
+                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 12px; text-align: center;">Membros da Equipe Alphadroid's</h4>
                         <img src="flltc oi.jpg" alt="Equipe ALPHADROID'S" class="team-group-photo-framed" onerror="this.style.display='none'; document.getElementById('team-photo-fallback').style.display='block';">
                         <div id="team-photo-fallback" style="display: none; padding: 30px; text-align: center; background: var(--bg-light); border-radius: 12px; color: var(--text-muted); font-size: 14px;">
                             Coloque a foto da equipe na mesma pasta do site com o nome <strong>flltc oi.jpg</strong>.
@@ -490,18 +525,23 @@
 
                     <div class="input-group">
                         <label>Sua Comunidade / Cidade Principal</label>
-                        <select id="profile-community" class="select-styled">
-                            <option value="Aparecida do Taboado">Aparecida do Taboado - MS</option>
-                            <option value="Paranaíba">Paranaíba - MS</option>
-                            <option value="Três Lagoas">Três Lagoas - MS</option>
-                            <option value="Campo Grande">Campo Grande - MS</option>
-                            <option value="Dourados">Dourados - MS</option>
-                            <option value="Corumbá">Corumbá - MS</option>
-                            <option value="Bonito">Bonito - MS</option>
-                            <option value="Santa Fé do Sul">Santa Fé do Sul - SP</option>
-                            <option value="Jales">Jales - SP</option>
-                            <option value="Fernandópolis">Fernandópolis - SP</option>
-                        </select>
+                        <div style="display: flex; gap: 8px;">
+                            <select id="profile-community" class="select-styled" style="flex: 1;">
+                                <option value="Aparecida do Taboado">Aparecida do Taboado - MS</option>
+                                <option value="Paranaíba">Paranaíba - MS</option>
+                                <option value="Três Lagoas">Três Lagoas - MS</option>
+                                <option value="Campo Grande">Campo Grande - MS</option>
+                                <option value="Dourados">Dourados - MS</option>
+                                <option value="Corumbá">Corumbá - MS</option>
+                                <option value="Bonito">Bonito - MS</option>
+                                <option value="Santa Fé do Sul">Santa Fé do Sul - SP</option>
+                                <option value="Jales">Jales - SP</option>
+                                <option value="Fernandópolis">Fernandópolis - SP</option>
+                            </select>
+                            <button type="button" class="btn-lime-pill" onclick="window.detectCityByGPS()" style="white-space: nowrap; padding: 10px 14px;" title="Detetar cidade atual por GPS">
+                                <span class="material-icons" style="font-size: 16px;">my_location</span> GPS
+                            </button>
+                        </div>
                     </div>
 
                     <button class="btn-lime-full" onclick="window.saveProfile()">Guardar Alterações de Perfil</button>
