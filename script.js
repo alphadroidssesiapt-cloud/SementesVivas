@@ -634,6 +634,30 @@ window.focusViveiroOnMap = (viveiroName, cityQuery) => {
     iframe.src = `https://maps.google.com/maps?q=${query}&t=m&z=15&ie=UTF8&iwloc=B&output=embed`;
 };
 
+window.selectBiomeManually = (biomeName) => {
+    const resultBox = document.getElementById('biome-result-box');
+    const titleEl = document.getElementById('biome-detected-title');
+    const descEl = document.getElementById('biome-detected-desc');
+    const viveirosContainer = document.getElementById('viveiros-list-container');
+    const gmapsLink = document.getElementById('gmaps-external-link');
+    const portalLink = document.getElementById('state-portal-link');
+    const portalLabel = document.getElementById('state-portal-label');
+    const iframe = document.getElementById('google-maps-iframe');
+
+    titleEl.innerText = `Bioma Selecionado: ${biomeName}`;
+    descEl.innerText = `Exploração manual do bioma ${biomeName} com espécies nativas catalogadas.`;
+    viveirosContainer.innerHTML = `<div style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">Viveiros do ${biomeName}:</div><button class="viveiro-pin-btn" onclick="window.focusViveiroOnMap('Viveiro Ecológico', '${biomeName}')"><span class="material-icons" style="font-size: 14px; color: #c53030;">location_on</span> Viveiro Ecológico ${biomeName}</button>`;
+
+    gmapsLink.href = `https://www.google.com/maps/search/?api=1&query=viveiro+de+mudas+${encodeURIComponent(biomeName)}`;
+    portalLink.href = "https://www.gov.br/mma/pt-br";
+    portalLabel.innerText = "Portal Ambiental (MMA)";
+    iframe.src = `https://maps.google.com/maps?q=viveiro+de+mudas+${encodeURIComponent(biomeName)}&t=m&z=10&ie=UTF8&iwloc=B&output=embed`;
+
+    resultBox.style.display = 'block';
+    const species = biomeSpeciesCatalog[biomeName] || biomeSpeciesCatalog["Cerrado"];
+    window.loadWikipediaSpeciesCards(species, biomeName);
+};
+
 window.identifyBiomeByCity = () => {
     const city = userProfileCache?.community || currentCommunity || "Aparecida do Taboado";
     const info = cityBiomeDatabase[city] || cityBiomeDatabase["Aparecida do Taboado"];
