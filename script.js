@@ -23,6 +23,7 @@ let privateChatUnsubscribe = null;
 let privateListUnsubscribe = null;
 let currentLanguage = "pt";
 
+// DICIONÁRIO COMPLETO PARA TRADUZIR O SITE INTEIRO (MANTENDO O NOME "Sementes Vivas" FIXO)
 const translations = {
     pt: {
         menu_home: "Início",
@@ -324,7 +325,7 @@ const translations = {
         tech_1_title: "Frontend & Diseño",
         tech_1_desc: "HTML5, CSS3 Personalizado con Modo Oscuro/Claro inteligente, JavaScript ES6+ Modular y Google Material Icons.",
         tech_2_title: "Base de Datos & Auth",
-        tech_2_desc: "Google Firebase Firestore (NoSQL) en tempo real y Firebase Authentication para protección y gestión de cuentas.",
+        tech_2_desc: "Google Firebase Firestore (NoSQL) en tiempo real y Firebase Authentication para protección y gestión de cuentas.",
         tech_3_title: "IA & Visión Computacional",
         tech_3_desc: "Integración con Tesseract.js (OCR) para lectura automática de etiquetas e identificación de nombres de semillas por foto.",
         tech_4_title: "APIs & Geoprocesamiento",
@@ -354,20 +355,6 @@ window.changeLanguage = (lang) => {
         const key = el.getAttribute('data-i18n');
         if (dict[key]) el.innerText = dict[key];
     });
-};
-
-window.toggleTheme = () => {
-    const htmlEl = document.documentElement;
-    const themeIcon = document.getElementById('theme-icon');
-    const currentTheme = htmlEl.getAttribute('data-theme');
-    
-    if (currentTheme === 'dark') {
-        htmlEl.setAttribute('data-theme', 'light');
-        if (themeIcon) themeIcon.innerText = 'dark_mode';
-    } else {
-        htmlEl.setAttribute('data-theme', 'dark');
-        if (themeIcon) themeIcon.innerText = 'light_mode';
-    }
 };
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -523,6 +510,20 @@ const cityBiomeDatabase = {
         mapQuery: "Fernandopolis,SP",
         viveiros: ["Viveiro Municipal Fernandópolis", "EcoMudas Fernandópolis"],
         species: [...new Set([...biomeSpeciesCatalog["Mata Atlântica"].slice(0, 10), ...biomeSpeciesCatalog["Cerrado"].slice(0, 6)])]
+    }
+};
+
+window.toggleTheme = () => {
+    const htmlEl = document.documentElement;
+    const themeIcon = document.getElementById('theme-icon');
+    const currentTheme = htmlEl.getAttribute('data-theme');
+    
+    if (currentTheme === 'dark') {
+        htmlEl.setAttribute('data-theme', 'light');
+        themeIcon.innerText = 'dark_mode';
+    } else {
+        htmlEl.setAttribute('data-theme', 'dark');
+        themeIcon.innerText = 'light_mode';
     }
 };
 
@@ -802,7 +803,8 @@ const comprimirEConverterBase64 = (file, max_size = 600, quality = 0.7) => {
 window.loadProfileData = async () => {
     const user = auth.currentUser;
     if (!user) return;
-    const snap = await getDoc(doc(db, "users", user.uid));
+    const userDoc = await doc(db, "users", user.uid);
+    const snap = await getDoc(userDoc);
     if (snap.exists()) {
         const data = snap.data();
         document.getElementById('profile-name').value = data.displayName || '';
