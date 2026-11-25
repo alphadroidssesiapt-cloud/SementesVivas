@@ -23,7 +23,7 @@ let privateChatUnsubscribe = null;
 let privateListUnsubscribe = null;
 let currentLanguage = "pt";
 
-// DICIONÁRIO DE IDIOMAS (NOME DO SITE MANTIDO EXATAMENTE COMO "Sementes Vivas")
+// DICIONÁRIO COMPLETO (NOME DO SITE MANTIDO SEMPRE COMO "Sementes Vivas")
 const translations = {
     pt: {
         menu_home: "Início",
@@ -37,7 +37,30 @@ const translations = {
         menu_profile: "Meu Perfil",
         btn_logout: "Sair da Conta",
         nav_register: "Cadastrar",
-        nav_logout: "Sair"
+        nav_logout: "Sair",
+        
+        about_title: "Sobre Nós & Ficha Técnica FLL",
+        about_subtitle: "Conheça a história, o coração e a tecnologia por trás do projeto da equipe Alphadroid's.",
+        about_team_badge: "EQUIPE ALPHADROID'S",
+        about_heading: "Quando a Tecnologia Floresce a Natureza 🌿🤖",
+        about_p1: "Sabe aquela vontade de ver a nossa cidade mais verde, cheia de vida e com árvores que realmente pertencem à nossa região? Foi exatamente a partir desse sonho — e de muita conversa na temporada da FIRST LEGO League (FLL) — que nós, da equipe ALPHADROID'S, criamos o projeto Sementes Vivas.",
+        about_p2: "Percebemos que muitas pessoas têm sementes crioulas incríveis guardadas ou mudas sobrando, mas não sabiam com quem partilhar. Unimos a engenharia de software ao amor pela biodiversidade para criar uma ponte real entre cultivadores e o reflorestamento ativo.",
+        tech_title: "Ficha Técnica e Arquitetura do Sistema",
+        tech_1_title: "Frontend & Design",
+        tech_1_desc: "HTML5, CSS3 Customizado com Modo Escuro/Claro inteligente, JavaScript ES6+ Modular e Google Material Icons.",
+        tech_2_title: "Banco de Dados & Auth",
+        tech_2_desc: "Google Firebase Firestore (NoSQL) em tempo real e Firebase Authentication para proteção e gestão de contas.",
+        tech_3_title: "IA & Visão Computacional",
+        tech_3_desc: "Integração com Tesseract.js (OCR) para leitura automática de rótulos e identificação de nomes de sementes por foto.",
+        tech_4_title: "APIs & Geoprocessamento",
+        tech_4_desc: "API REST da Wikipédia (Catálogo botânico), OpenStreetMap / Nominatim (Reverse Geocoding) e Google Maps Embed.",
+        pillar_1_title: "Rigor Científico",
+        pillar_1_desc: "Pesquisas e validações botânicas realizadas em conjunto com biólogos ambientais.",
+        pillar_2_title: "Inventário Dinâmico",
+        pillar_2_desc: "Controle de estoque automatizado que garante partilha justa sem desperdícios.",
+        pillar_3_title: "Comunidade Ativa",
+        pillar_3_desc: "Chats privados automáticos que transformam reservas em mutirões de plantio.",
+        team_members_title: "Membros da Equipe Alphadroid's"
     },
     en: {
         menu_home: "Home",
@@ -51,7 +74,30 @@ const translations = {
         menu_profile: "My Profile",
         btn_logout: "Log Out",
         nav_register: "Register",
-        nav_logout: "Logout"
+        nav_logout: "Logout",
+        
+        about_title: "About Us & FLL Technical Sheet",
+        about_subtitle: "Discover the story, heart, and technology behind the Alphadroid's team project.",
+        about_team_badge: "ALPHADROID'S TEAM",
+        about_heading: "When Technology Makes Nature Blossom 🌿🤖",
+        about_p1: "You know that desire to see our city greener, full of life, and with trees that truly belong to our region? It was born from that dream — and countless conversations during the FIRST LEGO League (FLL) season — that we, the ALPHADROID'S team, created the Sementes Vivas project.",
+        about_p2: "We noticed that many people have incredible heirloom seeds stored away or extra seedlings, but didn't know who to share them with. We combined software engineering with a love for biodiversity to build a real bridge between growers and active reforestation.",
+        tech_title: "Technical Sheet & System Architecture",
+        tech_1_title: "Frontend & Design",
+        tech_1_desc: "HTML5, Custom CSS3 with smart Dark/Light Mode, Modular JavaScript ES6+, and Google Material Icons.",
+        tech_2_title: "Database & Auth",
+        tech_2_desc: "Real-time Google Firebase Firestore (NoSQL) and Firebase Authentication for account protection and management.",
+        tech_3_title: "AI & Computer Vision",
+        tech_3_desc: "Integration with Tesseract.js (OCR) for automatic label reading and seed name identification from photos.",
+        tech_4_title: "APIs & Geoprocessing",
+        tech_4_desc: "Wikipedia REST API (Botanical catalog), OpenStreetMap / Nominatim (Reverse Geocoding), and Google Maps Embed.",
+        pillar_1_title: "Scientific Rigor",
+        pillar_1_desc: "Research and botanical validations conducted alongside environmental biologists.",
+        pillar_2_title: "Dynamic Inventory",
+        pillar_2_desc: "Automated stock control ensuring fair sharing without waste.",
+        pillar_3_title: "Active Community",
+        pillar_3_desc: "Automatic private chats that turn seed reservations into planting drives.",
+        team_members_title: "Alphadroid's Team Members"
     },
     es: {
         menu_home: "Inicio",
@@ -65,7 +111,30 @@ const translations = {
         menu_profile: "Mi Perfil",
         btn_logout: "Cerrar Sesión",
         nav_register: "Registrar",
-        nav_logout: "Salir"
+        nav_logout: "Salir",
+        
+        about_title: "Sobre Nosotros & Ficha Técnica FLL",
+        about_subtitle: "Conoce la historia, el corazón y la tecnología detrás del proyecto del equipo Alphadroid's.",
+        about_team_badge: "EQUIPO ALPHADROID'S",
+        about_heading: "Cuando la Tecnología Hace Florecer la Naturaleza 🌿🤖",
+        about_p1: "¿Sabes ese deseo de ver nuestra ciudad más verde, llena de vida y con árboles que realmente pertenecen a nuestra región? Nació exactamente de ese sueño — y de muchas conversaciones en la temporada de la FIRST LEGO League (FLL) — que nosotros, el equipo ALPHADROID'S, creamos el proyecto Sementes Vivas.",
+        about_p2: "Notamos que muchas personas tienen increíbles semillas criollas guardadas o plántulas sobrantes, pero no sabían con quién compartirlas. Unimos la ingeniería de software al amor por la biodiversidad para crear un puente real entre cultivadores y la reforestación activa.",
+        tech_title: "Ficha Técnica y Arquitectura del Sistema",
+        tech_1_title: "Frontend & Diseño",
+        tech_1_desc: "HTML5, CSS3 Personalizado con Modo Oscuro/Claro inteligente, JavaScript ES6+ Modular y Google Material Icons.",
+        tech_2_title: "Base de Datos & Auth",
+        tech_2_desc: "Google Firebase Firestore (NoSQL) en tempo real y Firebase Authentication para protección y gestión de cuentas.",
+        tech_3_title: "IA & Visión Computacional",
+        tech_3_desc: "Integración con Tesseract.js (OCR) para lectura automática de etiquetas e identificación de nombres de semillas por foto.",
+        tech_4_title: "APIs & Geoprocesamiento",
+        tech_4_desc: "API REST de Wikipedia (Catálogo botánico), OpenStreetMap / Nominatim (Geocodificación inversa) y Google Maps Embed.",
+        pillar_1_title: "Rigor Científico",
+        pillar_1_desc: "Investigaciones y validaciones botánicas realizadas junto con biólogos ambientales.",
+        pillar_2_title: "Inventario Dinâmico",
+        pillar_2_desc: "Control de stock automatizado que garantiza un intercambio justo sin desperdicios.",
+        pillar_3_title: "Comunidad Activa",
+        pillar_3_desc: "Chats privados automáticos que transformam las reservas de semillas en jornadas de siembra.",
+        team_members_title: "Miembros del Equipo Alphadroid's"
     }
 };
 
