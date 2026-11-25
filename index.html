@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light">
+<html lang="pt-BR" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -85,7 +85,7 @@
                     </select>
 
                     <button class="btn-theme-toggle" onclick="window.toggleTheme()" title="Alternar Modo">
-                        <span id="theme-icon" class="material-icons" style="font-size: 18px;">dark_mode</span>
+                        <span id="theme-icon" class="material-icons" style="font-size: 18px;">light_mode</span>
                     </button>
 
                     <button class="btn-lime-pill" onclick="window.showDonate()">
@@ -211,7 +211,7 @@
                             <div class="camera-btn" id="camera-label-seed">
                                 <span class="material-icons">photo_library</span> <span data-i18n="donate_cam_seed">Selecionar Foto da Semente</span>
                             </div>
-                            <input type="file" id="donate-seed-photo-seed" accept="image/*">
+                            <input type="file" id="donate-seed-photo-seed" accept="image/*" onchange="document.getElementById('camera-label-seed').innerText = this.files[0] ? this.files[0].name : 'Selecionar Foto da Semente'">
                         </div>
                     </div>
 
@@ -221,7 +221,7 @@
                             <div class="camera-btn" id="camera-label-plant">
                                 <span class="material-icons">photo_library</span> <span data-i18n="donate_cam_plant">Selecionar Foto da Planta</span>
                             </div>
-                            <input type="file" id="donate-seed-photo-plant" accept="image/*">
+                            <input type="file" id="donate-seed-photo-plant" accept="image/*" onchange="document.getElementById('camera-label-plant').innerText = this.files[0] ? this.files[0].name : 'Selecionar Foto da Planta'">
                         </div>
                     </div>
 
