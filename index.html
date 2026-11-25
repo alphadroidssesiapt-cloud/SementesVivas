@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="dark">
+<html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -85,7 +85,7 @@
                     </select>
 
                     <button class="btn-theme-toggle" onclick="window.toggleTheme()" title="Alternar Modo">
-                        <span id="theme-icon" class="material-icons" style="font-size: 18px;">light_mode</span>
+                        <span id="theme-icon" class="material-icons" style="font-size: 18px;">dark_mode</span>
                     </button>
 
                     <button class="btn-lime-pill" onclick="window.showDonate()">
@@ -211,7 +211,7 @@
                             <div class="camera-btn" id="camera-label-seed">
                                 <span class="material-icons">photo_library</span> <span data-i18n="donate_cam_seed">Selecionar Foto da Semente</span>
                             </div>
-                            <input type="file" id="donate-seed-photo-seed" accept="image/*" onchange="document.getElementById('camera-label-seed').innerText = this.files[0] ? this.files[0].name : 'Selecionar Foto da Semente'">
+                            <input type="file" id="donate-seed-photo-seed" accept="image/*">
                         </div>
                     </div>
 
@@ -221,7 +221,7 @@
                             <div class="camera-btn" id="camera-label-plant">
                                 <span class="material-icons">photo_library</span> <span data-i18n="donate_cam_plant">Selecionar Foto da Planta</span>
                             </div>
-                            <input type="file" id="donate-seed-photo-plant" accept="image/*" onchange="document.getElementById('camera-label-plant').innerText = this.files[0] ? this.files[0].name : 'Selecionar Foto da Planta'">
+                            <input type="file" id="donate-seed-photo-plant" accept="image/*">
                         </div>
                     </div>
 
@@ -339,19 +339,8 @@
                         <span class="enc-tag" style="margin-bottom: 8px;" data-i18n="enc_tag_geo">GEOLOCALIZAÇÃO E VIVEIROS</span>
                         <h3 style="color: var(--forest-dark); font-size: 20px; margin-bottom: 8px;" data-i18n="enc_box_title">Identificar Meu Bioma e Viveiros</h3>
                         <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;" data-i18n="enc_box_desc">
-                            Detete seu bioma, selecione manualmente ou clique nos viveiros abaixo.
+                            Detete seu bioma e clique nos viveiros abaixo para destacá-los diretamente no mapa ao lado.
                         </p>
-                        
-                        <!-- SELETOR MANUAL DE BIOMA -->
-                        <div class="input-group" style="margin-bottom: 12px;">
-                            <label style="font-size: 12px; font-weight: 600; margin-bottom: 4px;">Escolher Bioma Manualmente:</label>
-                            <select id="manual-biome-select" class="select-styled" onchange="window.selectBiomeManually(this.value)">
-                                <option value="Cerrado">Cerrado</option>
-                                <option value="Pantanal">Pantanal</option>
-                                <option value="Mata Atlântica">Mata Atlântica</option>
-                            </select>
-                        </div>
-
                         <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
                             <button class="btn-lime-pill" onclick="window.detectBiomeWithMaps()">
                                 <span class="material-icons" style="font-size: 17px;">my_location</span> <span data-i18n="btn_gps">Detectar por GPS</span>
