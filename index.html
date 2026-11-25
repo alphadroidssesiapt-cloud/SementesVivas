@@ -339,8 +339,19 @@
                         <span class="enc-tag" style="margin-bottom: 8px;" data-i18n="enc_tag_geo">GEOLOCALIZAÇÃO E VIVEIROS</span>
                         <h3 style="color: var(--forest-dark); font-size: 20px; margin-bottom: 8px;" data-i18n="enc_box_title">Identificar Meu Bioma e Viveiros</h3>
                         <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;" data-i18n="enc_box_desc">
-                            Detete seu bioma e clique nos viveiros abaixo para destacá-los diretamente no mapa ao lado.
+                            Detete seu bioma, selecione manualmente ou clique nos viveiros abaixo.
                         </p>
+                        
+                        <!-- SELETOR MANUAL DE BIOMA -->
+                        <div class="input-group" style="margin-bottom: 12px;">
+                            <label style="font-size: 12px; font-weight: 600; margin-bottom: 4px;">Escolher Bioma Manualmente:</label>
+                            <select id="manual-biome-select" class="select-styled" onchange="window.selectBiomeManually(this.value)">
+                                <option value="Cerrado">Cerrado</option>
+                                <option value="Pantanal">Pantanal</option>
+                                <option value="Mata Atlântica">Mata Atlântica</option>
+                            </select>
+                        </div>
+
                         <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
                             <button class="btn-lime-pill" onclick="window.detectBiomeWithMaps()">
                                 <span class="material-icons" style="font-size: 17px;">my_location</span> <span data-i18n="btn_gps">Detectar por GPS</span>
