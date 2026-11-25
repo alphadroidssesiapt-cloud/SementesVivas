@@ -727,7 +727,6 @@ window.renderSeeds = async () => {
                     actionHtml = `<p style="color: #c53030; font-size: 13px; font-weight: 600; text-align: center; margin-top: 10px;">Esgotada / Totalmente Reservada</p>`;
                 }
             } else if (user && seed.userId !== user.uid) {
-                // O INPUT DE RESERVA LIMITA RIGOROSAMENTE AO MÁXIMO DISPONÍVEL ATUAL
                 actionHtml = `
                     <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
                         <label style="font-size: 12px; font-weight: 600; color: var(--text-main);">Qtd:</label>
@@ -773,7 +772,6 @@ window.renderSeeds = async () => {
     }
 };
 
-// VALIDAÇÃO ESTRITA: VERIFICA DIRETAMENTE NO FIRESTORE O ESTOQUE ATUAL ANTES DE ABATER
 window.reservarSemente = async (seedId, ownerId, ownerName, seedName) => {
     const user = auth.currentUser;
     if (!user) return;
