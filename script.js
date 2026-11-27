@@ -46,6 +46,19 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// FUNÇÃO PARA ABRIR O JOGO EXTERNO
+window.openGameExternal = () => {
+    window.open("https://alphadroidssesiapt-cloud.github.io/jogo-teste/", "_blank");
+};
+
+// CONTROLO DO MENU HAMBÚRGUER EM MOBILE
+window.toggleMobileMenu = () => {
+    const navContainer = document.getElementById('nav-links-container');
+    if (navContainer) {
+        navContainer.classList.toggle('mobile-open');
+    }
+};
+
 window.acceptCookies = () => {
     localStorage.setItem('cookies_accepted', 'true');
     const banner = document.getElementById('cookie-banner');
@@ -135,6 +148,10 @@ window.switchView = (viewId) => {
         view.classList.add('active');
         view.style.display = (viewId === 'login-view') ? 'flex' : 'block';
     }
+
+    // Fecha o menu móvel ao trocar de aba
+    const navContainer = document.getElementById('nav-links-container');
+    if (navContainer) navContainer.classList.remove('mobile-open');
 
     document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
     const mapTab = {
