@@ -1234,3 +1234,53 @@ header {
     background-color: #c53030;
     color: white;
 }
+/* Garante que em ecrãs normais de computador os links ficam alinhados em linha sem quebras */
+@media (min-width: 1025px) {
+    .nav-links {
+        display: flex !important;
+        position: static !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        width: auto !important;
+    }
+    .hamburger-btn {
+        display: none !important;
+    }
+}
+
+/* Quando a tela diminui para o tamanho da sua captura de ecrã, o menu recolhe corretamente */
+@media (max-width: 1024px) {
+    .hamburger-btn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .nav-links {
+        display: none !important;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: var(--forest-dark, #143622);
+        border-bottom: 1px solid var(--border-color, #235336);
+        padding: 15px 20px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        align-items: stretch;
+        gap: 8px;
+        z-index: 999;
+    }
+
+    .nav-links.mobile-open {
+        display: flex !important;
+    }
+
+    .nav-link {
+        text-align: left;
+        padding: 12px;
+        width: 100%;
+        color: #ffffff;
+    }
+}
