@@ -24,7 +24,7 @@
                     </div>
                 </div>
 
-                <!-- BOTÃO HAMBÚRGUER -->
+                <!-- BOTÃO HAMBÚRGUER CORRIGIDO -->
                 <button class="hamburger-btn" id="hamburger-toggle" onclick="window.toggleMobileMenu()">
                     <span class="material-icons">menu</span>
                 </button>
@@ -158,6 +158,7 @@
                         <h3>Enciclopédia de Biomas</h3>
                         <p>Escolha qualquer bioma do Brasil e explore espécies.</p>
                     </div>
+                    <!-- BOTÃO JOGO NO ACESSO RÁPIDO -->
                     <div class="action-card" onclick="window.openGameExternal()">
                         <div class="card-icon-circle"><span class="material-icons">sports_esports</span></div>
                         <h3>Jogo Interativo</h3>
@@ -217,76 +218,56 @@
                 </div>
             </div>
 
-            <!-- MEUS CHATS PRIVADOS -->
+            <!-- MEUS CHATS PRIVADOS (CLÁSSICO) -->
             <div id="private-chats-view" class="view">
                 <div class="page-header-dark">
-                    <h2>Meus Chats de Sementes</h2>
-                    <p>Combine a entrega ou troca diretamente com os interessados.</p>
+                    <h2>Meus Chats Privados</h2>
+                    <p>Selecione uma reserva para conversar diretamente com o doador ou interessado.</p>
                 </div>
-                
-                <div class="telegram-chat-layout">
-                    <div class="tg-sidebar">
-                        <div class="tg-sidebar-header">
-                            <h4>Conversas Ativas</h4>
-                        </div>
-                        <div id="private-chat-list">
-                            <p style="color: var(--text-muted); font-size: 13px; padding: 10px;">A carregar conversas...</p>
-                        </div>
+                <div class="chat-container-box">
+                    <div id="private-chat-list" style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px;">
+                        <p style="color: var(--text-muted); font-size: 13px;">A carregar conversas...</p>
                     </div>
 
-                    <div class="tg-chat-pane">
-                        <div id="private-chat-header" class="tg-pane-header" style="display: none;">
-                            <div class="tg-pane-info">
-                                <h3 id="private-chat-title" style="font-size: 15px; font-weight: 700;">Semente</h3>
-                                <p id="private-chat-subtitle" style="font-size: 12px; color: var(--text-muted);">Participantes</p>
-                            </div>
-                        </div>
-                        
-                        <div id="private-chat-messages" class="tg-messages-box">
-                            <div class="tg-empty-chat">Selecione uma conversa ao lado ou reserve uma semente para iniciar.</div>
-                        </div>
-                        
-                        <div id="private-chat-input-box" class="tg-input-area" style="display: none;">
-                            <input type="text" id="private-chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkPrivateChatEnter(event)">
-                            <button class="tg-send-btn" onclick="window.sendPrivateMessage()">
-                                <span class="material-icons">send</span>
-                            </button>
+                    <div id="private-chat-room" style="display: none; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                        <h3 id="private-chat-title" style="font-size: 16px; color: var(--forest-dark); margin-bottom: 10px;">Conversa</h3>
+                        <div id="private-chat-messages" class="chat-messages-classic"></div>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="private-chat-input" placeholder="Escreva a sua mensagem..." style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-main); color: var(--text-main);" onkeypress="window.checkPrivateChatEnter(event)">
+                            <button class="btn-lime-pill" onclick="window.sendPrivateMessage()" style="padding: 12px 24px;">Enviar</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- CHAT COMUNITÁRIO -->
+            <!-- CHAT COMUNITÁRIO (CLÁSSICO) -->
             <div id="chat-view" class="view">
-                <div class="telegram-community-container">
-                    <div class="tg-community-header">
-                        <div>
-                            <h2 style="color: var(--forest-dark); font-size: 18px;">Chat Comunitário</h2>
-                            <p style="font-size: 12px; color: var(--text-muted);">Conversas gerais da região</p>
-                        </div>
-                        <select id="chat-community-select" class="select-styled" style="max-width: 240px; padding: 8px 12px;" onchange="window.changeChatCommunity()">
-                            <option value="Aparecida do Taboado">Aparecida do Taboado - MS</option>
-                            <option value="Paranaíba">Paranaíba - MS</option>
-                            <option value="Três Lagoas">Três Lagoas - MS</option>
-                            <option value="Campo Grande">Campo Grande - MS</option>
-                            <option value="Dourados">Dourados - MS</option>
-                            <option value="Corumbá">Corumbá - MS</option>
-                            <option value="Bonito">Bonito - MS</option>
-                            <option value="Santa Fé do Sul">Santa Fé do Sul - SP</option>
-                            <option value="Jales">Jales - SP</option>
-                            <option value="Fernandópolis">Fernandópolis - SP</option>
-                        </select>
+                <div class="page-header-dark" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+                    <div>
+                        <h2>Chat Comunitário</h2>
+                        <p>Partilhe dicas e novidades com cultivadores da sua cidade.</p>
                     </div>
-                    
-                    <div id="chat-messages" class="tg-messages-box" style="height: 420px;">
-                        <p style="color: var(--text-muted); text-align: center; margin-top: 20px;">A carregar mensagens...</p>
+                    <select id="chat-community-select" class="select-styled" style="padding: 10px 14px;" onchange="window.changeChatCommunity()">
+                        <option value="Aparecida do Taboado">Aparecida do Taboado - MS</option>
+                        <option value="Paranaíba">Paranaíba - MS</option>
+                        <option value="Três Lagoas">Três Lagoas - MS</option>
+                        <option value="Campo Grande">Campo Grande - MS</option>
+                        <option value="Dourados">Dourados - MS</option>
+                        <option value="Corumbá">Corumbá - MS</option>
+                        <option value="Bonito">Bonito - MS</option>
+                        <option value="Santa Fé do Sul">Santa Fé do Sul - SP</option>
+                        <option value="Jales">Jales - SP</option>
+                        <option value="Fernandópolis">Fernandópolis - SP</option>
+                    </select>
+                </div>
+
+                <div class="chat-container-box">
+                    <div id="chat-messages" class="chat-messages-classic">
+                        <p style="color: var(--text-muted); text-align: center;">A carregar mensagens...</p>
                     </div>
-                    
-                    <div class="tg-input-area">
-                        <input type="text" id="chat-input" placeholder="Escreva a sua mensagem..." onkeypress="window.checkChatEnter(event)">
-                        <button class="tg-send-btn" onclick="window.enviarMensagemChat()">
-                            <span class="material-icons">send</span>
-                        </button>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="chat-input" placeholder="Escreva uma mensagem para a comunidade..." style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-main); color: var(--text-main);" onkeypress="window.checkChatEnter(event)">
+                        <button class="btn-lime-pill" onclick="window.enviarMensagemChat()" style="padding: 12px 24px;">Enviar</button>
                     </div>
                 </div>
             </div>
@@ -298,7 +279,7 @@
                     <p>Selecione abaixo qualquer um dos 6 biomas brasileiros para carregar árvores, frutos e sementes oficiais da Wikipédia.</p>
                 </div>
 
-                <div class="biome-locator-card" style="display: flex; flex-direction: column; gap: 15px; padding: 25px;">
+                <div class="biome-locator-card" style="display: flex; flex-direction: column; gap: 15px; padding: 25px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px;">
                     <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
                         <label style="font-weight: 700; color: var(--forest-dark);">Escolha o Bioma:</label>
                         <select id="manual-biome-select" class="select-styled" style="max-width: 320px;" onchange="window.changeSelectedBiome(this.value)">
@@ -366,7 +347,7 @@
                 </div>
             </div>
 
-            <!-- SOBRE NÓS COM APOIADORES (EMBRAPA.PNG) -->
+            <!-- SOBRE NÓS COM A SEÇÃO DE APOIADORES (EMBRAPA.PNG) -->
             <div id="about-view" class="view">
                 <div class="page-header-dark">
                     <h2>Sobre Nós</h2>
@@ -374,7 +355,6 @@
                 </div>
 
                 <div class="about-card-vertical">
-                    <!-- Topo: Logo e Texto -->
                     <div class="about-header-flex">
                         <div class="about-logo-container">
                             <img src="alphas.jpg" alt="Logo ALPHADROID'S" class="team-logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
@@ -396,7 +376,6 @@
                         </div>
                     </div>
 
-                    <!-- Pilares do Projeto -->
                     <div class="about-pillars">
                         <div class="pillar-item">
                             <span class="material-icons">biotech</span>
@@ -426,7 +405,6 @@
                         </div>
                     </div>
 
-                    <!-- FOTO DA EQUIPE MENOR E EMOLDURADA EMBAIXO -->
                     <div class="team-photo-container" style="margin-top: 25px;">
                         <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 12px; text-align: center;">Nossa Equipe</h4>
                         <img src="flltc oi.jpg" alt="Equipe ALPHADROID'S" class="team-group-photo-framed" onerror="this.style.display='none'; document.getElementById('team-photo-fallback').style.display='block';">
