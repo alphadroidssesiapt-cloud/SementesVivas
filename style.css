@@ -1273,14 +1273,33 @@ header {
         z-index: 999;
     }
 
-    .nav-links.mobile-open {
-        display: flex !important;
-    }
+  /* NAVEGAÇÃO SUPERIOR ORIGINAL */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
 
-    .nav-link {
-        text-align: left;
-        padding: 12px;
-        width: 100%;
-        color: #ffffff;
-    }
+.nav-link {
+    background: transparent;
+    border: none;
+    color: #d4e0d8;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.nav-link:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-link.active {
+    background: var(--lime, #8bc34a);
+    color: var(--forest-dark, #143622);
+    font-weight: 700;
 }
