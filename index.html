@@ -13,7 +13,7 @@
 
     <div id="device-frame" class="device-desktop">
 
-        <!-- CABEÇALHO -->
+        <!-- CABEÇALHO COM MENU HAMBÚRGUER PARA MOBILE -->
         <header id="main-header" style="display: none;">
             <div class="header-container">
                 <div class="nav-brand" onclick="window.showDashboard()">
@@ -24,7 +24,12 @@
                     </div>
                 </div>
 
-                <nav class="nav-links">
+                <!-- BOTÃO HAMBÚRGUER -->
+                <button class="hamburger-btn" id="hamburger-toggle" onclick="window.toggleMobileMenu()">
+                    <span class="material-icons">menu</span>
+                </button>
+
+                <nav class="nav-links" id="nav-links-container">
                     <button class="nav-link active" id="tab-dashboard-view" onclick="window.showDashboard()">Início</button>
                     <button class="nav-link" id="tab-available-view" onclick="window.showAvailable()">Explorar</button>
                     <button class="nav-link" id="tab-private-chats-view" onclick="window.showPrivateChats()">Meus Chats</button>
@@ -32,7 +37,6 @@
                     <button class="nav-link" id="tab-encyclopedia-view" onclick="window.showEncyclopedia()">Bioma & Enciclopédia</button>
                     <button class="nav-link" id="tab-curiosities-view" onclick="window.showCuriosities()">Curiosidades</button>
                     <button class="nav-link" id="tab-learn-view" onclick="window.showLearn()">Aprender</button>
-                    <a href="https://alphadroidssesiapt-cloud.github.io/jogo-teste/" target="_blank" class="nav-link" style="text-decoration: none;">Jogo</a>
                     <button class="nav-link" id="tab-about-view" onclick="window.showAbout()">Sobre Nós</button>
                     <button class="nav-link" id="tab-profile-view" onclick="window.showProfile()">Perfil</button>
                 </nav>
@@ -126,8 +130,8 @@
                         <button class="btn-lime-hero" onclick="window.showAvailable()">
                             <span class="material-icons" style="font-size: 18px;">inventory_2</span> Explorar Sementes Disponíveis
                         </button>
-                        <button class="btn-glass-hero" onclick="window.showCuriosities()">
-                            Ver Curiosidades <span class="material-icons" style="font-size: 18px;">lightbulb</span>
+                        <button class="btn-glass-hero" onclick="window.openGameExternal()">
+                            Jogar Agora <span class="material-icons" style="font-size: 18px;">sports_esports</span>
                         </button>
                     </div>
                 </div>
@@ -152,12 +156,13 @@
                     <div class="action-card" onclick="window.showEncyclopedia()">
                         <div class="card-icon-circle"><span class="material-icons">public</span></div>
                         <h3>Enciclopédia de Biomas</h3>
-                        <p>Explore todos os 6 biomas do Brasil e conheça espécies nativas.</p>
+                        <p>Escolha qualquer bioma do Brasil e explore espécies.</p>
                     </div>
-                    <div class="action-card" onclick="window.open('https://alphadroidssesiapt-cloud.github.io/jogo-teste/', '_blank')">
+                    <!-- BOTÃO JOGO NO ACESSO RÁPIDO -->
+                    <div class="action-card" onclick="window.openGameExternal()">
                         <div class="card-icon-circle"><span class="material-icons">sports_esports</span></div>
                         <h3>Jogo Interativo</h3>
-                        <p>Divirta-se e aprenda jogando no nosso simulador educativo.</p>
+                        <p>Divirta-se e teste seus conhecimentos no jogo oficial.</p>
                     </div>
                 </div>
             </div>
@@ -287,7 +292,7 @@
                 </div>
             </div>
 
-            <!-- ENCICLOPÉDIA DE BIOMAS (SELETOR DOS 6 BIOMAS) -->
+            <!-- ENCICLOPÉDIA DE BIOMAS -->
             <div id="encyclopedia-view" class="view">
                 <div class="page-header-dark">
                     <h2>Enciclopédia dos Biomas do Brasil</h2>
@@ -362,7 +367,7 @@
                 </div>
             </div>
 
-            <!-- SOBRE NÓS (EQUIPE ALPHADROID'S + APOIADORES EMBRAPA) -->
+            <!-- SOBRE NÓS COM A SEÇÃO DE APOIADORES (EMBRAPA.PNG) -->
             <div id="about-view" class="view">
                 <div class="page-header-dark">
                     <h2>Sobre Nós</h2>
@@ -411,20 +416,19 @@
                         </div>
                     </div>
 
-                    <!-- APOIADORES (EMBRAPA) -->
-                    <div style="margin-top: 30px; padding: 25px; background: var(--bg-light); border-radius: 16px; text-align: center; border: 1px solid rgba(0,0,0,0.06);">
-                        <h3 style="color: var(--forest-dark); font-size: 20px; margin-bottom: 8px;">Apoiadores</h3>
-                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Instituições e parceiros que fortalecem a pesquisa e a conservação ambiental no nosso projeto:</p>
-                        <div style="display: flex; justify-content: center; align-items: center; gap: 30px; flex-wrap: wrap;">
-                            <div style="background: #ffffff; padding: 18px 32px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); display: inline-flex; flex-direction: column; align-items: center;">
-                                <img src="embrapa-logo.png" alt="Logo Embrapa" style="max-height: 75px; width: auto; object-fit: contain;" onerror="this.style.display='none'; document.getElementById('embrapa-fallback').style.display='block';">
-                                <span id="embrapa-fallback" style="display: none; font-weight: 800; color: #005a9c; font-size: 22px;">Embrapa</span>
+                    <!-- SEÇÃO DE APOIADORES COM A EMBRAPA.PNG -->
+                    <div class="supporters-section" style="margin-top: 35px; padding: 20px; background: var(--bg-light); border-radius: 12px; text-align: center;">
+                        <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 15px;">Apoiadores & Parceiros</h4>
+                        <div style="display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap;">
+                            <div style="background: white; padding: 12px 24px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; min-width: 160px; min-height: 70px;">
+                                <img src="embrapa.png" alt="Embrapa" style="max-height: 45px; max-width: 140px; object-fit: contain;" onerror="this.style.display='none'; document.getElementById('embrapa-fallback').style.display='block';">
+                                <span id="embrapa-fallback" style="display: none; font-weight: 700; color: var(--forest-dark); font-size: 15px;">Embrapa</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- FOTO DA EQUIPE MENOR E EMOLDURADA EMBAIXO -->
-                    <div class="team-photo-container" style="margin-top: 30px;">
+                    <div class="team-photo-container" style="margin-top: 25px;">
                         <h4 style="color: var(--forest-dark); font-size: 18px; margin-bottom: 12px; text-align: center;">Nossa Equipe</h4>
                         <img src="flltc oi.jpg" alt="Equipe ALPHADROID'S" class="team-group-photo-framed" onerror="this.style.display='none'; document.getElementById('team-photo-fallback').style.display='block';">
                         <div id="team-photo-fallback" style="display: none; padding: 30px; text-align: center; background: var(--bg-light); border-radius: 12px; color: var(--text-muted); font-size: 14px;">
