@@ -149,7 +149,6 @@ window.switchView = (viewId) => {
         view.style.display = (viewId === 'login-view') ? 'flex' : 'block';
     }
 
-    // Fecha o menu móvel ao trocar de aba
     const navContainer = document.getElementById('nav-links-container');
     if (navContainer) navContainer.classList.remove('mobile-open');
 
