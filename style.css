@@ -509,7 +509,7 @@ header {
 .hero-section {
     position: relative;
     min-height: 460px;
-    background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80');
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/2/22/Cerrado_landscape.jpg');
     background-size: cover;
     background-position: center;
     display: flex;
