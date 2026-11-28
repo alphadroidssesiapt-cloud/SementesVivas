@@ -137,14 +137,22 @@
         </div>
 
         <!-- PAINEL PRINCIPAL (INÍCIO) -->
-        <div id="dashboard-view" class="view">
-            <section class="hero-section">
-                <div class="hero-overlay"></div>
-                <div class="hero-content">
-                    <span id="user-greeting" class="hero-badge" data-i18n="hero_badge">Bem-vindo à comunidade</span>
-                    <h1 class="hero-title">
-                        <span data-i18n="hero_title_1">Partilha de sementes e</span> <span class="text-lime" data-i18n="hero_title_2">preservação da vida</span> <span data-i18n="hero_title_3">em cada cultivo.</span>
-                    </h1>
+       <div class="hero-buttons">
+    <button class="btn-lime-hero" onclick="window.showAvailable()">
+        <span class="material-icons" style="font-size: 18px;">inventory_2</span>
+        <span data-i18n="hero_btn_explore">Explorar Sementes Disponíveis</span>
+    </button>
+
+    <button class="btn-glass-hero" onclick="window.showEncyclopedia()">
+        <span data-i18n="hero_btn_biome">Identificar Meu Bioma</span>
+        <span class="material-icons" style="font-size: 18px;">public</span>
+    </button>
+
+    <button class="btn-lime-hero" onclick="window.open('https://alphadroidssesiapt-cloud.github.io/jogo-teste/', '_blank', 'noopener,noreferrer')">
+        <span class="material-icons" style="font-size: 18px;">sports_esports</span>
+        <span>Jogar</span>
+    </button>
+</div>
                     <p class="hero-subtitle" data-i18n="hero_subtitle">
                         Troque sementes nativas florestais, doe mudas nativas e fortaleça a biodiversidade local junto com cultivadores da sua região.
                     </p>
